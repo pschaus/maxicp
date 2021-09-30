@@ -17,14 +17,14 @@ package org.maxicp.search;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import com.github.guillaumederval.javagrading.GradingRunner;
-import org.maxicp.cp.BranchingScheme;
-import org.maxicp.engine.core.IntVar;
-import org.maxicp.engine.core.Solver;
+import org.maxicp.BranchingScheme;
+import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.Solver;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.maxicp.cp.Factory;
+import org.maxicp.Factory;
 
 import java.util.Arrays;
 

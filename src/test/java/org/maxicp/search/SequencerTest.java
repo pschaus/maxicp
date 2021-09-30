@@ -22,7 +22,7 @@ import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.Procedure;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
-import org.maxicp.cp.BranchingScheme;
+import org.maxicp.BranchingScheme;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

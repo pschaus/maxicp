@@ -24,7 +24,7 @@ import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
-import org.maxicp.cp.BranchingScheme;
+import org.maxicp.BranchingScheme;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;

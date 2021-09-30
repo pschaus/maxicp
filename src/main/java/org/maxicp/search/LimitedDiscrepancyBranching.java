@@ -16,7 +16,7 @@
 package org.maxicp.search;
 
 
-import org.maxicp.cp.BranchingScheme;
+import org.maxicp.BranchingScheme;
 import org.maxicp.util.Procedure;
 
 import java.util.function.Supplier;

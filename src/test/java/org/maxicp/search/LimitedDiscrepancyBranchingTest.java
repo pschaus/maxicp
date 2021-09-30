@@ -17,7 +17,7 @@ package org.maxicp.search;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import com.github.guillaumederval.javagrading.GradingRunner;
-import org.maxicp.cp.BranchingScheme;
+import org.maxicp.BranchingScheme;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
 import org.maxicp.state.Trailer;
