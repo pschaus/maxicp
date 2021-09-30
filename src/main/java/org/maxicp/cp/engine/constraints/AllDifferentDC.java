@@ -17,6 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractConstraint;
 import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.model.constraints.AllDifferent;
 import org.maxicp.util.GraphUtil;
 import org.maxicp.util.GraphUtil.Graph;
 import org.maxicp.util.exception.InconsistencyException;
