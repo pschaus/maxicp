@@ -17,7 +17,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
 import org.maxicp.util.exception.InconsistencyException;
@@ -39,8 +39,8 @@ public class Element1D extends AbstractCPConstraint {
     private final StateInt low;
     private final StateInt up;
 
-    private final IntVar y;
-    private final IntVar z;
+    private final CPIntVar y;
+    private final CPIntVar z;
 
 
     /**
@@ -50,7 +50,7 @@ public class Element1D extends AbstractCPConstraint {
      * @param y the index variable
      * @param z the result variable
      */
-    public Element1D(int[] array, IntVar y, IntVar z) {
+    public Element1D(int[] array, CPIntVar y, CPIntVar z) {
         super(y.getSolver());
         this.t = array;
 

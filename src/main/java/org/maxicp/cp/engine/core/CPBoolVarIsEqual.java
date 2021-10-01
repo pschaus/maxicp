@@ -17,9 +17,9 @@ package org.maxicp.cp.engine.core;
 
 import org.maxicp.util.exception.InconsistencyException;
 
-public class BoolVarIsEqual extends IntVarImpl implements BoolVar {
+public class CPBoolVarIsEqual extends CPIntVarImpl implements CPBoolVar {
 
-    public BoolVarIsEqual(IntVar x, int v) {
+    public CPBoolVarIsEqual(CPIntVar x, int v) {
         super(x.getSolver(), 0, 1);
 
         if (!x.contains(v)) {

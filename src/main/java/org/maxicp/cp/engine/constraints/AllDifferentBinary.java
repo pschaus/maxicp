@@ -16,14 +16,14 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 
 public class AllDifferentBinary extends AbstractCPConstraint {
 
-    private IntVar[] x;
+    private CPIntVar[] x;
 
-    public AllDifferentBinary(IntVar... x) {
+    public AllDifferentBinary(CPIntVar... x) {
         super(x[0].getSolver());
         this.x = x;
     }

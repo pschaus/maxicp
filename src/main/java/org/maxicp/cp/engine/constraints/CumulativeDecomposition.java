@@ -18,8 +18,8 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 import java.util.Arrays;
 
@@ -30,9 +30,9 @@ import static org.maxicp.Factory.*;
  */
 public class CumulativeDecomposition extends AbstractCPConstraint {
 
-    private final IntVar[] start;
+    private final CPIntVar[] start;
     private final int[] duration;
-    private final IntVar[] end;
+    private final CPIntVar[] end;
     private final int[] demand;
     private final int capa;
 
@@ -46,7 +46,7 @@ public class CumulativeDecomposition extends AbstractCPConstraint {
      * @param demand the demand of each activities, non negative
      * @param capa the capacity of the constraint
      */
-    public CumulativeDecomposition(IntVar[] start, int[] duration, int[] demand, int capa) {
+    public CumulativeDecomposition(CPIntVar[] start, int[] duration, int[] demand, int capa) {
         super(start[0].getSolver());
         this.start = start;
         this.duration = duration;
@@ -63,7 +63,7 @@ public class CumulativeDecomposition extends AbstractCPConstraint {
 
         for (int t = min; t < max; t++) {
 
-            BoolVar[] overlaps = new BoolVar[start.length];
+            CPBoolVar[] overlaps = new CPBoolVar[start.length];
             for (int i = 0; i < start.length; i++) {
                 overlaps[i] = makeBoolVar(getSolver());
                 // TODO
@@ -74,18 +74,18 @@ public class CumulativeDecomposition extends AbstractCPConstraint {
 
                 // STUDENT throw new NotImplementedException("CumulativeDecomp");
                 // BEGIN STRIP
-                BoolVar startsBefore = makeBoolVar(getSolver());
-                BoolVar endsAfter = makeBoolVar(getSolver());
+                CPBoolVar startsBefore = makeBoolVar(getSolver());
+                CPBoolVar endsAfter = makeBoolVar(getSolver());
                 getSolver().post(new IsLessOrEqual(startsBefore, start[i], t));
                 getSolver().post(new IsLessOrEqual(endsAfter, minus(plus(start[i], duration[i] - 1)), -t));
                 final int capa = -2;
                 // overlaps = endsAfter & startsBefore
-                getSolver().post(new IsLessOrEqual(overlaps[i], minus(sum(new IntVar[]{startsBefore, endsAfter})), capa));
+                getSolver().post(new IsLessOrEqual(overlaps[i], minus(sum(new CPIntVar[]{startsBefore, endsAfter})), capa));
                 // END STRIP
             }
 
-            IntVar[] overlapHeights = Factory.makeIntVarArray(start.length, i -> mul(overlaps[i], demand[i]));
-            IntVar cumHeight = sum(overlapHeights);
+            CPIntVar[] overlapHeights = Factory.makeIntVarArray(start.length, i -> mul(overlaps[i], demand[i]));
+            CPIntVar cumHeight = sum(overlapHeights);
             cumHeight.removeAbove(capa);
 
         }

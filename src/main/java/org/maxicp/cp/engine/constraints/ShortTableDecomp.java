@@ -16,14 +16,14 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 /**
  * Decomposition of table constraint with short tuples (having {@code *} entries)
  */
 public class ShortTableDecomp extends AbstractCPConstraint {
 
-    private final IntVar[] x;
+    private final CPIntVar[] x;
     private final int[][] table;
     private final int star; // considered as *
 
@@ -35,7 +35,7 @@ public class ShortTableDecomp extends AbstractCPConstraint {
      * @param table array of valid solutions (second dimension must be of same size as the array x)
      * @param star  the symbol representing "any" setValue in the table
      */
-    public ShortTableDecomp(IntVar[] x, int[][] table, int star) {
+    public ShortTableDecomp(CPIntVar[] x, int[][] table, int star) {
         super(x[0].getSolver());
         this.x = x;
         this.table = table;
@@ -44,7 +44,7 @@ public class ShortTableDecomp extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        for (IntVar var : x)
+        for (CPIntVar var : x)
             var.propagateOnDomainChange(this);
         propagate();
     }

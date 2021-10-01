@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.exception.InconsistencyException;
 import org.junit.Test;
@@ -32,8 +32,8 @@ public class NotEqualTest extends CPSolverTest {
     public void notEqualTest() {
         CPSolver cp = solverFactory.get();
 
-        IntVar x = Factory.makeIntVar(cp, 10);
-        IntVar y = Factory.makeIntVar(cp, 10);
+        CPIntVar x = Factory.makeIntVar(cp, 10);
+        CPIntVar y = Factory.makeIntVar(cp, 10);
 
         try {
             cp.post(Factory.notEqual(x, y));

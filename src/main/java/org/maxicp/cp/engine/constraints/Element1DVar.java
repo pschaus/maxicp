@@ -16,24 +16,24 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 public class Element1DVar extends AbstractCPConstraint {
 
-    private final IntVar[] array;
-    private final IntVar y;
-    private final IntVar z;
+    private final CPIntVar[] array;
+    private final CPIntVar y;
+    private final CPIntVar z;
 
     // STUDENT
     // BEGIN STRIP
     private final int[] yValues;
-    private IntVar supMin;
-    private IntVar supMax;
+    private CPIntVar supMin;
+    private CPIntVar supMax;
     private int zMin;
     private int zMax;
     // END STRIP
 
-    public Element1DVar(IntVar[] array, IntVar y, IntVar z) {
+    public Element1DVar(CPIntVar[] array, CPIntVar y, CPIntVar z) {
         super(y.getSolver());
         this.array = array;
         this.y = y;
@@ -52,7 +52,7 @@ public class Element1DVar extends AbstractCPConstraint {
         y.removeBelow(0);
         y.removeAbove(array.length - 1);
 
-        for (IntVar t : array) {
+        for (CPIntVar t : array) {
             t.propagateOnBoundChange(this);
         }
         y.propagateOnDomainChange(this);
@@ -86,7 +86,7 @@ public class Element1DVar extends AbstractCPConstraint {
     // BEGIN STRIP
     private void equalityPropagate() {
         int id = y.min();
-        IntVar tVar = array[id];
+        CPIntVar tVar = array[id];
         tVar.removeBelow(zMin);
         tVar.removeAbove(zMax);
         z.removeBelow(tVar.min());
@@ -101,7 +101,7 @@ public class Element1DVar extends AbstractCPConstraint {
         while (i > 0) {
             i -= 1;
             int id = yValues[i];
-            IntVar tVar = array[id];
+            CPIntVar tVar = array[id];
             int tMin = tVar.min();
             int tMax = tVar.max();
             if (tMax < zMin || tMin > zMax) {

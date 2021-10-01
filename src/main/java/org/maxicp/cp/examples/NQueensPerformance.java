@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -29,7 +29,7 @@ public class NQueensPerformance {
     public static void main(String[] args) {
         int n = 88;
         CPSolver cp = makeSolver();
-        IntVar[] q = makeIntVarArray(cp, n, n);
+        CPIntVar[] q = makeIntVarArray(cp, n, n);
 
         for (int i = 0; i < n; i++)
             for (int j = i + 1; j < n; j++) {
@@ -43,7 +43,7 @@ public class NQueensPerformance {
 
 
         DFSearch dfs = makeDfs(cp, () -> {
-            IntVar qs = selectMin(q,
+            CPIntVar qs = selectMin(q,
                     qi -> qi.size() > 1,
                     qi -> qi.size());
             if (qs == null)

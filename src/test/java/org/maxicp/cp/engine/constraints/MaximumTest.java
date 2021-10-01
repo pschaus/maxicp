@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -42,8 +42,8 @@ public class MaximumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 3, 10);
-            IntVar y = Factory.makeIntVar(cp, -5, 20);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 10);
+            CPIntVar y = Factory.makeIntVar(cp, -5, 20);
             cp.post(new Maximum(x, y));
 
             assertEquals(9, y.max());
@@ -88,10 +88,10 @@ public class MaximumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x1 = Factory.makeIntVar(cp, 0, 0);
-            IntVar x2 = Factory.makeIntVar(cp, 1, 1);
-            IntVar x3 = Factory.makeIntVar(cp, 2, 2);
-            IntVar y = Factory.maximum(x1, x2, x3);
+            CPIntVar x1 = Factory.makeIntVar(cp, 0, 0);
+            CPIntVar x2 = Factory.makeIntVar(cp, 1, 1);
+            CPIntVar x3 = Factory.makeIntVar(cp, 2, 2);
+            CPIntVar y = Factory.maximum(x1, x2, x3);
 
 
             assertEquals(2, y.max());
@@ -110,10 +110,10 @@ public class MaximumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x1 = Factory.makeIntVar(cp, 0, 10);
-            IntVar x2 = Factory.makeIntVar(cp, 0, 10);
-            IntVar x3 = Factory.makeIntVar(cp, -5, 50);
-            IntVar y = Factory.maximum(x1, x2, x3);
+            CPIntVar x1 = Factory.makeIntVar(cp, 0, 10);
+            CPIntVar x2 = Factory.makeIntVar(cp, 0, 10);
+            CPIntVar x3 = Factory.makeIntVar(cp, -5, 50);
+            CPIntVar y = Factory.maximum(x1, x2, x3);
 
             y.removeAbove(5);
             cp.fixPoint();
@@ -135,10 +135,10 @@ public class MaximumTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                IntVar[] x = Factory.makeIntVarArray(cp, 4, 5);
-                IntVar y = Factory.makeIntVar(cp, -5, 20);
+                CPIntVar[] x = Factory.makeIntVarArray(cp, 4, 5);
+                CPIntVar y = Factory.makeIntVar(cp, -5, 20);
 
-                IntVar[] allIntVars = new IntVar[x.length+1];
+                CPIntVar[] allIntVars = new CPIntVar[x.length+1];
                 System.arraycopy(x, 0, allIntVars, 0, x.length);
                 allIntVars[x.length] = y;
 

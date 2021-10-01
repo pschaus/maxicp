@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.util.GraphUtil;
 import org.maxicp.util.GraphUtil.Graph;
 import org.maxicp.util.exception.InconsistencyException;
@@ -32,7 +32,7 @@ import java.util.Arrays;
  */
 public class AllDifferentDC extends AbstractCPConstraint {
 
-    private IntVar[] x;
+    private CPIntVar[] x;
 
     private final MaximumMatching maximumMatching;
 
@@ -66,7 +66,7 @@ public class AllDifferentDC extends AbstractCPConstraint {
     private int minVal;
     private int maxVal;
 
-    public AllDifferentDC(IntVar... x) {
+    public AllDifferentDC(CPIntVar... x) {
         super(x[0].getSolver());
         this.x = x;
         maximumMatching = new MaximumMatching(x);

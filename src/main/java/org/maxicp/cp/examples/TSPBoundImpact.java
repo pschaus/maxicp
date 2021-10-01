@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.constraints.Circuit;
 import org.maxicp.cp.engine.constraints.Element1D;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -41,7 +41,7 @@ public class TSPBoundImpact {
      * @param obj
      * @return the value that if assigned to v induced the least augmentation of the objective obj
      */
-    public static int boundImpactValueSelector(IntVar x, IntVar obj) {
+    public static int boundImpactValueSelector(CPIntVar x, CPIntVar obj) {
         // STUDENT throw new NotImplementedException("boundImpactValueSelector");
         // BEGIN STRIP
         int val = x.min();
@@ -77,8 +77,8 @@ public class TSPBoundImpact {
         int[][] distanceMatrix = reader.getMatrix(n, n);
 
         CPSolver cp = makeSolver(false);
-        IntVar[] succ = makeIntVarArray(cp, n, n);
-        IntVar[] distSucc = makeIntVarArray(cp, n, 1000);
+        CPIntVar[] succ = makeIntVarArray(cp, n, n);
+        CPIntVar[] distSucc = makeIntVarArray(cp, n, 1000);
 
         cp.post(new Circuit(succ));
 
@@ -86,12 +86,12 @@ public class TSPBoundImpact {
             cp.post(new Element1D(distanceMatrix[i], succ[i], distSucc[i]));
         }
 
-        IntVar totalDist = sum(distSucc);
+        CPIntVar totalDist = sum(distSucc);
 
         Objective obj = cp.minimize(totalDist);
 
         DFSearch dfs = makeDfs(cp, () -> {
-            IntVar xs = selectMin(succ,
+            CPIntVar xs = selectMin(succ,
                     xi -> xi.size() > 1,
                     xi -> xi.size());
             if (xs == null)

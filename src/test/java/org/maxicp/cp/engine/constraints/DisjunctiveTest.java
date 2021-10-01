@@ -17,8 +17,8 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -38,16 +38,16 @@ import static org.junit.Assert.assertEquals;
 public class DisjunctiveTest extends CPSolverTest {
 
 
-    private static void decomposeDisjunctive(IntVar[] start, int[] duration) {
+    private static void decomposeDisjunctive(CPIntVar[] start, int[] duration) {
         CPSolver cp = start[0].getSolver();
         for (int i = 0; i < start.length; i++) {
-            IntVar end_i = Factory.plus(start[i], duration[i]);
+            CPIntVar end_i = Factory.plus(start[i], duration[i]);
             for (int j = i + 1; j < start.length; j++) {
                 // i before j or j before i
 
-                IntVar end_j = Factory.plus(start[j], duration[j]);
-                BoolVar iBeforej = Factory.makeBoolVar(cp);
-                BoolVar jBeforei = Factory.makeBoolVar(cp);
+                CPIntVar end_j = Factory.plus(start[j], duration[j]);
+                CPBoolVar iBeforej = Factory.makeBoolVar(cp);
+                CPBoolVar jBeforei = Factory.makeBoolVar(cp);
 
                 cp.post(new IsLessOrEqualVar(iBeforej, end_i, start[j]));
                 cp.post(new IsLessOrEqualVar(jBeforei, end_j, start[i]));
@@ -65,7 +65,7 @@ public class DisjunctiveTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar[] s = Factory.makeIntVarArray(cp, 5, 5);
+            CPIntVar[] s = Factory.makeIntVarArray(cp, 5, 5);
             int[] d = new int[5];
             Arrays.fill(d, 1);
 
@@ -89,7 +89,7 @@ public class DisjunctiveTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar[] s = Factory.makeIntVarArray(cp, 4, 20);
+            CPIntVar[] s = Factory.makeIntVarArray(cp, 4, 20);
             int[] d = new int[]{5, 4, 6, 7};
             DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(s));
 
@@ -120,13 +120,13 @@ public class DisjunctiveTest extends CPSolverTest {
     @Test
     public void testBinaryDecomposition() {
         CPSolver cp = solverFactory.get();
-        IntVar s1 = Factory.makeIntVar(cp, 0, 10);
+        CPIntVar s1 = Factory.makeIntVar(cp, 0, 10);
         int d1 = 10;
-        IntVar s2 = Factory.makeIntVar(cp, 6, 15);
+        CPIntVar s2 = Factory.makeIntVar(cp, 6, 15);
         int d2 = 6;
 
         try {
-            cp.post(new Disjunctive(new IntVar[]{s1, s2}, new int[]{d1, d2}));
+            cp.post(new Disjunctive(new CPIntVar[]{s1, s2}, new int[]{d1, d2}));
             assertEquals(10, s2.min());
         } catch (InconsistencyException e) {
             assert (false);
@@ -139,15 +139,15 @@ public class DisjunctiveTest extends CPSolverTest {
     @Test
     public void testOverloadChecker() {
         CPSolver cp = solverFactory.get();
-        IntVar sA = Factory.makeIntVar(cp, 0, 9);
+        CPIntVar sA = Factory.makeIntVar(cp, 0, 9);
         int d1 = 5;
-        IntVar sB = Factory.makeIntVar(cp, 1, 10);
+        CPIntVar sB = Factory.makeIntVar(cp, 1, 10);
         int d2 = 5;
-        IntVar sC = Factory.makeIntVar(cp, 3, 7);
+        CPIntVar sC = Factory.makeIntVar(cp, 3, 7);
         int d3 = 6;
 
         try {
-            cp.post(new Disjunctive(new IntVar[]{sA, sB, sC}, new int[]{d1, d2, d3}));
+            cp.post(new Disjunctive(new CPIntVar[]{sA, sB, sC}, new int[]{d1, d2, d3}));
             assert (false);
             Assume.assumeTrue(false);
         } catch (InconsistencyException e) {
@@ -161,15 +161,15 @@ public class DisjunctiveTest extends CPSolverTest {
     @Test
     public void testDetectablePrecedence() {
         CPSolver cp = solverFactory.get();
-        IntVar sA = Factory.makeIntVar(cp, 0, 9);
+        CPIntVar sA = Factory.makeIntVar(cp, 0, 9);
         int d1 = 5;
-        IntVar sB = Factory.makeIntVar(cp, 1, 10);
+        CPIntVar sB = Factory.makeIntVar(cp, 1, 10);
         int d2 = 5;
-        IntVar sC = Factory.makeIntVar(cp, 8, 15);
+        CPIntVar sC = Factory.makeIntVar(cp, 8, 15);
         int d3 = 3;
 
         try {
-            cp.post(new Disjunctive(new IntVar[]{sA, sB, sC}, new int[]{d1, d2, d3}));
+            cp.post(new Disjunctive(new CPIntVar[]{sA, sB, sC}, new int[]{d1, d2, d3}));
             Assume.assumeTrue("not last should set est(C)=10", sC.min() == 10);
         } catch (InconsistencyException e) {
             assert (false);
@@ -181,15 +181,15 @@ public class DisjunctiveTest extends CPSolverTest {
     @Test
     public void testNotLast() {
         CPSolver cp = solverFactory.get();
-        IntVar sA = Factory.makeIntVar(cp, 0, 9);
+        CPIntVar sA = Factory.makeIntVar(cp, 0, 9);
         int d1 = 5;
-        IntVar sB = Factory.makeIntVar(cp, 1, 10);
+        CPIntVar sB = Factory.makeIntVar(cp, 1, 10);
         int d2 = 5;
-        IntVar sC = Factory.makeIntVar(cp, 3, 9);
+        CPIntVar sC = Factory.makeIntVar(cp, 3, 9);
         int d3 = 4;
 
         try {
-            cp.post(new Disjunctive(new IntVar[]{sA, sB, sC}, new int[]{d1, d2, d3}));
+            cp.post(new Disjunctive(new CPIntVar[]{sA, sB, sC}, new int[]{d1, d2, d3}));
             Assume.assumeTrue("not last should set lst(C)=6", sC.max() == 6);
         } catch (InconsistencyException e) {
             assert (false);

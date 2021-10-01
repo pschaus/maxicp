@@ -18,7 +18,7 @@ package org.maxicp.cp.engine.constraints;
 import com.github.guillaumederval.javagrading.Grade;
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -46,7 +46,7 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar[] s = Factory.makeIntVarArray(cp, 5, 5);
+            CPIntVar[] s = Factory.makeIntVarArray(cp, 5, 5);
             int[] d = new int[5];
             Arrays.fill(d, 1);
             int[] r = new int[5];
@@ -72,7 +72,7 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
+            CPIntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
             int[] d = new int[]{5, 5};
             int[] r = new int[]{1, 1};
 
@@ -96,7 +96,7 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
+            CPIntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
             int[] d = new int[]{5, 5};
             int[] r = new int[]{1, 1};
 
@@ -122,7 +122,7 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar[] s = Factory.makeIntVarArray(cp, 5, 10);
+            CPIntVar[] s = Factory.makeIntVarArray(cp, 5, 10);
             int[] d = new int[]{5, 10, 3, 6, 1};
             int[] r = new int[]{3, 7, 1, 4, 8};
 

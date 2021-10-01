@@ -17,15 +17,15 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 /**
  * Maximum Constraint
  */
 public class Maximum extends AbstractCPConstraint {
 
-    private final IntVar[] x;
-    private final IntVar y;
+    private final CPIntVar[] x;
+    private final CPIntVar y;
 
     /**
      * Creates the maximum constraint y = maximum(x[0],x[1],...,x[n])?
@@ -33,7 +33,7 @@ public class Maximum extends AbstractCPConstraint {
      * @param x the variable on which the maximum is to be found
      * @param y the variable that is equal to the maximum on x
      */
-    public Maximum(IntVar[] x, IntVar y) {
+    public Maximum(CPIntVar[] x, CPIntVar y) {
         super(x[0].getSolver());
         assert (x.length > 0);
         this.x = x;
@@ -46,7 +46,7 @@ public class Maximum extends AbstractCPConstraint {
         // TODO
         // STUDENT throw new NotImplementedException("Maximum");
         // BEGIN STRIP
-        for (IntVar xi : x) {
+        for (CPIntVar xi : x) {
             xi.propagateOnBoundChange(this);
         }
         y.propagateOnBoundChange(this);

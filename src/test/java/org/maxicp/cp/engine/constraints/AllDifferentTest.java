@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -34,7 +34,7 @@ public class AllDifferentTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
         try {
             cp.post(Factory.allDifferent(x));
@@ -55,7 +55,7 @@ public class AllDifferentTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
         try {
             cp.post(Factory.allDifferent(x));

@@ -25,7 +25,7 @@ import static org.maxicp.Factory.makeIntVar;
 import static org.junit.Assert.*;
 
 
-public class IntVarViewOffsetTest extends CPSolverTest {
+public class CPIntVarViewMulTest extends CPSolverTest {
 
     public boolean propagateCalled = false;
 
@@ -33,10 +33,10 @@ public class IntVarViewOffsetTest extends CPSolverTest {
     public void testIntVar() {
         CPSolver cp = solverFactory.get();
 
-        IntVar x = Factory.plus(Factory.makeIntVar(cp, -3, 4), 3); // domain is {0,1,2,3,4,5,6,7}
+        CPIntVar x = Factory.mul(Factory.mul(Factory.makeIntVar(cp, -3, 4), -3), -1); // domain is {-9,-6,-3,0,3,6,9,12}
 
-        assertEquals(0, x.min());
-        assertEquals(7, x.max());
+        assertEquals(-9, x.min());
+        assertEquals(12, x.max());
         assertEquals(8, x.size());
 
         cp.getStateManager().saveState();
@@ -46,19 +46,19 @@ public class IntVarViewOffsetTest extends CPSolverTest {
 
             assertFalse(x.isBound());
 
-            x.remove(0);
-            assertFalse(x.contains(0));
-            x.remove(3);
-            assertTrue(x.contains(1));
-            assertTrue(x.contains(2));
-            assertEquals(6, x.size());
-            x.removeAbove(6);
+            x.remove(-6);
+            assertFalse(x.contains(-6));
+            x.remove(2);
+            assertTrue(x.contains(0));
+            assertTrue(x.contains(3));
+            assertEquals(7, x.size());
+            x.removeAbove(7);
             assertEquals(6, x.max());
-            x.removeBelow(3);
-            assertEquals(4, x.min());
-            x.assign(5);
+            x.removeBelow(-8);
+            assertEquals(-3, x.min());
+            x.assign(3);
             assertTrue(x.isBound());
-            assertEquals(5, x.max());
+            assertEquals(3, x.max());
 
 
         } catch (InconsistencyException e) {
@@ -67,7 +67,7 @@ public class IntVarViewOffsetTest extends CPSolverTest {
         }
 
         try {
-            x.assign(4);
+            x.assign(8);
             fail("should have failed");
         } catch (InconsistencyException expectedException) {
         }
@@ -85,8 +85,8 @@ public class IntVarViewOffsetTest extends CPSolverTest {
         propagateCalled = false;
         CPSolver cp = solverFactory.get();
 
-        IntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
-        IntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
+        CPIntVar x = Factory.mul(Factory.makeIntVar(cp, 10), 1);
+        CPIntVar y = Factory.mul(Factory.makeIntVar(cp, 10), 1);
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
 
@@ -99,17 +99,17 @@ public class IntVarViewOffsetTest extends CPSolverTest {
 
         try {
             cp.post(cons);
-            x.remove(9);
+            x.remove(8);
             cp.fixPoint();
             assertFalse(propagateCalled);
-            x.assign(5);
+            x.assign(4);
             cp.fixPoint();
             assertTrue(propagateCalled);
             propagateCalled = false;
-            y.remove(11);
+            y.remove(10);
             cp.fixPoint();
             assertFalse(propagateCalled);
-            y.remove(10);
+            y.remove(9);
             cp.fixPoint();
             assertTrue(propagateCalled);
 
@@ -124,8 +124,8 @@ public class IntVarViewOffsetTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        IntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1);
-        IntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1);
+        CPIntVar x = Factory.mul(Factory.makeIntVar(cp, 10), 1);
+        CPIntVar y = Factory.mul(Factory.makeIntVar(cp, 10), 1);
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
 
@@ -138,22 +138,22 @@ public class IntVarViewOffsetTest extends CPSolverTest {
 
         try {
             cp.post(cons);
+            x.remove(8);
+            cp.fixPoint();
+            assertFalse(propagateCalled);
             x.remove(9);
             cp.fixPoint();
             assertFalse(propagateCalled);
-            x.remove(10);
-            cp.fixPoint();
-            assertFalse(propagateCalled);
-            x.assign(5);
+            x.assign(4);
             cp.fixPoint();
             assertTrue(propagateCalled);
             propagateCalled = false;
-            assertFalse(y.contains(11));
-            y.remove(11);
+            assertFalse(y.contains(10));
+            y.remove(10);
             cp.fixPoint();
             assertFalse(propagateCalled);
             propagateCalled = false;
-            y.remove(3);
+            y.remove(2);
             cp.fixPoint();
             assertTrue(propagateCalled);
 
@@ -162,10 +162,11 @@ public class IntVarViewOffsetTest extends CPSolverTest {
         }
     }
 
+
     @Test(expected = IntOverFlowException.class)
     public void testOverFlow() {
         CPSolver cp = solverFactory.get();
-        IntVar x = Factory.plus(Factory.makeIntVar(cp, Integer.MAX_VALUE - 5, Integer.MAX_VALUE - 2), 3);
+        CPIntVar x = Factory.mul(Factory.makeIntVar(cp, 1000000, 1000000), 10000000);
     }
 
 

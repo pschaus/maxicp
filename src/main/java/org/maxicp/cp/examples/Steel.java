@@ -17,8 +17,8 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.constraints.IsOr;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -84,10 +84,10 @@ public class Steel {
 
 
             CPSolver cp = makeSolver();
-            IntVar[] x = makeIntVarArray(cp, nOrder, nSlab);
-            IntVar[] l = makeIntVarArray(cp, nSlab, maxCapa + 1);
+            CPIntVar[] x = makeIntVarArray(cp, nOrder, nSlab);
+            CPIntVar[] l = makeIntVarArray(cp, nSlab, maxCapa + 1);
 
-            BoolVar[][] inSlab = new BoolVar[nSlab][nOrder]; // inSlab[j][i] = 1 if order i is placed in slab j
+            CPBoolVar[][] inSlab = new CPBoolVar[nSlab][nOrder]; // inSlab[j][i] = 1 if order i is placed in slab j
 
             for (int j = 0; j < nSlab; j++) {
                 for (int i = 0; i < nOrder; i++) {
@@ -98,12 +98,12 @@ public class Steel {
 
             for (int j = 0; j < nSlab; j++) {
                 // for each color, is it present in the slab
-                IntVar[] presence = new IntVar[nCol];
+                CPIntVar[] presence = new CPIntVar[nCol];
 
                 for (int col = 0; col < nCol; col++) {
                     presence[col] = makeBoolVar(cp);
 
-                    ArrayList<BoolVar> inSlabWithColor = new ArrayList<>();
+                    ArrayList<CPBoolVar> inSlabWithColor = new ArrayList<>();
                     for (int i = 0; i < nOrder; i++) {
                         if (c[i] == col) inSlabWithColor.add(inSlab[j][i]);
                     }
@@ -111,7 +111,7 @@ public class Steel {
                     // TODO 2: model that presence[col] is true iff at least one order with color col is placed in slab j
                     // STUDENT
                     // BEGIN STRIP
-                    cp.post(new IsOr((BoolVar) presence[col], inSlabWithColor.toArray(new BoolVar[0])));
+                    cp.post(new IsOr((CPBoolVar) presence[col], inSlabWithColor.toArray(new CPBoolVar[0])));
                     // END STRIP
                 }
                 // TODO 3: restrict the number of colors present in slab j to be <= 2
@@ -124,7 +124,7 @@ public class Steel {
 
             // bin packing constraint
             for (int j = 0; j < nSlab; j++) {
-                IntVar[] wj = new IntVar[nSlab];
+                CPIntVar[] wj = new CPIntVar[nSlab];
                 for (int i = 0; i < nOrder; i++) {
                     wj[i] = mul(inSlab[j][i], w[i]);
                 }
@@ -138,10 +138,10 @@ public class Steel {
             // END STRIP
 
             // TODO 5: model the objective function using element constraint + a sum constraint
-            IntVar totLoss = null;
+            CPIntVar totLoss = null;
             // STUDENT
             // BEGIN STRIP
-            IntVar[] losses = Factory.makeIntVarArray(nSlab, j -> element(loss, l[j]));
+            CPIntVar[] losses = Factory.makeIntVarArray(nSlab, j -> element(loss, l[j]));
             totLoss = sum(losses);
             // END STRIP
 
@@ -155,13 +155,13 @@ public class Steel {
             // BEGIN STRIP
             DFSearch dfs = makeDfs(cp,
                     () -> {
-                        IntVar xs = selectMin(x,
+                        CPIntVar xs = selectMin(x,
                                 xi -> xi.size() > 1,
                                 xi -> xi.size());
                         if (xs == null) return EMPTY;
                         else {
                             int maxUsed = -1;
-                            for (IntVar xi : x)
+                            for (CPIntVar xi : x)
                                 if (xi.isBound() && xi.min() > maxUsed)
                                     maxUsed = xi.min();
                             Procedure[] branches = new Procedure[maxUsed + 2];

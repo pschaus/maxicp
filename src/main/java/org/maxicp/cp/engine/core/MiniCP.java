@@ -35,7 +35,7 @@ public class MiniCP implements CPSolver {
 
     private final StateManager sm;
 
-    private final StateStack<IntVar> vars;
+    private final StateStack<CPIntVar> vars;
 
     public MiniCP(StateManager sm) {
         this.sm = sm;
@@ -85,12 +85,12 @@ public class MiniCP implements CPSolver {
     }
 
     @Override
-    public Objective minimize(IntVar x) {
+    public Objective minimize(CPIntVar x) {
         return new Minimize(x);
     }
 
     @Override
-    public Objective maximize(IntVar x) {
+    public Objective maximize(CPIntVar x) {
         return minimize(Factory.minus(x));
     }
 
@@ -106,7 +106,7 @@ public class MiniCP implements CPSolver {
     }
 
     @Override
-    public void post(BoolVar b) {
+    public void post(CPBoolVar b) {
         b.assign(true);
         fixPoint();
     }

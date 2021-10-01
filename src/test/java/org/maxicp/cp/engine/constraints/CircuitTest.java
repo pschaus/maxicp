@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -59,8 +59,8 @@ public class CircuitTest extends CPSolverTest {
         return true;
     }
 
-    public static IntVar[] instanciate(CPSolver cp, int[] circuit) {
-        IntVar[] x = new IntVar[circuit.length];
+    public static CPIntVar[] instanciate(CPSolver cp, int[] circuit) {
+        CPIntVar[] x = new CPIntVar[circuit.length];
         for (int i = 0; i < circuit.length; i++) {
             x[i] = Factory.makeIntVar(cp, circuit[i], circuit[i]);
         }
@@ -108,7 +108,7 @@ public class CircuitTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
             cp.post(new Circuit(x));
 
 

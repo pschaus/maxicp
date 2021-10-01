@@ -18,8 +18,8 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.util.exception.InconsistencyException;
 
 import java.util.Arrays;
@@ -33,9 +33,9 @@ import static org.maxicp.Factory.*;
  */
 public class Disjunctive extends AbstractCPConstraint {
 
-    private final IntVar[] start;
+    private final CPIntVar[] start;
     private final int[] duration;
-    private final IntVar[] end;
+    private final CPIntVar[] end;
 
     // STUDENT
     // BEGIN STRIP
@@ -62,12 +62,12 @@ public class Disjunctive extends AbstractCPConstraint {
      * @param start the start times of the activities
      * @param duration the durations of the activities
      */
-    public Disjunctive(IntVar[] start, int[] duration) {
+    public Disjunctive(CPIntVar[] start, int[] duration) {
         this(start, duration, true);
     }
 
 
-    private Disjunctive(IntVar[] start, int[] duration, boolean postMirror) {
+    private Disjunctive(CPIntVar[] start, int[] duration, boolean postMirror) {
         super(start[0].getSolver());
         this.start = start;
         this.duration = duration;
@@ -118,11 +118,11 @@ public class Disjunctive extends AbstractCPConstraint {
 
         if (postMirror) {
             for (int i = 0; i < start.length; i++) {
-                IntVar endi = plus(start[i], duration[i]);
+                CPIntVar endi = plus(start[i], duration[i]);
                 for (int j = i + 1; j < start.length; j++) {
-                    IntVar endj = plus(start[j], duration[j]);
-                    BoolVar iBeforej = makeBoolVar(getSolver());
-                    BoolVar jBeforei = makeBoolVar(getSolver());
+                    CPIntVar endj = plus(start[j], duration[j]);
+                    CPBoolVar iBeforej = makeBoolVar(getSolver());
+                    CPBoolVar jBeforei = makeBoolVar(getSolver());
 
                     getSolver().post(new IsLessOrEqualVar(iBeforej, endi, start[j]));
                     getSolver().post(new IsLessOrEqualVar(jBeforei, endj, start[i]));
@@ -133,7 +133,7 @@ public class Disjunctive extends AbstractCPConstraint {
             }
 
 
-            IntVar[] startMirror = Factory.makeIntVarArray(start.length, i -> minus(end[i]));
+            CPIntVar[] startMirror = Factory.makeIntVarArray(start.length, i -> minus(end[i]));
             getSolver().post(new Disjunctive(startMirror, duration, false), false);
 
             propagate();

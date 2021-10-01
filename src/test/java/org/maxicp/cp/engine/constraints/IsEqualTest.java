@@ -16,8 +16,8 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -38,9 +38,9 @@ public class IsEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
 
-            BoolVar b = Factory.isEqual(x, -2);
+            CPBoolVar b = Factory.isEqual(x, -2);
 
             DFSearch search = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
 
@@ -63,9 +63,9 @@ public class IsEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
 
-            BoolVar b = Factory.isEqual(x, -2);
+            CPBoolVar b = Factory.isEqual(x, -2);
 
             cp.getStateManager().saveState();
             cp.post(Factory.equal(b, 1));
@@ -89,16 +89,16 @@ public class IsEqualTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
             cp.post(Factory.equal(x, -2));
 
             {
-                BoolVar b = Factory.makeBoolVar(cp);
+                CPBoolVar b = Factory.makeBoolVar(cp);
                 cp.post(new IsEqual(b, x, -2));
                 assertTrue(b.isTrue());
             }
             {
-                BoolVar b = Factory.makeBoolVar(cp);
+                CPBoolVar b = Factory.makeBoolVar(cp);
                 cp.post(new IsEqual(b, x, -3));
                 assertTrue(b.isFalse());
             }
@@ -115,8 +115,8 @@ public class IsEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPBoolVar b = Factory.makeBoolVar(cp);
 
             cp.getStateManager().saveState();
             cp.post(Factory.equal(b, 1));

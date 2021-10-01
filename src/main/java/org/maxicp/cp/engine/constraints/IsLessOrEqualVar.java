@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.BoolVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 import static org.maxicp.Factory.lessOrEqual;
 import static org.maxicp.Factory.plus;
@@ -28,9 +28,9 @@ import static org.maxicp.Factory.plus;
  */
 public class IsLessOrEqualVar extends AbstractCPConstraint {
 
-    private final BoolVar b;
-    private final IntVar x;
-    private final IntVar y;
+    private final CPBoolVar b;
+    private final CPIntVar x;
+    private final CPIntVar y;
 
     // STUDENT
     // BEGIN STRIP
@@ -44,7 +44,7 @@ public class IsLessOrEqualVar extends AbstractCPConstraint {
      * @param x left hand side of less or equal operator
      * @param y right hand side of less or equal operator
      */
-    public IsLessOrEqualVar(BoolVar b, IntVar x, IntVar y) {
+    public IsLessOrEqualVar(CPBoolVar b, CPIntVar x, CPIntVar y) {
         super(x.getSolver());
         this.b = b;
         this.x = x;

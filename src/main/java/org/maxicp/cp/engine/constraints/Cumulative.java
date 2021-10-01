@@ -19,7 +19,7 @@ package org.maxicp.cp.engine.constraints;
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.constraints.Profile.Rectangle;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.util.exception.InconsistencyException;
 
 import java.util.ArrayList;
@@ -32,9 +32,9 @@ import static org.maxicp.Factory.plus;
  */
 public class Cumulative extends AbstractCPConstraint {
 
-    private final IntVar[] start;
+    private final CPIntVar[] start;
     private final int[] duration;
-    private final IntVar[] end;
+    private final CPIntVar[] end;
     private final int[] demand;
     private final int capa;
     private final boolean postMirror;
@@ -50,11 +50,11 @@ public class Cumulative extends AbstractCPConstraint {
      * @param demand the demand of each activities, non negative
      * @param capa the capacity of the constraint
      */
-    public Cumulative(IntVar[] start, int[] duration, int[] demand, int capa) {
+    public Cumulative(CPIntVar[] start, int[] duration, int[] demand, int capa) {
         this(start, duration, demand, capa, true);
     }
 
-    private Cumulative(IntVar[] start, int[] duration, int[] demand, int capa, boolean postMirror) {
+    private Cumulative(CPIntVar[] start, int[] duration, int[] demand, int capa, boolean postMirror) {
         super(start[0].getSolver());
         this.start = start;
         this.duration = duration;
@@ -72,7 +72,7 @@ public class Cumulative extends AbstractCPConstraint {
         }
 
         if (postMirror) {
-            IntVar[] startMirror = Factory.makeIntVarArray(start.length, i -> minus(end[i]));
+            CPIntVar[] startMirror = Factory.makeIntVarArray(start.length, i -> minus(end[i]));
             getSolver().post(new Cumulative(startMirror, duration, demand, capa, false), false);
         }
 

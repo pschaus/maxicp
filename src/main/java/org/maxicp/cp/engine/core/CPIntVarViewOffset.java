@@ -17,16 +17,24 @@
 package org.maxicp.cp.engine.core;
 
 import org.maxicp.util.Procedure;
+import org.maxicp.util.exception.IntOverFlowException;
 
 /**
- * A view on a variable of type {@code -x}
+ * A view on a variable of type {@code x+o}
  */
-public class IntVarViewOpposite implements IntVar {
+public class CPIntVarViewOffset implements CPIntVar {
 
-    private final IntVar x;
+    private final CPIntVar x;
+    private final int o;
 
-    public IntVarViewOpposite(IntVar x) {
+    public CPIntVarViewOffset(CPIntVar x, int offset) { // y = x + o
+        if (0L + x.min() + offset <= (long) Integer.MIN_VALUE)
+            throw new IntOverFlowException("consider applying a smaller offset as the min domain on this view is <= Integer.MIN _VALUE");
+        if (0L + x.max() + offset >= (long) Integer.MAX_VALUE)
+            throw new IntOverFlowException("consider applying a smaller offset as the max domain on this view is >= Integer.MAX _VALUE");
         this.x = x;
+        this.o = offset;
+
     }
 
     @Override
@@ -66,12 +74,12 @@ public class IntVarViewOpposite implements IntVar {
 
     @Override
     public int min() {
-        return -x.max();
+        return x.min() + o;
     }
 
     @Override
     public int max() {
-        return -x.min();
+        return x.max() + o;
     }
 
     @Override
@@ -83,7 +91,7 @@ public class IntVarViewOpposite implements IntVar {
     public int fillArray(int[] dest) {
         int s = x.fillArray(dest);
         for (int i = 0; i < s; i++) {
-            dest[i] = -dest[i];
+            dest[i] += o;
         }
         return s;
     }
@@ -95,27 +103,27 @@ public class IntVarViewOpposite implements IntVar {
 
     @Override
     public boolean contains(int v) {
-        return x.contains(-v);
+        return x.contains(v - o);
     }
 
     @Override
     public void remove(int v) {
-        x.remove(-v);
+        x.remove(v - o);
     }
 
     @Override
     public void assign(int v) {
-        x.assign(-v);
+        x.assign(v - o);
     }
 
     @Override
     public void removeBelow(int v) {
-        x.removeAbove(-v);
+        x.removeBelow(v - o);
     }
 
     @Override
     public void removeAbove(int v) {
-        x.removeBelow(-v);
+        x.removeAbove(v - o);
     }
 
     @Override
@@ -131,5 +139,6 @@ public class IntVarViewOpposite implements IntVar {
         if (size() > 0) b.append(max());
         b.append("}");
         return b.toString();
+
     }
 }

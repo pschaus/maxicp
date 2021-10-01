@@ -16,17 +16,17 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 /**
  * Less or equal constraint between two variables
  */
 public class LessOrEqual extends AbstractCPConstraint { // x <= y
 
-    private final IntVar x;
-    private final IntVar y;
+    private final CPIntVar x;
+    private final CPIntVar y;
 
-    public LessOrEqual(IntVar x, IntVar y) {
+    public LessOrEqual(CPIntVar x, CPIntVar y) {
         super(x.getSolver());
         this.x = x;
         this.y = y;

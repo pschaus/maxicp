@@ -17,8 +17,8 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -39,9 +39,9 @@ public class IsLessOrEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
 
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar b = Factory.makeBoolVar(cp);
 
             cp.post(new IsLessOrEqual(b, x, 3));
 
@@ -69,9 +69,9 @@ public class IsLessOrEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
 
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar b = Factory.makeBoolVar(cp);
 
             cp.post(new IsLessOrEqual(b, x, -2));
 
@@ -97,15 +97,15 @@ public class IsLessOrEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
             cp.post(Factory.equal(x, -2));
             {
-                BoolVar b = Factory.makeBoolVar(cp);
+                CPBoolVar b = Factory.makeBoolVar(cp);
                 cp.post(new IsLessOrEqual(b, x, -2));
                 assertTrue(b.isTrue());
             }
             {
-                BoolVar b = Factory.makeBoolVar(cp);
+                CPBoolVar b = Factory.makeBoolVar(cp);
                 cp.post(new IsLessOrEqual(b, x, -3));
                 assertTrue(b.isFalse());
             }
@@ -122,8 +122,8 @@ public class IsLessOrEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -4, 7);
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
+            CPBoolVar b = Factory.makeBoolVar(cp);
 
             cp.getStateManager().saveState();
             cp.post(Factory.equal(b, 1));
@@ -150,8 +150,8 @@ public class IsLessOrEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -5, 10);
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPIntVar x = Factory.makeIntVar(cp, -5, 10);
+            CPBoolVar b = Factory.makeBoolVar(cp);
 
             cp.getStateManager().saveState();
             cp.post(new IsLessOrEqual(b, x, -6));
@@ -177,8 +177,8 @@ public class IsLessOrEqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -5, -3);
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPIntVar x = Factory.makeIntVar(cp, -5, -3);
+            CPBoolVar b = Factory.makeBoolVar(cp);
 
             cp.getStateManager().saveState();
             cp.post(new IsLessOrEqual(b, x, -3));

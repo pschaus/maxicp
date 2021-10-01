@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.BoolVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.state.StateInt;
 
 
@@ -25,8 +25,8 @@ import org.maxicp.state.StateInt;
  */
 public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
 
-    private final BoolVar b;
-    private final BoolVar[] x;
+    private final CPBoolVar b;
+    private final CPBoolVar[] x;
     private final int n;
 
     private int[] unBounds;
@@ -42,7 +42,7 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
      * @param b the boolean that is true if at least one variable in x is true
      * @param x an non empty array of variables
      */
-    public IsOr(BoolVar b, BoolVar[] x) {
+    public IsOr(CPBoolVar b, CPBoolVar[] x) {
         super(b.getSolver());
         this.b = b;
         this.x = x;
@@ -59,7 +59,7 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
     @Override
     public void post() {
         b.propagateOnBind(this);
-        for (BoolVar xi : x) {
+        for (CPBoolVar xi : x) {
             xi.propagateOnBind(this);
         }
     }
@@ -73,7 +73,7 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
             setActive(false);
             getSolver().post(or, false);
         } else if (b.isFalse()) {
-            for (BoolVar xi : x) {
+            for (CPBoolVar xi : x) {
                 xi.assign(false);
             }
             setActive(false);
@@ -81,7 +81,7 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
             int nU = nUnBounds.value();
             for (int i = nU - 1; i >= 0; i--) {
                 int idx = unBounds[i];
-                BoolVar y = x[idx];
+                CPBoolVar y = x[idx];
                 if (y.isBound()) {
                     if (y.isTrue()) {
                         b.assign(true);

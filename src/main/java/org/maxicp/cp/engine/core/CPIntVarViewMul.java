@@ -24,12 +24,12 @@ import org.maxicp.util.exception.IntOverFlowException;
 /**
  * A view on a variable of type {@code a*x}
  */
-public class IntVarViewMul implements IntVar {
+public class CPIntVarViewMul implements CPIntVar {
 
     private final int a;
-    private final IntVar x;
+    private final CPIntVar x;
 
-    public IntVarViewMul(IntVar x, int a) {
+    public CPIntVarViewMul(CPIntVar x, int a) {
         if ((1L + x.min()) * a <= (long) Integer.MIN_VALUE)
             throw new IntOverFlowException("consider applying a smaller mul cte as the min domain on this view is <= Integer.MIN _VALUE");
         if ((1L + x.max()) * a >= (long) Integer.MAX_VALUE)

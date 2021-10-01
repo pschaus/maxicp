@@ -17,7 +17,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.state.StateInt;
 
 import static org.maxicp.Factory.allDifferent;
@@ -27,7 +27,7 @@ import static org.maxicp.Factory.allDifferent;
  */
 public class Circuit extends AbstractCPConstraint {
 
-    private final IntVar[] x;
+    private final CPIntVar[] x;
     private final StateInt[] dest;
     private final StateInt[] orig;
     private final StateInt[] lengthToDest;
@@ -39,7 +39,7 @@ public class Circuit extends AbstractCPConstraint {
      * @param x the variables representing the successor array that is
      *          {@code x[i]} is the city visited after city i
      */
-    public Circuit(IntVar[] x) {
+    public Circuit(CPIntVar[] x) {
         super(x[0].getSolver());
         assert (x.length > 0);
         this.x = x;

@@ -77,7 +77,7 @@ public interface CPSolver {
      * @return an objective that can minimize x
      * @see DFSearch#optimize(Objective)
      */
-    Objective minimize(IntVar x);
+    Objective minimize(CPIntVar x);
 
     /**
      * Creates a maximization objective on the given variable.
@@ -86,7 +86,7 @@ public interface CPSolver {
      * @return an objective that can maximize x
      * @see DFSearch#optimize(Objective)
      */
-    Objective maximize(IntVar x);
+    Objective maximize(CPIntVar x);
 
     /**
      * Forces the boolean variable to be true and then
@@ -94,6 +94,6 @@ public interface CPSolver {
      *
      * @param b the variable that must be set to true
      */
-    void post(BoolVar b);
+    void post(CPBoolVar b);
 }
 

@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.core;
 
 /**
  * Interface for integer domain implementation.
- * A domain is encapsulated in an {@link IntVar} implementation.
+ * A domain is encapsulated in an {@link CPIntVar} implementation.
  * A domain is like a set of integers.
  */
 public interface IntDomain {

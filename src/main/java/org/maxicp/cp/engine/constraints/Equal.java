@@ -2,10 +2,10 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 public class Equal extends AbstractCPConstraint {
-    private final IntVar x, y;
+    private final CPIntVar x, y;
 
 
     /**
@@ -14,9 +14,9 @@ public class Equal extends AbstractCPConstraint {
      *
      * @param x the left member
      * @param y the right memer
-     * @see Factory#equal(IntVar, IntVar)
+     * @see Factory#equal(CPIntVar, CPIntVar)
      */
-    public Equal(IntVar x, IntVar y) { // x == y
+    public Equal(CPIntVar x, CPIntVar y) { // x == y
         super(x.getSolver());
         this.x = x;
         this.y = y;
@@ -46,7 +46,7 @@ public class Equal extends AbstractCPConstraint {
 
     // dom consistent filtering in the direction from -> to
     // every value of to has a support in from
-    private void pruneEquals(IntVar from, IntVar to, int[] domVal) {
+    private void pruneEquals(CPIntVar from, CPIntVar to, int[] domVal) {
         // dump the domain of to into domVal
         int nVal = to.fillArray(domVal);
         for (int k = 0; k < nVal; k++)

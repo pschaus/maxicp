@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.state.StateSparseBitSet;
 import org.maxicp.util.exception.InconsistencyException;
 
@@ -31,7 +31,7 @@ import static org.maxicp.Factory.minus;
  */
 
 public class TableCTNew extends AbstractCPConstraint {
-    private IntVar[] x; //variables
+    private CPIntVar[] x; //variables
     private int[][] table; //the table
 
     private StateSparseBitSet validTuples;
@@ -55,9 +55,9 @@ public class TableCTNew extends AbstractCPConstraint {
      * @param table the possible set of solutions for x.
      *              The second dimension must be of the same size as the array x.
      */
-    public TableCTNew(IntVar[] x, int[][] table) {
+    public TableCTNew(CPIntVar[] x, int[][] table) {
         super(x[0].getSolver());
-        this.x = new IntVar[x.length];
+        this.x = new CPIntVar[x.length];
         this.table = table;
 
         validTuples = new StateSparseBitSet(x[0].getSolver().getStateManager(),table.length);
@@ -84,7 +84,7 @@ public class TableCTNew extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        for (IntVar var : x)
+        for (CPIntVar var : x)
             var.propagateOnDomainChange(this);
         propagate();
     }

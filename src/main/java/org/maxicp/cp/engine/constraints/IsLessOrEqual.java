@@ -17,16 +17,16 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 /**
  * Reified less or equal constraint.
  */
 public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
 
-    private final BoolVar b;
-    private final IntVar x;
+    private final CPBoolVar b;
+    private final CPIntVar x;
     private final int v;
 
     /**
@@ -37,9 +37,9 @@ public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
      *         x takes a value less or equal to v
      * @param x the variable
      * @param v the constant
-     * @see Factory#isLessOrEqual(IntVar, int)
+     * @see Factory#isLessOrEqual(CPIntVar, int)
      */
-    public IsLessOrEqual(BoolVar b, IntVar x, int v) {
+    public IsLessOrEqual(CPBoolVar b, CPIntVar x, int v) {
         super(b.getSolver());
         this.b = b;
         this.x = x;

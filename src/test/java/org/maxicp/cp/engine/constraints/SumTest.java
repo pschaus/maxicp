@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
 public class SumTest extends CPSolverTest {
 
 
-    private static IntVar makeIVar(CPSolver cp, Integer... values) {
+    private static CPIntVar makeIVar(CPSolver cp, Integer... values) {
         return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
@@ -47,8 +47,8 @@ public class SumTest extends CPSolverTest {
     public void sum1() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar y = Factory.makeIntVar(cp, -100, 100);
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, 0, 5), Factory.makeIntVar(cp, 1, 5), Factory.makeIntVar(cp, 0, 5)};
+            CPIntVar y = Factory.makeIntVar(cp, -100, 100);
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, 0, 5), Factory.makeIntVar(cp, 1, 5), Factory.makeIntVar(cp, 0, 5)};
             cp.post(new Sum(x, y));
 
             assertEquals(1, y.min());
@@ -66,8 +66,8 @@ public class SumTest extends CPSolverTest {
     public void sum2() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -5, 5), Factory.makeIntVar(cp, 1, 2), Factory.makeIntVar(cp, 0, 1)};
-            IntVar y = Factory.makeIntVar(cp, 0, 100);
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -5, 5), Factory.makeIntVar(cp, 1, 2), Factory.makeIntVar(cp, 0, 1)};
+            CPIntVar y = Factory.makeIntVar(cp, 0, 100);
             cp.post(new Sum(x, y));
 
             assertEquals(-3, x[0].min());
@@ -87,8 +87,8 @@ public class SumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -5, 5), Factory.makeIntVar(cp, 1, 2), Factory.makeIntVar(cp, 0, 1)};
-            IntVar y = Factory.makeIntVar(cp, 5, 5);
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -5, 5), Factory.makeIntVar(cp, 1, 2), Factory.makeIntVar(cp, 0, 1)};
+            CPIntVar y = Factory.makeIntVar(cp, 5, 5);
             cp.post(new Sum(x, y));
 
             x[0].removeBelow(1);
@@ -117,7 +117,7 @@ public class SumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, 0, 5), Factory.makeIntVar(cp, 0, 2), Factory.makeIntVar(cp, 0, 1)};
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, 0, 5), Factory.makeIntVar(cp, 0, 2), Factory.makeIntVar(cp, 0, 1)};
             cp.post(new Sum(x, 0));
 
             assertEquals(0, x[0].max());
@@ -137,7 +137,7 @@ public class SumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -3, 0)};
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -3, 0)};
             cp.post(new Sum(x, 0));
 
             assertEquals(0, x[0].min());
@@ -157,7 +157,7 @@ public class SumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -3, 3)};
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -3, 3)};
             cp.post(new Sum(x, 0));
             assertEquals(-3, x[0].min());
             assertEquals(-3, x[1].min());
@@ -182,7 +182,7 @@ public class SumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -3, 3)};
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -5, 0), Factory.makeIntVar(cp, -3, 3)};
             cp.post(new Sum(x, 0));
             assertEquals(-3, x[0].min());
             assertEquals(-3, x[1].min());
@@ -222,7 +222,7 @@ public class SumTest extends CPSolverTest {
             // {1,2,-3}  6
 
 
-            IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -3, 3), Factory.makeIntVar(cp, -3, 3), Factory.makeIntVar(cp, -3, 3)};
+            CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -3, 3), Factory.makeIntVar(cp, -3, 3), Factory.makeIntVar(cp, -3, 3)};
             cp.post(new Sum(x, 0));
 
             DFSearch search = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
@@ -243,7 +243,7 @@ public class SumTest extends CPSolverTest {
     public void sum9() {
         CPSolver cp = solverFactory.get();
 
-        IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -9, -9)};
+        CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -9, -9)};
         boolean failed = false;
         try {
             cp.post(new Sum(x));
@@ -258,7 +258,7 @@ public class SumTest extends CPSolverTest {
     public void sum10() {
         CPSolver cp = solverFactory.get();
 
-        IntVar[] x = new IntVar[]{Factory.makeIntVar(cp, -9, -4)};
+        CPIntVar[] x = new CPIntVar[]{Factory.makeIntVar(cp, -9, -4)};
         boolean failed = false;
         try {
             cp.post(new Sum(x));
@@ -275,12 +275,12 @@ public class SumTest extends CPSolverTest {
         try {
             CPSolver cp = solverFactory.get();
 
-            IntVar x = makeIVar(cp, -2147483645, -2147483639, -2147483637);
-            IntVar y = makeIVar(cp, -2147483645, -2147483638);
+            CPIntVar x = makeIVar(cp, -2147483645, -2147483639, -2147483637);
+            CPIntVar y = makeIVar(cp, -2147483645, -2147483638);
 
             boolean failed = false;
             try {
-                cp.post(Factory.sum(new IntVar[]{x}, y));
+                cp.post(Factory.sum(new CPIntVar[]{x}, y));
             } catch (InconsistencyException e) {
                 failed = true;
             }
@@ -298,12 +298,12 @@ public class SumTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar x = makeIVar(cp, -45, -39, -37);
-            IntVar y = makeIVar(cp, -45, -3);
+            CPIntVar x = makeIVar(cp, -45, -39, -37);
+            CPIntVar y = makeIVar(cp, -45, -3);
 
             boolean failed = false;
             try {
-                cp.post(Factory.sum(new IntVar[]{x}, y));
+                cp.post(Factory.sum(new CPIntVar[]{x}, y));
             } catch (InconsistencyException e) {
                 failed = true;
             }
@@ -321,11 +321,11 @@ public class SumTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            IntVar x0 = makeIVar(cp, -463872433, -463872431, -463872430, -463872429);
-            IntVar x1 = makeIVar(cp, -463872438, -463872437, -463872430);
-            IntVar x2 = makeIVar(cp, -463872432, -463872429);
-            IntVar x3 = makeIVar(cp, -463872435, -463872434, -463872432, -463872431, -463872430, -463872429);
-            IntVar x4 = makeIVar(cp, -463872437, -463872436, -463872435, -463872432, -463872431, -463872430, -463872429);
+            CPIntVar x0 = makeIVar(cp, -463872433, -463872431, -463872430, -463872429);
+            CPIntVar x1 = makeIVar(cp, -463872438, -463872437, -463872430);
+            CPIntVar x2 = makeIVar(cp, -463872432, -463872429);
+            CPIntVar x3 = makeIVar(cp, -463872435, -463872434, -463872432, -463872431, -463872430, -463872429);
+            CPIntVar x4 = makeIVar(cp, -463872437, -463872436, -463872435, -463872432, -463872431, -463872430, -463872429);
 
 
             cp.post(Factory.lessOrEqual(Factory.sum(x0, x1, x2, x3, x4), 0));

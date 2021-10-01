@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -38,9 +38,9 @@ public class Element2DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -2, 40);
-            IntVar y = Factory.makeIntVar(cp, -3, 10);
-            IntVar z = Factory.makeIntVar(cp, 2, 40);
+            CPIntVar x = Factory.makeIntVar(cp, -2, 40);
+            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
+            CPIntVar z = Factory.makeIntVar(cp, 2, 40);
 
             int[][] T = new int[][]{
                     {9, 8, 7, 5, 6},
@@ -93,9 +93,9 @@ public class Element2DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -2, 40);
-            IntVar y = Factory.makeIntVar(cp, -3, 10);
-            IntVar z = Factory.makeIntVar(cp, -20, 40);
+            CPIntVar x = Factory.makeIntVar(cp, -2, 40);
+            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
+            CPIntVar z = Factory.makeIntVar(cp, -20, 40);
 
             int[][] T = new int[][]{
                     {9, 8, 7, 5, 6},

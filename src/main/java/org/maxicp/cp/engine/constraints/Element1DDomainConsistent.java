@@ -17,7 +17,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 
 /**
@@ -28,8 +28,8 @@ import org.maxicp.cp.engine.core.IntVar;
 public class Element1DDomainConsistent extends AbstractCPConstraint {
 
     private final int[] t;
-    private final IntVar y;
-    private final IntVar z;
+    private final CPIntVar y;
+    private final CPIntVar z;
 
     /**
      * Creates an element constraint {@code array[y] = z}
@@ -38,7 +38,7 @@ public class Element1DDomainConsistent extends AbstractCPConstraint {
      * @param y the index variable
      * @param z the result variable
      */
-    public Element1DDomainConsistent(int[] array, IntVar y, IntVar z) {
+    public Element1DDomainConsistent(int[] array, CPIntVar y, CPIntVar z) {
         super(y.getSolver());
         this.t = array;
         this.y = y;
@@ -54,7 +54,7 @@ public class Element1DDomainConsistent extends AbstractCPConstraint {
             table[i][0] = i;
             table[i][1] = t[i];
         }
-        getSolver().post(new TableCT(new IntVar[]{y,z},table));
+        getSolver().post(new TableCT(new CPIntVar[]{y,z},table));
         // END STRIP
     }
 }

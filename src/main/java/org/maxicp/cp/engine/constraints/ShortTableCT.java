@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 import java.util.Arrays;
 import java.util.BitSet;
@@ -28,7 +28,7 @@ import static org.maxicp.Factory.minus;
  */
 public class ShortTableCT extends AbstractCPConstraint {
 
-    private final IntVar[] x; //variables
+    private final CPIntVar[] x; //variables
     private final int[][] table; //the table
     //supports[i][v] is the set of tuples supported by x[i]=v
     private BitSet[][] supports;
@@ -43,9 +43,9 @@ public class ShortTableCT extends AbstractCPConstraint {
      * @param table the array of valid solutions (second dimension must be of same size as the array x)
      * @param star  the {@code *} symbol representing "any" value in the table
      */
-    public ShortTableCT(IntVar[] x, int[][] table, int star) {
+    public ShortTableCT(CPIntVar[] x, int[][] table, int star) {
         super(x[0].getSolver());
-        this.x = new IntVar[x.length];
+        this.x = new CPIntVar[x.length];
         this.table = table;
         dom = new int[Arrays.stream(x).map(var -> var.size()).max(Integer::compare).get()];
 
@@ -78,7 +78,7 @@ public class ShortTableCT extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        for (IntVar var : x)
+        for (CPIntVar var : x)
             var.propagateOnDomainChange(this);
         propagate();
     }

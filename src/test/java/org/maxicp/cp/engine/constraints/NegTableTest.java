@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -65,7 +65,7 @@ public class NegTableTest extends CPSolverTest {
         return tableList.toArray(new int[0][]);
     }
 
-    public int[][] toPositive(IntVar x, IntVar y, IntVar z, int[][] negTable) {
+    public int[][] toPositive(CPIntVar x, CPIntVar y, CPIntVar z, int[][] negTable) {
         ArrayList<int[]> posTableList = new ArrayList<>();
         for (int i = x.min(); i <= x.max(); i++) {
             if (x.contains(i)) {
@@ -95,7 +95,7 @@ public class NegTableTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                IntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+                CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
                 int[][] table = new int[][]{
                         {0, 0, 0},
                         {1, 0, 0},
@@ -123,7 +123,7 @@ public class NegTableTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                IntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+                CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
                 int[][] table = new int[][]{{1, 1, 1}};
                 cp.post(new NegTableCT(x, table));
                 DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
@@ -143,7 +143,7 @@ public class NegTableTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                IntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+                CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
                 int[][] table = new int[][]{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
                 cp.post(new NegTableCT(x, table));
                 DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
@@ -198,11 +198,11 @@ public class NegTableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
-            cp.post(new TableCT(new IntVar[]{x[0], x[1], x[2]}, toPositive(x[0], x[1], x[2], t1)));
-            cp.post(new TableCT(new IntVar[]{x[2], x[3], x[4]}, toPositive(x[2], x[3], x[4], t2)));
-            cp.post(new TableCT(new IntVar[]{x[0], x[2], x[4]}, toPositive(x[0], x[2], x[4], t3)));
+            cp.post(new TableCT(new CPIntVar[]{x[0], x[1], x[2]}, toPositive(x[0], x[1], x[2], t1)));
+            cp.post(new TableCT(new CPIntVar[]{x[2], x[3], x[4]}, toPositive(x[2], x[3], x[4], t2)));
+            cp.post(new TableCT(new CPIntVar[]{x[0], x[2], x[4]}, toPositive(x[0], x[2], x[4], t3)));
             statsDecomp = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsDecomp = null;
@@ -210,11 +210,11 @@ public class NegTableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
-            cp.post(new NegTableCT(new IntVar[]{x[0], x[1], x[2]}, t1));
-            cp.post(new NegTableCT(new IntVar[]{x[2], x[3], x[4]}, t2));
-            cp.post(new NegTableCT(new IntVar[]{x[0], x[2], x[4]}, t3));
+            cp.post(new NegTableCT(new CPIntVar[]{x[0], x[1], x[2]}, t1));
+            cp.post(new NegTableCT(new CPIntVar[]{x[2], x[3], x[4]}, t2));
+            cp.post(new NegTableCT(new CPIntVar[]{x[0], x[2], x[4]}, t3));
             statsAlgo = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsAlgo = null;

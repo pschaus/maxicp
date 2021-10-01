@@ -31,7 +31,7 @@ public class MiniCPTest extends CPSolverTest {
     @Test
     public void testSolveSubjectTo() {
         CPSolver cp = Factory.makeSolver();
-        IntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+        CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
 
         DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
 
@@ -52,7 +52,7 @@ public class MiniCPTest extends CPSolverTest {
     @Test
     public void testDFS() {
         CPSolver cp = solverFactory.get();
-        IntVar[] values = Factory.makeIntVarArray(cp, 3, 2);
+        CPIntVar[] values = Factory.makeIntVarArray(cp, 3, 2);
 
         DFSearch dfs = Factory.makeDfs(cp, () -> {
             int sel = -1;

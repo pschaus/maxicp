@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -58,17 +58,17 @@ public class QAPPaper {
         }
         // Model creation and resolution
         CPSolver cp = makeSolver();
-        IntVar[] x = makeIntVarArray(cp, n, n);
+        CPIntVar[] x = makeIntVarArray(cp, n, n);
 
         cp.post(allDifferent(x));
-        IntVar[] weightedDist = new IntVar[n * n];
+        CPIntVar[] weightedDist = new CPIntVar[n * n];
         int k = 0;
         for (int i = 0; i < n; i++) 
             for (int j = 0; j < n; j++) {
-                IntVar dij = element(d, x[i], x[j]);
+                CPIntVar dij = element(d, x[i], x[j]);
                 weightedDist[k++] = mul(dij,w[i][j]);
             }
-        IntVar totCost  = sum(weightedDist);
+        CPIntVar totCost  = sum(weightedDist);
         Objective obj = cp.minimize(totCost);
 
         DFSearch dfs = makeDfs(cp,() -> {
@@ -81,7 +81,7 @@ public class QAPPaper {
                 if (idx == -1)
                     return new Procedure[0];
                 else {
-                    IntVar xi = x[idx];
+                    CPIntVar xi = x[idx];
                     int v = xi.min();
                     Procedure left = () -> cp.post(Factory.equal(xi, v));
                     Procedure right = () -> cp.post(Factory.notEqual(xi, v));

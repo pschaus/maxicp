@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -41,7 +41,7 @@ public class AllDifferentDCTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
         try {
             cp.post(new AllDifferentDC(x));
@@ -64,7 +64,7 @@ public class AllDifferentDCTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
         try {
             cp.post(new AllDifferentDC(x));
@@ -80,7 +80,7 @@ public class AllDifferentDCTest extends CPSolverTest {
     }
 
 
-    private static IntVar makeIVar(CPSolver cp, Integer... values) {
+    private static CPIntVar makeIVar(CPSolver cp, Integer... values) {
         return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
@@ -89,7 +89,7 @@ public class AllDifferentDCTest extends CPSolverTest {
     public void allDifferentTest3() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{
+            CPIntVar[] x = new CPIntVar[]{
                     makeIVar(cp, 1, 2),
                     makeIVar(cp, 1, 2),
                     makeIVar(cp, 1, 2, 3, 4)};
@@ -112,7 +112,7 @@ public class AllDifferentDCTest extends CPSolverTest {
     public void allDifferentTest5() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{
+            CPIntVar[] x = new CPIntVar[]{
                     makeIVar(cp, 1, 2, 3, 4, 5),
                     makeIVar(cp, 2),
                     makeIVar(cp, 1, 2, 3, 4, 5),
@@ -144,7 +144,7 @@ public class AllDifferentDCTest extends CPSolverTest {
     public void allDifferentTest6() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{
+            CPIntVar[] x = new CPIntVar[]{
                     makeIVar(cp, 1, 2, 3, 4, 5),
                     makeIVar(cp, 2, 7),
                     makeIVar(cp, 1, 2, 3, 4, 5),
@@ -159,7 +159,7 @@ public class AllDifferentDCTest extends CPSolverTest {
             cp.post(new AllDifferentDC(x));
 
             DFSearch dfs = Factory.makeDfs(cp, () -> {
-                IntVar xs = BranchingScheme.selectMin(x,
+                CPIntVar xs = BranchingScheme.selectMin(x,
                         xi -> xi.size() > 1,
                         xi -> -xi.size());
                 if (xs == null)
@@ -194,7 +194,7 @@ public class AllDifferentDCTest extends CPSolverTest {
     public void allDifferentTest7() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{
+            CPIntVar[] x = new CPIntVar[]{
                     makeIVar(cp, 3, 4),
                     makeIVar(cp, 1),
                     makeIVar(cp, 3, 4),
@@ -226,7 +226,7 @@ public class AllDifferentDCTest extends CPSolverTest {
     public void allDifferentTest8() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = new IntVar[]{
+            CPIntVar[] x = new CPIntVar[]{
                     makeIVar(cp, 0,2,3,5),
                     makeIVar(cp, 4),
                     makeIVar(cp, -1,1),

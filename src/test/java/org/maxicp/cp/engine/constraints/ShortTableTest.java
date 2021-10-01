@@ -18,7 +18,7 @@ package org.maxicp.cp.engine.constraints;
 import com.github.guillaumederval.javagrading.Grade;
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -52,7 +52,7 @@ public class ShortTableTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 2, 1);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 2, 1);
             int[][] table = new int[][]{{0, 0}};
             cp.post(new ShortTableCT(x, table, -1));
 
@@ -69,7 +69,7 @@ public class ShortTableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 3, 12);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 12);
             int[][] table = new int[][]{{0, 0, 2},
                     {3, 5, 7},
                     {6, 9, 10},
@@ -122,11 +122,11 @@ public class ShortTableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
-            cp.post(new ShortTableDecomp(new IntVar[]{x[0], x[1], x[2]}, t1, star));
-            cp.post(new ShortTableDecomp(new IntVar[]{x[2], x[3], x[4]}, t2, star));
-            cp.post(new ShortTableDecomp(new IntVar[]{x[0], x[2], x[4]}, t3, star));
+            cp.post(new ShortTableDecomp(new CPIntVar[]{x[0], x[1], x[2]}, t1, star));
+            cp.post(new ShortTableDecomp(new CPIntVar[]{x[2], x[3], x[4]}, t2, star));
+            cp.post(new ShortTableDecomp(new CPIntVar[]{x[0], x[2], x[4]}, t3, star));
             statsDecomp = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsDecomp = null;
@@ -134,11 +134,11 @@ public class ShortTableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
-            cp.post(new ShortTableCT(new IntVar[]{x[0], x[1], x[2]}, t1, star));
-            cp.post(new ShortTableCT(new IntVar[]{x[2], x[3], x[4]}, t2, star));
-            cp.post(new ShortTableCT(new IntVar[]{x[0], x[2], x[4]}, t3, star));
+            cp.post(new ShortTableCT(new CPIntVar[]{x[0], x[1], x[2]}, t1, star));
+            cp.post(new ShortTableCT(new CPIntVar[]{x[2], x[3], x[4]}, t2, star));
+            cp.post(new ShortTableCT(new CPIntVar[]{x[0], x[2], x[4]}, t3, star));
             statsAlgo = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsAlgo = null;
@@ -169,11 +169,11 @@ public class ShortTableTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            final IntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0)));
-            final IntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-1, 2)));
+            final CPIntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0)));
+            final CPIntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-1, 2)));
 
 
-            cp.post(new ShortTableCT(new IntVar[]{x0, x1}, table, star));
+            cp.post(new ShortTableCT(new CPIntVar[]{x0, x1}, table, star));
 
             assertEquals(1, x0.size());
             assertEquals(2, x1.size());
@@ -193,10 +193,10 @@ public class ShortTableTest extends CPSolverTest {
             final int[][] table = {{0, 0}};
 
             CPSolver cp = solverFactory.get();
-            final IntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-5)));
-            final IntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-5)));
+            final CPIntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-5)));
+            final CPIntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-5)));
 
-            cp.post(new ShortTableCT(new IntVar[]{x0, x1}, table, star));
+            cp.post(new ShortTableCT(new CPIntVar[]{x0, x1}, table, star));
 
         } catch (NotImplementedException e) {
             NotImplementedExceptionAssume.fail(e);
@@ -215,13 +215,13 @@ public class ShortTableTest extends CPSolverTest {
             };
 
             CPSolver cp = solverFactory.get();
-            IntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0)));
-            IntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-1, 2)));
+            CPIntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0)));
+            CPIntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-1, 2)));
 
-            IntVar y = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0, 1)));
-            IntVar z = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(3)));
+            CPIntVar y = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0, 1)));
+            CPIntVar z = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(3)));
 
-            IntVar[] data = new IntVar[]{x0, x1};
+            CPIntVar[] data = new CPIntVar[]{x0, x1};
 
             cp.post(new ShortTableCT(data, table, star));
             assertEquals(-1, data[1].min());

@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.state.State;
 import org.maxicp.state.StateInt;
 import org.maxicp.util.exception.InconsistencyException;
@@ -33,7 +33,7 @@ public class Sum extends AbstractCPConstraint {
     private int[] free;
     private StateInt nFrees;
     private State<Long> sumFixed;
-    private IntVar[] x;
+    private CPIntVar[] x;
     private int[] min, max;
     private int n;
 
@@ -45,7 +45,7 @@ public class Sum extends AbstractCPConstraint {
      * @param x the non empty left hand side of the sum
      * @param y the right hand side of the sum
      */
-    public Sum(IntVar[] x, IntVar y) {
+    public Sum(CPIntVar[] x, CPIntVar y) {
         this(Arrays.copyOf(x, x.length + 1));
         this.x[x.length] = Factory.minus(y);
     }
@@ -58,7 +58,7 @@ public class Sum extends AbstractCPConstraint {
      * @param x the non empty left hand side of the sum
      * @param y the right hand side of the sum
      */
-    public Sum(IntVar[] x, int y) {
+    public Sum(CPIntVar[] x, int y) {
         this(Arrays.copyOf(x, x.length + 1));
         this.x[x.length] = Factory.makeIntVar(getSolver(), -y, -y);
     }
@@ -70,7 +70,7 @@ public class Sum extends AbstractCPConstraint {
      *
      * @param x the non empty set of variables that should sum to zero
      */
-    public Sum(IntVar[] x) {
+    public Sum(CPIntVar[] x) {
         super(x[0].getSolver());
         this.x = x;
         this.n = x.length;
@@ -83,7 +83,7 @@ public class Sum extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        for (IntVar var : x)
+        for (CPIntVar var : x)
             var.propagateOnBoundChange(this);
         propagate();
     }

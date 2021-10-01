@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 /**
  * Compute and Maintain a Maximum Matching
@@ -43,9 +43,9 @@ public class MaximumMatching {
 
     private int magic;
 
-    private IntVar[] x;
+    private CPIntVar[] x;
 
-    public MaximumMatching(IntVar... x) {
+    public MaximumMatching(CPIntVar... x) {
         this.x = x;
 
         // find setValue ranges

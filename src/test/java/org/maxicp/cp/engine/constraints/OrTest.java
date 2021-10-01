@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.BoolVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -38,10 +38,10 @@ public class OrTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             cp.post(new Or(x));
 
-            for (BoolVar xi : x) {
+            for (CPBoolVar xi : x) {
                 assertTrue(!xi.isBound());
             }
 
@@ -63,7 +63,7 @@ public class OrTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             cp.post(new Or(x));
 
 
@@ -71,7 +71,7 @@ public class OrTest extends CPSolverTest {
 
             dfs.onSolution(() -> {
                         int nTrue = 0;
-                        for (BoolVar xi : x) {
+                        for (CPBoolVar xi : x) {
                             if (xi.isTrue()) nTrue++;
                         }
                         assertTrue(nTrue > 0);
@@ -96,9 +96,9 @@ public class OrTest extends CPSolverTest {
     public void or3() {
         try {
             CPSolver cp = solverFactory.get();
-            BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             
-            for (BoolVar xi : x) {
+            for (CPBoolVar xi : x) {
                 xi.assign(false);
             }
             

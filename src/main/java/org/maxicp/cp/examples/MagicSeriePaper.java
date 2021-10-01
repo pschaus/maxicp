@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 
@@ -31,7 +31,7 @@ public class MagicSeriePaper {
     public static void main(String[] args) {
         int n = 8;
         CPSolver cp = Factory.makeSolver(false);
-        IntVar[] s = Factory.makeIntVarArray(cp, n, n);
+        CPIntVar[] s = Factory.makeIntVarArray(cp, n, n);
 
         for (int i = 0; i < n; i++) {
             final int fi = i;
@@ -50,7 +50,7 @@ public class MagicSeriePaper {
             if (idx == -1)
                 return new Procedure[0];
             else {
-                IntVar si = s[idx];
+                CPIntVar si = s[idx];
                 int v = si.min();
                 Procedure left = () -> cp.post(Factory.equal(si, v));
                 Procedure right = () -> cp.post(Factory.notEqual(si, v));

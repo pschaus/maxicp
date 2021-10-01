@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
@@ -34,8 +34,8 @@ public class AbsoluteTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -5, 5);
-            IntVar y = Factory.makeIntVar(cp, -10, 10);
+            CPIntVar x = Factory.makeIntVar(cp, -5, 5);
+            CPIntVar y = Factory.makeIntVar(cp, -10, 10);
 
             cp.post(new Absolute(x, y));
 
@@ -64,8 +64,8 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest1() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -5, 5);
-            IntVar y = Factory.makeIntVar(cp, -10, 10);
+            CPIntVar x = Factory.makeIntVar(cp, -5, 5);
+            CPIntVar y = Factory.makeIntVar(cp, -10, 10);
 
             cp.post(Factory.notEqual(x, 0));
             cp.post(Factory.notEqual(x, 5));
@@ -89,8 +89,8 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest2() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -5, 0);
-            IntVar y = Factory.makeIntVar(cp, 4, 4);
+            CPIntVar x = Factory.makeIntVar(cp, -5, 0);
+            CPIntVar y = Factory.makeIntVar(cp, 4, 4);
 
             cp.post(new Absolute(x, y));
 
@@ -110,8 +110,8 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest3() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, 7, 7);
-            IntVar y = Factory.makeIntVar(cp, -1000, 12);
+            CPIntVar x = Factory.makeIntVar(cp, 7, 7);
+            CPIntVar y = Factory.makeIntVar(cp, -1000, 12);
 
             cp.post(new Absolute(x, y));
 
@@ -131,8 +131,8 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest4() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar x = Factory.makeIntVar(cp, -5, 10);
-            IntVar y = Factory.makeIntVar(cp, -6, 7);
+            CPIntVar x = Factory.makeIntVar(cp, -5, 10);
+            CPIntVar y = Factory.makeIntVar(cp, -6, 7);
 
             cp.post(new Absolute(x, y));
 

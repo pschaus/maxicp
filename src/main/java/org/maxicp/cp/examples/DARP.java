@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.constraints.Circuit;
 import org.maxicp.cp.engine.constraints.Element1DVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -34,11 +34,11 @@ import static org.maxicp.Factory.*;
  */
 public class DARP {
 
-    public static IntVar elementVar(IntVar[] array, IntVar y) {
+    public static CPIntVar elementVar(CPIntVar[] array, CPIntVar y) {
         CPSolver cp = y.getSolver();
         int min = IntStream.range(0, array.length).map(i -> array[i].min()).min().getAsInt();
         int max = IntStream.range(0, array.length).map(i -> array[i].max()).max().getAsInt();
-        IntVar z = makeIntVar(cp, min,max);
+        CPIntVar z = makeIntVar(cp, min,max);
         cp.post(new Element1DVar(array, y, z));
         return z;
     }
@@ -99,10 +99,10 @@ public class DARP {
         CPSolver cp = makeSolver();
 
 
-        IntVar [] succ = makeIntVarArray(cp, 2*n+1,2*n+1);
-        IntVar [] pred = makeIntVarArray(cp, 2*n+1,2*n+1);
-        IntVar [] time = makeIntVarArray(cp, 2*n+1,500);
-        IntVar [] load = makeIntVarArray(cp, 2*n+1,vehicleCapacity+1);
+        CPIntVar[] succ = makeIntVarArray(cp, 2*n+1,2*n+1);
+        CPIntVar[] pred = makeIntVarArray(cp, 2*n+1,2*n+1);
+        CPIntVar[] time = makeIntVarArray(cp, 2*n+1,500);
+        CPIntVar[] load = makeIntVarArray(cp, 2*n+1,vehicleCapacity+1);
 
         // departure time from the depot =  0
         cp.post(equal(time[0],0));
@@ -110,9 +110,9 @@ public class DARP {
         // visit time update
         for (int i = 1; i < 2*n+1; i++) {
             // time[i] = time[pred[i]] + transition[pred[i]][i]
-            IntVar tPredi = elementVar(time,pred[i]);
-            IntVar posPredi = element(positionIdx,pred[i]);
-            IntVar tt = element(transitions[positionIdx[i]],posPredi);
+            CPIntVar tPredi = elementVar(time,pred[i]);
+            CPIntVar posPredi = element(positionIdx,pred[i]);
+            CPIntVar tt = element(transitions[positionIdx[i]],posPredi);
             cp.post(equal(time[i],sum(tPredi,tt)));
         }
 
@@ -123,14 +123,14 @@ public class DARP {
         // load update after a pickup (+1)
         for (int i = 1; i <= n; i++) {
             // load[i] = load[[pred[i]] + 1
-            IntVar loadPred = elementVar(load, pred[i]);
+            CPIntVar loadPred = elementVar(load, pred[i]);
             cp.post(equal(load[i], plus(loadPred, 1)));
         }
 
         // load update after a delivery (-1)
         for (int i = n+1; i <= 2*n; i++) {
             // load[i] = load[[pred[i]] - 1
-            IntVar loadPred = elementVar(load, pred[i]);
+            CPIntVar loadPred = elementVar(load, pred[i]);
             cp.post(equal(load[i], plus(loadPred, -1)));
         }
 

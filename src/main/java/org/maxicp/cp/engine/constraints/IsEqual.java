@@ -17,18 +17,18 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 
 /**
  * Reified equality constraint
- * @see Factory#isEqual(IntVar, int)
+ * @see Factory#isEqual(CPIntVar, int)
  */
 public class IsEqual extends AbstractCPConstraint { // b <=> x == v
 
-    private final BoolVar b;
-    private final IntVar x;
+    private final CPBoolVar b;
+    private final CPIntVar x;
     private final int v;
 
     /**
@@ -38,9 +38,9 @@ public class IsEqual extends AbstractCPConstraint { // b <=> x == v
      * @param v the constant
      * @param b the boolean variable that is set to true
      *          if and only if x takes the value v
-     * @see Factory#isEqual(IntVar, int)
+     * @see Factory#isEqual(CPIntVar, int)
      */
-    public IsEqual(BoolVar b, IntVar x, int v) {
+    public IsEqual(CPBoolVar b, CPIntVar x, int v) {
         super(b.getSolver());
         this.b = b;
         this.x = x;

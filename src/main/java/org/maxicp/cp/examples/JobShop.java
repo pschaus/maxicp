@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.constraints.Disjunctive;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -36,8 +36,8 @@ import java.util.StringTokenizer;
  */
 public class JobShop {
 
-    public static IntVar[] flatten(IntVar[][] x) {
-        return Arrays.stream(x).flatMap(Arrays::stream).toArray(IntVar[]::new);
+    public static CPIntVar[] flatten(CPIntVar[][] x) {
+        return Arrays.stream(x).flatMap(Arrays::stream).toArray(CPIntVar[]::new);
     }
 
     public static void main(String[] args) {
@@ -69,16 +69,16 @@ public class JobShop {
 
             CPSolver cp = Factory.makeSolver();
 
-            IntVar[][] start = new IntVar[nJobs][nMachines];
-            IntVar[][] end = new IntVar[nJobs][nMachines];
-            ArrayList<IntVar>[] startOnMachine = new ArrayList[nMachines];
+            CPIntVar[][] start = new CPIntVar[nJobs][nMachines];
+            CPIntVar[][] end = new CPIntVar[nJobs][nMachines];
+            ArrayList<CPIntVar>[] startOnMachine = new ArrayList[nMachines];
             ArrayList<Integer>[] durationsOnMachine = new ArrayList[nMachines];
             for (int m = 0; m < nMachines; m++) {
-                startOnMachine[m] = new ArrayList<IntVar>();
+                startOnMachine[m] = new ArrayList<CPIntVar>();
                 durationsOnMachine[m] = new ArrayList<Integer>();
             }
 
-            IntVar[] endLast = new IntVar[nJobs];
+            CPIntVar[] endLast = new CPIntVar[nJobs];
             for (int i = 0; i < nJobs; i++) {
 
                 for (int j = 0; j < nMachines; j++) {
@@ -104,11 +104,11 @@ public class JobShop {
                 for (int i = 0; i < nJobs; i++) {
                     durations[i] = durationsOnMachine[m].get(i);
                 }
-                IntVar[] starts = startOnMachine[m].toArray(new IntVar[]{});
+                CPIntVar[] starts = startOnMachine[m].toArray(new CPIntVar[]{});
                 cp.post(new Disjunctive(starts, durations));
             }
 
-            IntVar makespan = Factory.maximum(endLast);
+            CPIntVar makespan = Factory.maximum(endLast);
 
 
             Objective obj = cp.minimize(makespan);

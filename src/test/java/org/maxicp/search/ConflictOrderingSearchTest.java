@@ -18,7 +18,7 @@ package org.maxicp.search;
 import com.github.guillaumederval.javagrading.GradeClass;
 import com.github.guillaumederval.javagrading.GradingRunner;
 import org.maxicp.BranchingScheme;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.NotImplementedException;
@@ -39,23 +39,23 @@ public class ConflictOrderingSearchTest {
     public void testExample1() {
         try {
             CPSolver cp = Factory.makeSolver();
-            IntVar[] x = Factory.makeIntVarArray(cp, 8, 8);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 8, 8);
             for(int i = 4; i < 8; i++)
                 x[i].removeAbove(2);
 
             // apply alldifferent on the four last variables.
             // of course, this cannot work!
-            IntVar[] fourLast = Arrays.stream(x).skip(4).toArray(IntVar[]::new);
+            CPIntVar[] fourLast = Arrays.stream(x).skip(4).toArray(CPIntVar[]::new);
             cp.post(Factory.allDifferent(fourLast));
 
             DFSearch dfs = new DFSearch(cp.getStateManager(), BranchingScheme.conflictOrderingSearch(
                     () -> { //select first unbound variable in x
-                        for(IntVar z: x)
+                        for(CPIntVar z: x)
                             if(!z.isBound())
                                 return z;
                         return null;
                     },
-                    IntVar::min //select smallest value
+                    CPIntVar::min //select smallest value
             ));
 
             SearchStatistics stats = dfs.solve();

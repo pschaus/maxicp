@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.util.Procedure;
@@ -34,7 +34,7 @@ public class NQueensPaper {
     public static void main(String[] args) {
         int n = 8;
         CPSolver cp = Factory.makeSolver(false);
-        IntVar[] q = Factory.makeIntVarArray(cp, n, n);
+        CPIntVar[] q = Factory.makeIntVarArray(cp, n, n);
 
         for (int i = 0; i < n; i++)
             for (int j = i + 1; j < n; j++) {
@@ -53,7 +53,7 @@ public class NQueensPaper {
             if (idx == -1)
                 return new Procedure[0];
             else {
-                IntVar qi = q[idx];
+                CPIntVar qi = q[idx];
                 int v = qi.min();
                 Procedure left = () -> cp.post(Factory.equal(qi, v));
                 Procedure right = () -> cp.post(Factory.notEqual(qi, v));

@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -38,9 +38,9 @@ public class MaximizeTest {
             try {
 
                 CPSolver cp = Factory.makeSolver();
-                IntVar y = Factory.makeIntVar(cp, 10, 20);
+                CPIntVar y = Factory.makeIntVar(cp, 10, 20);
 
-                IntVar[] x = new IntVar[]{y};
+                CPIntVar[] x = new CPIntVar[]{y};
                 DFSearch dfs = Factory.makeDfs(cp, () -> y.isBound() ? BranchingScheme.EMPTY :
                         BranchingScheme.branch(() -> cp.post(Factory.equal(y, y.min())),
                                 () -> cp.post(Factory.notEqual(y, y.min()))));

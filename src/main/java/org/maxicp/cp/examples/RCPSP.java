@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.constraints.Cumulative;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -74,8 +74,8 @@ public class RCPSP {
 
         CPSolver cp = makeSolver();
 
-        IntVar[] start = makeIntVarArray(cp, nActivities, horizon);
-        IntVar[] end = new IntVar[nActivities];
+        CPIntVar[] start = makeIntVarArray(cp, nActivities, horizon);
+        CPIntVar[] end = new CPIntVar[nActivities];
 
 
         for (int i = 0; i < nActivities; i++) {
@@ -106,7 +106,7 @@ public class RCPSP {
             }
         }
 
-        IntVar makespan = maximum(end);
+        CPIntVar makespan = maximum(end);
 
         Objective obj = cp.minimize(makespan);
 

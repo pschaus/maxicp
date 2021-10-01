@@ -20,7 +20,7 @@ import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -44,8 +44,8 @@ public class Element1DDCTest extends CPSolverTest {
             CPSolver cp = solverFactory.get();
 
             Random rand = new Random(678);
-            IntVar y = Factory.makeIntVar(cp, 0, 100);
-            IntVar z = Factory.makeIntVar(cp, 0, 100);
+            CPIntVar y = Factory.makeIntVar(cp, 0, 100);
+            CPIntVar z = Factory.makeIntVar(cp, 0, 100);
 
 
             int[] T = new int[70];

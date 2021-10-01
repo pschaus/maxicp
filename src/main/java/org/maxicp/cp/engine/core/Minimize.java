@@ -23,9 +23,9 @@ import org.maxicp.util.exception.InconsistencyException;
  */
 public class Minimize implements Objective {
     private int bound = Integer.MAX_VALUE;
-    private final IntVar x;
+    private final CPIntVar x;
 
-    public Minimize(IntVar x) {
+    public Minimize(CPIntVar x) {
         this.x = x;
         x.getSolver().onFixPoint(() -> x.removeAbove(bound));
     }

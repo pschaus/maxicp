@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -36,7 +36,7 @@ public class MagicSerie {
         int n = 300;
         CPSolver cp = makeSolver(false);
 
-        IntVar[] s = makeIntVarArray(cp, n, n);
+        CPIntVar[] s = makeIntVarArray(cp, n, n);
 
         for (int i = 0; i < n; i++) {
             final int fi = i;
@@ -48,7 +48,7 @@ public class MagicSerie {
 
         long t0 = System.currentTimeMillis();
         DFSearch dfs = makeDfs(cp, () -> {
-            IntVar sv = selectMin(s,
+            CPIntVar sv = selectMin(s,
                     si -> si.size() > 1,
                     si -> -si.size());
             if (sv == null) return EMPTY;

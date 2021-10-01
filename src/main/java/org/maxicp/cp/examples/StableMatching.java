@@ -17,8 +17,8 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.constraints.Element1D;
 import org.maxicp.cp.engine.constraints.Element1DVar;
-import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -72,14 +72,14 @@ public class StableMatching {
         CPSolver cp = Factory.makeSolver();
 
         // company[s] is the company chosen for student s
-        IntVar[] company = Factory.makeIntVarArray(cp, n, n);
+        CPIntVar[] company = Factory.makeIntVarArray(cp, n, n);
         // student[c] is the student chosen for company c
-        IntVar[] student = Factory.makeIntVarArray(cp, n, n);
+        CPIntVar[] student = Factory.makeIntVarArray(cp, n, n);
 
         // companyPref[s] is the preference of student s for the company chosen for s
-        IntVar[] companyPref = Factory.makeIntVarArray(cp, n, n + 1);
+        CPIntVar[] companyPref = Factory.makeIntVarArray(cp, n, n + 1);
         // studentPref[c] is the preference of company c for the student chosen for c
-        IntVar[] studentPref = Factory.makeIntVarArray(cp, n, n + 1);
+        CPIntVar[] studentPref = Factory.makeIntVarArray(cp, n, n + 1);
 
 
         for (int s = 0; s < n; s++) {
@@ -118,8 +118,8 @@ public class StableMatching {
                 // if student s prefers company c over the chosen company, then the opposite is not true: c prefers their chosen student over s
                 // (companyPref[s] > rankCompanies[s][c]) => (studentPref[c] < rankStudents[c][s])
 
-                BoolVar sPrefersC = Factory.isLarger(companyPref[s], rankCompanies[s][c]);
-                BoolVar cDoesnot = Factory.isLess(studentPref[c], rankStudents[c][s]);
+                CPBoolVar sPrefersC = Factory.isLarger(companyPref[s], rankCompanies[s][c]);
+                CPBoolVar cDoesnot = Factory.isLess(studentPref[c], rankStudents[c][s]);
                 cp.post(implies(sPrefersC, cDoesnot));
 
                 // if company c prefers student s over their chosen student, then the opposite is not true: s prefers the chosen company over c
@@ -127,8 +127,8 @@ public class StableMatching {
                 // TODO: model this constraint
                 // STUDENT
                 // BEGIN STRIP
-                BoolVar cPrefersS = Factory.isLarger(studentPref[c], rankStudents[c][s]);
-                BoolVar sDoesnot = Factory.isLess(companyPref[s], rankCompanies[s][c]);
+                CPBoolVar cPrefersS = Factory.isLarger(studentPref[c], rankStudents[c][s]);
+                CPBoolVar sDoesnot = Factory.isLess(companyPref[s], rankCompanies[s][c]);
                 cp.post(implies(cPrefersS, sDoesnot));
                 // END STRIP
 
@@ -157,8 +157,8 @@ public class StableMatching {
      * @return a boolean variable that is true if and only if
      *         the relation "b1 implies b2" is true, and false otherwise.
      */
-    private static BoolVar implies(BoolVar b1, BoolVar b2) {
-        IntVar notB1 = Factory.plus(Factory.minus(b1), 1);
+    private static CPBoolVar implies(CPBoolVar b1, CPBoolVar b2) {
+        CPIntVar notB1 = Factory.plus(Factory.minus(b1), 1);
         return Factory.isLargerOrEqual(Factory.sum(notB1, b2), 1);
     }
 }

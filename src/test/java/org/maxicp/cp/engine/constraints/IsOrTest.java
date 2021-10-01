@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
-import org.maxicp.cp.engine.core.BoolVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -38,11 +38,11 @@ public class IsOrTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar b = Factory.makeBoolVar(cp);
             cp.post(new IsOr(b, x));
 
-            for (BoolVar xi : x) {
+            for (CPBoolVar xi : x) {
                 assertTrue(!xi.isBound());
             }
 
@@ -92,15 +92,15 @@ public class IsOrTest extends CPSolverTest {
     public void isOr2() {
         try {
             CPSolver cp = solverFactory.get();
-            BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
-            BoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar b = Factory.makeBoolVar(cp);
             cp.post(new IsOr(b, x));
 
             DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
 
             dfs.onSolution(() -> {
                         int nTrue = 0;
-                        for (BoolVar xi : x) {
+                        for (CPBoolVar xi : x) {
                             if (xi.isTrue()) nTrue++;
                         }
                         assertTrue((nTrue > 0 && b.isTrue()) || (nTrue == 0 && b.isFalse()));

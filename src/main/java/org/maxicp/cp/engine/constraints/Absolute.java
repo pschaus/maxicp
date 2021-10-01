@@ -16,15 +16,15 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 /**
  * Absolute value constraint
  */
 public class Absolute extends AbstractCPConstraint {
 
-    private final IntVar x;
-    private final IntVar y;
+    private final CPIntVar x;
+    private final CPIntVar y;
 
     /**
      * Creates the absolute value constraint {@code y = |x|}.
@@ -32,7 +32,7 @@ public class Absolute extends AbstractCPConstraint {
      * @param x the input variable such that its absolut value is equal to y
      * @param y the variable that represents the absolute value of x
      */
-    public Absolute(IntVar x, IntVar y) {
+    public Absolute(CPIntVar x, CPIntVar y) {
         super(x.getSolver());
         this.x = x;
         this.y = y;

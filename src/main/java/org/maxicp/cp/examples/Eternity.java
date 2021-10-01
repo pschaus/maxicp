@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.constraints.TableCT;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -38,8 +38,8 @@ import static org.maxicp.Factory.*;
  */
 public class Eternity {
 
-    public static IntVar[] flatten(IntVar[][] x) {
-        return Arrays.stream(x).flatMap(Arrays::stream).toArray(IntVar[]::new);
+    public static CPIntVar[] flatten(CPIntVar[][] x) {
+        return Arrays.stream(x).flatMap(Arrays::stream).toArray(CPIntVar[]::new);
     }
 
     public static void main(String[] args) {
@@ -101,11 +101,11 @@ public class Eternity {
         //   |         |
 
 
-        IntVar[][] id = new IntVar[n][m]; // id
-        IntVar[][] u = new IntVar[n][m];  // up
-        IntVar[][] r = new IntVar[n][m];  // right
-        IntVar[][] d = new IntVar[n][m];  // down
-        IntVar[][] l = new IntVar[n][m];  // left
+        CPIntVar[][] id = new CPIntVar[n][m]; // id
+        CPIntVar[][] u = new CPIntVar[n][m];  // up
+        CPIntVar[][] r = new CPIntVar[n][m];  // right
+        CPIntVar[][] d = new CPIntVar[n][m];  // down
+        CPIntVar[][] l = new CPIntVar[n][m];  // left
 
         for (int i = 0; i < n; i++) {
             u[i] = Factory.makeIntVarArray(m, j -> makeIntVar(cp, 0, max));
@@ -148,7 +148,7 @@ public class Eternity {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 //cp.post(new TableCT(new IntVar[]{id[i][j],u[i][j],r[i][j],d[i][j],l[i][j]},table));
-                cp.post(new TableCT(new IntVar[]{id[i][j],u[i][j],r[i][j],d[i][j],l[i][j]},table));
+                cp.post(new TableCT(new CPIntVar[]{id[i][j],u[i][j],r[i][j],d[i][j],l[i][j]},table));
                 //cp.post(new TableDecomp(new IntVar[]{id[i][j], u[i][j], r[i][j], d[i][j], l[i][j]}, table));
             }
         }

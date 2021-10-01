@@ -18,7 +18,7 @@ package org.maxicp.cp.engine.constraints;
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -39,8 +39,8 @@ import static org.junit.Assert.*;
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class TableTest extends CPSolverTest {
 
-    private static List<BiFunction<IntVar[], int[][], CPConstraint>> getAlgos() {
-        List<BiFunction<IntVar[], int[][], CPConstraint>> algos = new ArrayList<>();
+    private static List<BiFunction<CPIntVar[], int[][], CPConstraint>> getAlgos() {
+        List<BiFunction<CPIntVar[], int[][], CPConstraint>> algos = new ArrayList<>();
         algos.add(TableDecomp::new);
         algos.add(TableCT::new);
         return algos;
@@ -59,7 +59,7 @@ public class TableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 2, 1);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 2, 1);
             int[][] table = new int[][]{{0, 0}};
             cp.post(new TableCT(x, table));
 
@@ -75,7 +75,7 @@ public class TableTest extends CPSolverTest {
     public void simpleTest1() {
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 3, 12);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 12);
             int[][] table = new int[][]{{0, 0, 2},
                     {3, 5, 7},
                     {6, 9, 10},
@@ -110,7 +110,7 @@ public class TableTest extends CPSolverTest {
             int[][] tuples2 = randomTuples(rand, 3, 50, 1, 7);
             int[][] tuples3 = randomTuples(rand, 3, 50, 0, 6);
 
-            for (BiFunction<IntVar[], int[][], CPConstraint> algo : getAlgos()) {
+            for (BiFunction<CPIntVar[], int[][], CPConstraint> algo : getAlgos()) {
                 try {
                     testTable(algo, tuples1, tuples2, tuples3);
                 } catch (NotImplementedException e) {
@@ -121,18 +121,18 @@ public class TableTest extends CPSolverTest {
     }
 
 
-    public void testTable(BiFunction<IntVar[], int[][], CPConstraint> tc, int[][] t1, int[][] t2, int[][] t3) {
+    public void testTable(BiFunction<CPIntVar[], int[][], CPConstraint> tc, int[][] t1, int[][] t2, int[][] t3) {
 
         SearchStatistics statsDecomp;
         SearchStatistics statsAlgo;
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
-            cp.post(new TableDecomp(new IntVar[]{x[0], x[1], x[2]}, t1));
-            cp.post(new TableDecomp(new IntVar[]{x[2], x[3], x[4]}, t2));
-            cp.post(new TableDecomp(new IntVar[]{x[0], x[2], x[4]}, t3));
+            cp.post(new TableDecomp(new CPIntVar[]{x[0], x[1], x[2]}, t1));
+            cp.post(new TableDecomp(new CPIntVar[]{x[2], x[3], x[4]}, t2));
+            cp.post(new TableDecomp(new CPIntVar[]{x[0], x[2], x[4]}, t3));
             statsDecomp = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsDecomp = null;
@@ -140,11 +140,11 @@ public class TableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
+            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
-            cp.post(tc.apply(new IntVar[]{x[0], x[1], x[2]}, t1));
-            cp.post(tc.apply(new IntVar[]{x[2], x[3], x[4]}, t2));
-            cp.post(tc.apply(new IntVar[]{x[0], x[2], x[4]}, t3));
+            cp.post(tc.apply(new CPIntVar[]{x[0], x[1], x[2]}, t1));
+            cp.post(tc.apply(new CPIntVar[]{x[2], x[3], x[4]}, t2));
+            cp.post(tc.apply(new CPIntVar[]{x[0], x[2], x[4]}, t3));
             statsAlgo = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsAlgo = null;

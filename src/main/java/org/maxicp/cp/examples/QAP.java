@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -78,20 +78,20 @@ public class QAP {
      */
     public static List<Integer> solve(int n, int[][] w, int[][] d, boolean verbose, Predicate<SearchStatistics> limit) {
         CPSolver cp = makeSolver();
-        IntVar[] x = makeIntVarArray(cp, n, n);
+        CPIntVar[] x = makeIntVarArray(cp, n, n);
 
         cp.post(allDifferent(x));
 
 
         // build the objective function
-        IntVar[] weightedDist = new IntVar[n * n];
+        CPIntVar[] weightedDist = new CPIntVar[n * n];
         for (int k = 0, i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 weightedDist[k] = mul(element(d, x[i], x[j]), w[i][j]);
                 k++;
             }
         }
-        IntVar totCost = sum(weightedDist);
+        CPIntVar totCost = sum(weightedDist);
         Objective obj = cp.minimize(totCost);
 
         /*

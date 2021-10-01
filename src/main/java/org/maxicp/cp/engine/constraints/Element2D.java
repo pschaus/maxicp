@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
 import org.maxicp.util.exception.InconsistencyException;
@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
 public class Element2D extends AbstractCPConstraint {
 
     private final int[][] matrix;
-    private final IntVar x, y, z;
+    private final CPIntVar x, y, z;
     private int n, m;
     private final StateInt[] nRowsSup;
     private final StateInt[] nColsSup;
@@ -66,7 +66,7 @@ public class Element2D extends AbstractCPConstraint {
      * @param y the second dimention index variable
      * @param z the result variable
      */
-    public Element2D(int[][] mat, IntVar x, IntVar y, IntVar z) {
+    public Element2D(int[][] mat, CPIntVar x, CPIntVar y, CPIntVar z) {
         super(x.getSolver());
         this.matrix = mat;
         this.x = x;

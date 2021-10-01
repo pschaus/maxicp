@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 /**
- * Factory to create {@link CPSolver}, {@link IntVar}, {@link CPConstraint}
+ * Factory to create {@link CPSolver}, {@link CPIntVar}, {@link CPConstraint}
  * and some modeling utility methods.
  * Example for the n-queens problem:
  * <pre>
@@ -85,8 +85,8 @@ public final class Factory {
      * @param sz a positive value that is the size of the domain
      * @return a variable with domain equal to the set {0,...,sz-1}
      */
-    public static IntVar makeIntVar(CPSolver cp, int sz) {
-        return new IntVarImpl(cp, sz);
+    public static CPIntVar makeIntVar(CPSolver cp, int sz) {
+        return new CPIntVarImpl(cp, sz);
     }
 
     /**
@@ -97,8 +97,8 @@ public final class Factory {
      * @param max the upper bound of the domain (included) {@code max > min}
      * @return a variable with domain equal to the set {min,...,max}
      */
-    public static IntVar makeIntVar(CPSolver cp, int min, int max) {
-        return new IntVarImpl(cp, min, max);
+    public static CPIntVar makeIntVar(CPSolver cp, int min, int max) {
+        return new CPIntVarImpl(cp, min, max);
     }
 
     /**
@@ -108,8 +108,8 @@ public final class Factory {
      * @param values a set of values
      * @return a variable with domain equal to the set of values
      */
-    public static IntVar makeIntVar(CPSolver cp, Set<Integer> values) {
-        return new IntVarImpl(cp, values);
+    public static CPIntVar makeIntVar(CPSolver cp, Set<Integer> values) {
+        return new CPIntVarImpl(cp, values);
     }
 
     /**
@@ -118,8 +118,8 @@ public final class Factory {
      * @param cp the solver in which the variable is created
      * @return an uninstantiated boolean variable
      */
-    public static BoolVar makeBoolVar(CPSolver cp) {
-        return new BoolVarImpl(cp);
+    public static CPBoolVar makeBoolVar(CPSolver cp) {
+        return new CPBoolVarImpl(cp);
     }
 
     /**
@@ -130,7 +130,7 @@ public final class Factory {
      * @param sz a positive value that is the size of the domain
      * @return an array of n variables, each with domain equal to the set {0,...,sz-1}
      */
-    public static IntVar[] makeIntVarArray(CPSolver cp, int n, int sz) {
+    public static CPIntVar[] makeIntVarArray(CPSolver cp, int n, int sz) {
         return makeIntVarArray(n, i -> makeIntVar(cp, sz));
     }
 
@@ -143,7 +143,7 @@ public final class Factory {
      * @param max the upper bound of the domain (included) {@code max > min}
      * @return an array of n variables each with a domain equal to the set {min,...,max}
      */
-    public static IntVar[] makeIntVarArray(CPSolver cp, int n, int min, int max) {
+    public static CPIntVar[] makeIntVarArray(CPSolver cp, int n, int min, int max) {
         return makeIntVarArray(n, i -> makeIntVar(cp, min, max));
     }
 
@@ -151,12 +151,12 @@ public final class Factory {
      * Creates an array of variables with specified lambda function
      *
      * @param n the number of variables to create
-     * @param body the function that given the index i in the array creates/map the corresponding {@link IntVar}
+     * @param body the function that given the index i in the array creates/map the corresponding {@link CPIntVar}
      * @return an array of n variables
      *         with variable at index <i>i</i> generated as {@code body.get(i)}
      */
-    public static IntVar[] makeIntVarArray(int n, Function<Integer, IntVar> body) {
-        IntVar[] t = new IntVar[n];
+    public static CPIntVar[] makeIntVarArray(int n, Function<Integer, CPIntVar> body) {
+        CPIntVar[] t = new CPIntVar[n];
         for (int i = 0; i < n; i++)
             t[i] = body.apply(i);
         return t;
@@ -194,7 +194,7 @@ public final class Factory {
      *         {@link DFSearch#solve()} or
      *         {@link DFSearch#optimize(Objective)}
      *         using the given branching scheme
-     * @see BranchingScheme#firstFail(IntVar...)
+     * @see BranchingScheme#firstFail(CPIntVar...)
      * @see BranchingScheme#branch(Procedure...)
      */
     public static DFSearch makeDfs(CPSolver cp, Supplier<Procedure[]> branching) {
@@ -210,13 +210,13 @@ public final class Factory {
      * @param a a constant to multiply x with
      * @return a variable that is a view of {@code x*a}
      */
-    public static IntVar mul(IntVar x, int a) {
+    public static CPIntVar mul(CPIntVar x, int a) {
         if (a == 0) return makeIntVar(x.getSolver(), 0, 0);
         else if (a == 1) return x;
         else if (a < 0) {
-            return minus(new IntVarViewMul(x, -a));
+            return minus(new CPIntVarViewMul(x, -a));
         } else {
-            return new IntVarViewMul(x, a);
+            return new CPIntVarViewMul(x, a);
         }
     }
 
@@ -226,8 +226,8 @@ public final class Factory {
      * @param x a variable
      * @return a variable that is a view of {@code -x}
      */
-    public static IntVar minus(IntVar x) {
-        return new IntVarViewOpposite(x);
+    public static CPIntVar minus(CPIntVar x) {
+        return new CPIntVarViewOpposite(x);
     }
 
     /**
@@ -237,8 +237,8 @@ public final class Factory {
      * @param v a value
      * @return a variable that is a view of {@code x+v}
      */
-    public static IntVar plus(IntVar x, int v) {
-        return new IntVarViewOffset(x, v);
+    public static CPIntVar plus(CPIntVar x, int v) {
+        return new CPIntVarViewOffset(x, v);
     }
 
     /**
@@ -248,8 +248,8 @@ public final class Factory {
      * @param v a value
      * @return a variable that is a view of {@code x-v}
      */
-    public static IntVar minus(IntVar x, int v) {
-        return new IntVarViewOffset(x, -v);
+    public static CPIntVar minus(CPIntVar x, int v) {
+        return new CPIntVarViewOffset(x, -v);
     }
 
     /**
@@ -260,8 +260,8 @@ public final class Factory {
      * @param x a variable
      * @return a variable that represents the absolute value of x
      */
-    public static IntVar abs(IntVar x) {
-        IntVar r = makeIntVar(x.getSolver(), 0, x.max());
+    public static CPIntVar abs(CPIntVar x) {
+        CPIntVar r = makeIntVar(x.getSolver(), 0, x.max());
         x.getSolver().post(new Absolute(x, r));
         return r;
     }
@@ -273,13 +273,13 @@ public final class Factory {
      *
      * @param x the variables on which to compute the maximum
      * @return a variable that represents the maximum on x
-     * @see Factory#minimum(IntVar...)
+     * @see Factory#minimum(CPIntVar...)
      */
-    public static IntVar maximum(IntVar... x) {
+    public static CPIntVar maximum(CPIntVar... x) {
         CPSolver cp = x[0].getSolver();
-        int min = Arrays.stream(x).mapToInt(IntVar::min).min().getAsInt();
-        int max = Arrays.stream(x).mapToInt(IntVar::max).max().getAsInt();
-        IntVar y = makeIntVar(cp, min, max);
+        int min = Arrays.stream(x).mapToInt(CPIntVar::min).min().getAsInt();
+        int max = Arrays.stream(x).mapToInt(CPIntVar::max).max().getAsInt();
+        CPIntVar y = makeIntVar(cp, min, max);
         cp.post(new Maximum(x, y));
         return y;
     }
@@ -291,10 +291,10 @@ public final class Factory {
      *
      * @param x the variables on which to compute the minimum
      * @return a variable that represents the minimum on x
-     * @see Factory#maximum(IntVar...) (IntVar...)
+     * @see Factory#maximum(CPIntVar...) (IntVar...)
      */
-    public static IntVar minimum(IntVar... x) {
-        IntVar[] minusX = Arrays.stream(x).map(Factory::minus).toArray(IntVar[]::new);
+    public static CPIntVar minimum(CPIntVar... x) {
+        CPIntVar[] minusX = Arrays.stream(x).map(Factory::minus).toArray(CPIntVar[]::new);
         return minus(maximum(minusX));
     }
 
@@ -306,7 +306,7 @@ public final class Factory {
      * @param v the value that must be assigned to x
      * @return a constraint so that {@code x = v}
      */
-    public static CPConstraint equal(IntVar x, int v) {
+    public static CPConstraint equal(CPIntVar x, int v) {
         return new AbstractCPConstraint(x.getSolver()) {
             @Override
             public void post() {
@@ -323,7 +323,7 @@ public final class Factory {
      * @param v the value that must be the upper bound on x
      * @return a constraint so that {@code x <= v}
      */
-    public static CPConstraint lessOrEqual(IntVar x, int v) {
+    public static CPConstraint lessOrEqual(CPIntVar x, int v) {
         return new AbstractCPConstraint(x.getSolver()) {
             @Override
             public void post() {
@@ -340,7 +340,7 @@ public final class Factory {
      * @param v the value that must be different from x
      * @return a constraint so that {@code x != y}
      */
-    public static CPConstraint notEqual(IntVar x, int v) {
+    public static CPConstraint notEqual(CPIntVar x, int v) {
         return new AbstractCPConstraint(x.getSolver()) {
             @Override
             public void post() {
@@ -357,7 +357,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x != y}
      */
-    public static CPConstraint notEqual(IntVar x, IntVar y) {
+    public static CPConstraint notEqual(CPIntVar x, CPIntVar y) {
         return new NotEqual(x, y);
     }
 
@@ -370,7 +370,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x = y}
      */
-    public static CPConstraint equal(IntVar x, IntVar y) {
+    public static CPConstraint equal(CPIntVar x, CPIntVar y) {
         return new Equal(x, y);
     }
 
@@ -384,7 +384,7 @@ public final class Factory {
      * @param c a constant
      * @return a constraint so that {@code x != y+c}
      */
-    public static CPConstraint notEqual(IntVar x, IntVar y, int c) {
+    public static CPConstraint notEqual(CPIntVar x, CPIntVar y, int c) {
         return new NotEqual(x, y, c);
     }
 
@@ -399,8 +399,8 @@ public final class Factory {
      * @return a boolean variable that is true if and only if x takes the value c
      * @see IsEqual
      */
-    public static BoolVar isEqual(IntVar x, final int c) {
-        BoolVar b = makeBoolVar(x.getSolver());
+    public static CPBoolVar isEqual(CPIntVar x, final int c) {
+        CPBoolVar b = makeBoolVar(x.getSolver());
         CPSolver cp = x.getSolver();
         try {
             cp.post(new IsEqual(b, x, c));
@@ -421,8 +421,8 @@ public final class Factory {
      * @return a boolean variable that is true if and only if
      *         x takes a value less or equal to c
      */
-    public static BoolVar isLessOrEqual(IntVar x, final int c) {
-        BoolVar b = makeBoolVar(x.getSolver());
+    public static CPBoolVar isLessOrEqual(CPIntVar x, final int c) {
+        CPBoolVar b = makeBoolVar(x.getSolver());
         CPSolver cp = x.getSolver();
         cp.post(new IsLessOrEqual(b, x, c));
         return b;
@@ -439,7 +439,7 @@ public final class Factory {
      * @return a boolean variable that is true if and only if
      *         x takes a value less than c
      */
-    public static BoolVar isLess(IntVar x, final int c) {
+    public static CPBoolVar isLess(CPIntVar x, final int c) {
         return isLessOrEqual(x, c - 1);
     }
 
@@ -454,7 +454,7 @@ public final class Factory {
      * @return a boolean variable that is true if and only if
      *         x takes a value larger or equal to c
      */
-    public static BoolVar isLargerOrEqual(IntVar x, final int c) {
+    public static CPBoolVar isLargerOrEqual(CPIntVar x, final int c) {
         return isLessOrEqual(minus(x), -c);
     }
 
@@ -469,7 +469,7 @@ public final class Factory {
      * @return a boolean variable that is true if and only if
      *         x takes a value larger than c
      */
-    public static BoolVar isLarger(IntVar x, final int c) {
+    public static CPBoolVar isLarger(CPIntVar x, final int c) {
         return isLargerOrEqual(x, c + 1);
     }
 
@@ -481,7 +481,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x <= y}
      */
-    public static CPConstraint lessOrEqual(IntVar x, IntVar y) {
+    public static CPConstraint lessOrEqual(CPIntVar x, CPIntVar y) {
         return new LessOrEqual(x, y);
     }
 
@@ -493,7 +493,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x >= y}
      */
-    public static CPConstraint largerOrEqual(IntVar x, IntVar y) {
+    public static CPConstraint largerOrEqual(CPIntVar x, CPIntVar y) {
         return new LessOrEqual(y, x);
     }
 
@@ -508,9 +508,9 @@ public final class Factory {
      * @param y the variable
      * @return a variable equal to {@code array[y]}
      */
-    public static IntVar element(int[] array, IntVar y) {
+    public static CPIntVar element(int[] array, CPIntVar y) {
         CPSolver cp = y.getSolver();
-        IntVar z = makeIntVar(cp, IntStream.of(array).min().getAsInt(), IntStream.of(array).max().getAsInt());
+        CPIntVar z = makeIntVar(cp, IntStream.of(array).min().getAsInt(), IntStream.of(array).max().getAsInt());
         cp.post(new Element1D(array, y, z));
         return z;
     }
@@ -527,7 +527,7 @@ public final class Factory {
      * @param y the column variable with domain included in 0..m-1
      * @return a variable equal to {@code matrix[x][y]}
      */
-    public static IntVar element(int[][] matrix, IntVar x, IntVar y) {
+    public static CPIntVar element(int[][] matrix, CPIntVar x, CPIntVar y) {
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
         for (int i = 0; i < matrix.length; i++) {
@@ -536,7 +536,7 @@ public final class Factory {
                 max = Math.max(max, matrix[i][j]);
             }
         }
-        IntVar z = makeIntVar(x.getSolver(), min, max);
+        CPIntVar z = makeIntVar(x.getSolver(), min, max);
         x.getSolver().post(new Element2D(matrix, x, y, z));
         return z;
     }
@@ -550,7 +550,7 @@ public final class Factory {
      * @param x the n variables to sum
      * @return a variable equal to {@code x[0]+x[1]+...+x[n-1]}
      */
-    public static IntVar sum(IntVar... x) {
+    public static CPIntVar sum(CPIntVar... x) {
         long sumMin = 0;
         long sumMax = 0;
         for (int i = 0; i < x.length; i++) {
@@ -561,7 +561,7 @@ public final class Factory {
             throw new IntOverFlowException("domains are too large for sum constraint and would exceed Integer bounds");
         }
         CPSolver cp = x[0].getSolver();
-        IntVar s = makeIntVar(cp, (int) sumMin, (int) sumMax);
+        CPIntVar s = makeIntVar(cp, (int) sumMin, (int) sumMax);
         cp.post(new Sum(x, s));
         return s;
     }
@@ -573,7 +573,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code y = x[0]+x[1]+...+x[n-1]}
      */
-    public static CPConstraint sum(IntVar[] x, IntVar y) {
+    public static CPConstraint sum(CPIntVar[] x, CPIntVar y) {
         return new Sum(x, y);
     }
 
@@ -584,7 +584,7 @@ public final class Factory {
      * @param y a constant
      * @return a constraint so that {@code y = x[0]+x[1]+...+x[n-1]}
      */
-    public static CPConstraint sum(IntVar[] x, int y) {
+    public static CPConstraint sum(CPIntVar[] x, int y) {
         return new Sum(x, y);
     }
 
@@ -597,7 +597,7 @@ public final class Factory {
      * @param x a parameter pack of IntVar representing an array of variables
      * @return a constraint so that {@code y = x[0] + ... + x[n-1]}
      */
-    public static CPConstraint sum(int y, IntVar... x) {
+    public static CPConstraint sum(int y, CPIntVar... x) {
         return new Sum(x, y);
     }
 
@@ -607,7 +607,7 @@ public final class Factory {
      * @param x an array of variables
      * @return a constraint so that {@code x[i] != x[j] for all i < j}
      */
-    public static CPConstraint allDifferent(IntVar[] x) {
+    public static CPConstraint allDifferent(CPIntVar[] x) {
         return new AllDifferentBinary(x);
     }
 
@@ -618,7 +618,7 @@ public final class Factory {
      * @param x an array of variables
      * @return a constraint so that {@code x[i] != x[j] for all i < j}
      */
-    public static CPConstraint allDifferentAC(IntVar[] x) {
+    public static CPConstraint allDifferentAC(CPIntVar[] x) {
         return new AllDifferentDC(x);
     }
 }

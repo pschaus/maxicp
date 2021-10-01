@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.util.exception.InconsistencyException;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ import static org.maxicp.Factory.minus;
  * <p>See <a href="https://www.info.ucl.ac.be/~pschaus/assets/publi/cp2016-compacttable.pdf">The article.</a>
  */
 public class TableCT extends AbstractCPConstraint {
-    private IntVar[] x; //variables
+    private CPIntVar[] x; //variables
     private int[][] table; //the table
     //supports[i][v] is the set of tuples supported by x[i]=v
     private BitSet[][] supports;
@@ -57,9 +57,9 @@ public class TableCT extends AbstractCPConstraint {
      * @param table the possible set of solutions for x.
      *              The second dimension must be of the same size as the array x.
      */
-    public TableCT(IntVar[] x, int[][] table) {
+    public TableCT(CPIntVar[] x, int[][] table) {
         super(x[0].getSolver());
-        this.x = new IntVar[x.length];
+        this.x = new CPIntVar[x.length];
         this.table = table;
         dom = new int[Arrays.stream(x).map(var -> var.size()).max(Integer::compare).get()];
 
@@ -87,7 +87,7 @@ public class TableCT extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        for (IntVar var : x)
+        for (CPIntVar var : x)
             var.propagateOnDomainChange(this);
         propagate();
     }

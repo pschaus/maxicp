@@ -21,7 +21,7 @@ import org.maxicp.util.exception.InconsistencyException;
  * Boolean variable, that can be used as a 0-1 IntVar.
  * <p>0 corresponds to false, and 1 corresponds to true
  */
-public interface BoolVar extends IntVar {
+public interface CPBoolVar extends CPIntVar {
 
     /**
      * Tests if the variable is bound to true

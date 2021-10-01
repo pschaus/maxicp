@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -48,8 +48,8 @@ public class SMoney {
 
     public static void main(String[] args) {
         CPSolver cp = Factory.makeSolver(false);
-        IntVar[] values = Factory.makeIntVarArray(cp, Y.val + 1, 0, 9);
-        IntVar[] carry = Factory.makeIntVarArray(cp, 4, 0, 1);
+        CPIntVar[] values = Factory.makeIntVarArray(cp, Y.val + 1, 0, 9);
+        CPIntVar[] carry = Factory.makeIntVarArray(cp, 4, 0, 1);
 
         cp.post(Factory.allDifferent(values));
         cp.post(Factory.notEqual(values[S.val], 0));

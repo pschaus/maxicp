@@ -15,7 +15,7 @@
 
 package org.maxicp;
 
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.LimitedDiscrepancyBranching;
 import org.maxicp.search.Sequencer;
@@ -96,7 +96,7 @@ public final class BranchingScheme {
      * @param x the array on which the minimum value is searched
      * @param p the predicate that filters the element eligible for selection
      * @param f the evaluation function that returns a comparable when applied on an element of x
-     * @param <T> the type of the elements in x, for instance {@link IntVar}
+     * @param <T> the type of the elements in x, for instance {@link CPIntVar}
      * @param <N> the type on which the minimum is computed, for instance {@link Integer}
      * @return the minimum element in x that satisfies the predicate p
      *         or null if no element satisfies the predicate.
@@ -121,9 +121,9 @@ public final class BranchingScheme {
      * @return a first-fail branching strategy
      * @see Factory#makeDfs(CPSolver, Supplier)
      */
-    public static Supplier<Procedure[]> firstFail(IntVar... x) {
+    public static Supplier<Procedure[]> firstFail(CPIntVar... x) {
         return () -> {
-            IntVar xs = selectMin(x,
+            CPIntVar xs = selectMin(x,
                     xi -> xi.size() > 1,
                     xi -> xi.size());
             if (xs == null)
@@ -175,7 +175,7 @@ public final class BranchingScheme {
      * @param valueSelector given a variable, returns the value to which
      *                      it must be assigned on the left branch (and excluded on the right)
      */
-    public static Supplier<Procedure[]> lastConflict(Supplier<IntVar> variableSelector, Function<IntVar, Integer> valueSelector) {
+    public static Supplier<Procedure[]> lastConflict(Supplier<CPIntVar> variableSelector, Function<CPIntVar, Integer> valueSelector) {
         throw new NotImplementedException();
     }
 
@@ -191,7 +191,7 @@ public final class BranchingScheme {
      * @param valueSelector given a variable, returns the value to which
      *                      it must be assigned on the left branch (and excluded on the right)
      */
-    public static Supplier<Procedure[]> conflictOrderingSearch(Supplier<IntVar> variableSelector, Function<IntVar, Integer> valueSelector) {
+    public static Supplier<Procedure[]> conflictOrderingSearch(Supplier<CPIntVar> variableSelector, Function<CPIntVar, Integer> valueSelector) {
         throw new NotImplementedException();
     }
 

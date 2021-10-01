@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.BoolVar;
+import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.state.StateInt;
 
 import static org.maxicp.util.exception.InconsistencyException.INCONSISTENCY;
@@ -26,7 +26,7 @@ import static org.maxicp.util.exception.InconsistencyException.INCONSISTENCY;
  */
 public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
 
-    private final BoolVar[] x;
+    private final CPBoolVar[] x;
     private final int n;
     private StateInt wL; // watched literal left
     private StateInt wR; // watched literal right
@@ -38,7 +38,7 @@ public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
      *
      * @param x the variables in the scope of the constraint
      */
-    public Or(BoolVar[] x) {
+    public Or(CPBoolVar[] x) {
         super(x[0].getSolver());
         this.x = x;
         this.n = x.length;

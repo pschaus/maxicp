@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -28,7 +28,7 @@ import static org.maxicp.Factory.minus;
  */
 public class NegTableCT extends AbstractCPConstraint {
 
-    private IntVar[] x; //variables
+    private CPIntVar[] x; //variables
     private int[][] table; //the table
     //supports[i][v] is the set of tuples supported by x[i]=v
     private BitSet[][] conflicts;
@@ -42,9 +42,9 @@ public class NegTableCT extends AbstractCPConstraint {
      * @param x the variables to constraint. x is not empty.
      * @param table the array of invalid solutions (second dimension must be of same size as the array x)
      */
-    public NegTableCT(IntVar[] x, int[][] table) {
+    public NegTableCT(CPIntVar[] x, int[][] table) {
         super(x[0].getSolver());
-        this.x = new IntVar[x.length];
+        this.x = new CPIntVar[x.length];
 
 
         // remove duplicate (the negative ct algo does not support it)
@@ -92,7 +92,7 @@ public class NegTableCT extends AbstractCPConstraint {
         // TODO
         // STUDENT throw new NotImplementedException("NegTableCT");
         // BEGIN STRIP
-        for (IntVar var : x)
+        for (CPIntVar var : x)
             var.propagateOnDomainChange(this);
         propagate();
         // END STRIP

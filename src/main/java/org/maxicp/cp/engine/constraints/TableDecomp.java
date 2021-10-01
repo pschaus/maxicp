@@ -16,10 +16,10 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 
 public class TableDecomp extends AbstractCPConstraint {
-    private final IntVar[] x;
+    private final CPIntVar[] x;
     private final int[][] table;
 
     /**
@@ -37,7 +37,7 @@ public class TableDecomp extends AbstractCPConstraint {
      * @param table the possible set of solutions for x.
      *              The second dimension must be of the same size as the array x.
      */
-    public TableDecomp(IntVar[] x, int[][] table) {
+    public TableDecomp(CPIntVar[] x, int[][] table) {
         super(x[0].getSolver());
         this.x = x;
         this.table = table;
@@ -45,7 +45,7 @@ public class TableDecomp extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        for (IntVar var : x)
+        for (CPIntVar var : x)
             var.propagateOnDomainChange(this);
         propagate();
     }

@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.IntVar;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
@@ -38,7 +38,7 @@ public class MagicSquare {
         int sumResult = n * (n * n + 1) / 2;
 
         CPSolver cp = Factory.makeSolver();
-        IntVar[][] x = new IntVar[n][n];
+        CPIntVar[][] x = new CPIntVar[n][n];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -47,7 +47,7 @@ public class MagicSquare {
         }
 
 
-        IntVar[] xFlat = new IntVar[x.length * x.length];
+        CPIntVar[] xFlat = new CPIntVar[x.length * x.length];
         for (int i = 0; i < x.length; i++) {
             System.arraycopy(x[i], 0, xFlat, i * x.length, x.length);
         }
@@ -63,15 +63,15 @@ public class MagicSquare {
 
         // Sum on columns
         for (int j = 0; j < x.length; j++) {
-            IntVar[] column = new IntVar[n];
+            CPIntVar[] column = new CPIntVar[n];
             for (int i = 0; i < x.length; i++)
                 column[i] = x[i][j];
             cp.post(Factory.sum(column, sumResult));
         }
 
         // Sum on diagonals
-        IntVar[] diagonalLeft = new IntVar[n];
-        IntVar[] diagonalRight = new IntVar[n];
+        CPIntVar[] diagonalLeft = new CPIntVar[n];
+        CPIntVar[] diagonalRight = new CPIntVar[n];
         for (int i = 0; i < x.length; i++) {
             diagonalLeft[i] = x[i][i];
             diagonalRight[i] = x[n - i - 1][i];
