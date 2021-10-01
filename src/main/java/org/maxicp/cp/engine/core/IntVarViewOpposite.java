@@ -30,7 +30,7 @@ public class IntVarViewOpposite implements IntVar {
     }
 
     @Override
-    public Solver getSolver() {
+    public CPSolver getSolver() {
         return x.getSolver();
     }
 

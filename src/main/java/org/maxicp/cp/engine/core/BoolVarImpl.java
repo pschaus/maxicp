@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.core;
 
 public class BoolVarImpl extends IntVarImpl implements BoolVar {
 
-    public BoolVarImpl(Solver cp) {
+    public BoolVarImpl(CPSolver cp) {
         super(cp, 0, 1);
     }
 

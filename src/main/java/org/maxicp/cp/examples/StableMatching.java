@@ -19,7 +19,7 @@ import org.maxicp.cp.engine.constraints.Element1D;
 import org.maxicp.cp.engine.constraints.Element1DVar;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.io.InputReader;
@@ -69,7 +69,7 @@ public class StableMatching {
         student: 6,8,4,7,1,5,0,3,2
         */
 
-        Solver cp = Factory.makeSolver();
+        CPSolver cp = Factory.makeSolver();
 
         // company[s] is the company chosen for student s
         IntVar[] company = Factory.makeIntVarArray(cp, n, n);

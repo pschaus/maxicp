@@ -16,10 +16,10 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -35,11 +35,11 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class DisjunctiveTest extends SolverTest {
+public class DisjunctiveTest extends CPSolverTest {
 
 
     private static void decomposeDisjunctive(IntVar[] start, int[] duration) {
-        Solver cp = start[0].getSolver();
+        CPSolver cp = start[0].getSolver();
         for (int i = 0; i < start.length; i++) {
             IntVar end_i = Factory.plus(start[i], duration[i]);
             for (int j = i + 1; j < start.length; j++) {
@@ -63,7 +63,7 @@ public class DisjunctiveTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar[] s = Factory.makeIntVarArray(cp, 5, 5);
             int[] d = new int[5];
@@ -87,7 +87,7 @@ public class DisjunctiveTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar[] s = Factory.makeIntVarArray(cp, 4, 20);
             int[] d = new int[]{5, 4, 6, 7};
@@ -119,7 +119,7 @@ public class DisjunctiveTest extends SolverTest {
 
     @Test
     public void testBinaryDecomposition() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         IntVar s1 = Factory.makeIntVar(cp, 0, 10);
         int d1 = 10;
         IntVar s2 = Factory.makeIntVar(cp, 6, 15);
@@ -138,7 +138,7 @@ public class DisjunctiveTest extends SolverTest {
 
     @Test
     public void testOverloadChecker() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         IntVar sA = Factory.makeIntVar(cp, 0, 9);
         int d1 = 5;
         IntVar sB = Factory.makeIntVar(cp, 1, 10);
@@ -160,7 +160,7 @@ public class DisjunctiveTest extends SolverTest {
 
     @Test
     public void testDetectablePrecedence() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         IntVar sA = Factory.makeIntVar(cp, 0, 9);
         int d1 = 5;
         IntVar sB = Factory.makeIntVar(cp, 1, 10);
@@ -180,7 +180,7 @@ public class DisjunctiveTest extends SolverTest {
 
     @Test
     public void testNotLast() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         IntVar sA = Factory.makeIntVar(cp, 0, 9);
         int d1 = 5;
         IntVar sB = Factory.makeIntVar(cp, 1, 10);

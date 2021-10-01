@@ -1,7 +1,7 @@
 package org.maxicp.cp;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.model.Constraint;
 import org.maxicp.model.Var;
 
@@ -20,5 +20,5 @@ public abstract class CPInstantiableConstraint implements Constraint {
         s.addAll(Arrays.asList(x));
     }
 
-    public abstract AbstractCPConstraint instantiate(Solver s);
+    public abstract AbstractCPConstraint instantiate(CPSolver s);
 }

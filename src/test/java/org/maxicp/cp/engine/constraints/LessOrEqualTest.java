@@ -15,9 +15,9 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
@@ -29,13 +29,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class LessOrEqualTest extends SolverTest {
+public class LessOrEqualTest extends CPSolverTest {
 
 
     @Test
     public void simpleTest0() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -5, 5);
             IntVar y = Factory.makeIntVar(cp, -10, 10);
 

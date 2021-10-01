@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 /**
- * Factory to create {@link Solver}, {@link IntVar}, {@link CPConstraint}
+ * Factory to create {@link CPSolver}, {@link IntVar}, {@link CPConstraint}
  * and some modeling utility methods.
  * Example for the n-queens problem:
  * <pre>
@@ -64,7 +64,7 @@ public final class Factory {
      * Creates a constraint programming solver
      * @return a constraint programming solver with trail-based memory management
      */
-    public static Solver makeSolver() {
+    public static CPSolver makeSolver() {
         return new MiniCP(new Trailer());
     }
     /**
@@ -74,7 +74,7 @@ public final class Factory {
      *               or falso for a trail-based memory management
      * @return a constraint programming solver
      */
-    public static Solver makeSolver(boolean byCopy) {
+    public static CPSolver makeSolver(boolean byCopy) {
         return new MiniCP(byCopy ? new Copier() : new Trailer());
     }
 
@@ -85,7 +85,7 @@ public final class Factory {
      * @param sz a positive value that is the size of the domain
      * @return a variable with domain equal to the set {0,...,sz-1}
      */
-    public static IntVar makeIntVar(Solver cp, int sz) {
+    public static IntVar makeIntVar(CPSolver cp, int sz) {
         return new IntVarImpl(cp, sz);
     }
 
@@ -97,7 +97,7 @@ public final class Factory {
      * @param max the upper bound of the domain (included) {@code max > min}
      * @return a variable with domain equal to the set {min,...,max}
      */
-    public static IntVar makeIntVar(Solver cp, int min, int max) {
+    public static IntVar makeIntVar(CPSolver cp, int min, int max) {
         return new IntVarImpl(cp, min, max);
     }
 
@@ -108,7 +108,7 @@ public final class Factory {
      * @param values a set of values
      * @return a variable with domain equal to the set of values
      */
-    public static IntVar makeIntVar(Solver cp, Set<Integer> values) {
+    public static IntVar makeIntVar(CPSolver cp, Set<Integer> values) {
         return new IntVarImpl(cp, values);
     }
 
@@ -118,7 +118,7 @@ public final class Factory {
      * @param cp the solver in which the variable is created
      * @return an uninstantiated boolean variable
      */
-    public static BoolVar makeBoolVar(Solver cp) {
+    public static BoolVar makeBoolVar(CPSolver cp) {
         return new BoolVarImpl(cp);
     }
 
@@ -130,7 +130,7 @@ public final class Factory {
      * @param sz a positive value that is the size of the domain
      * @return an array of n variables, each with domain equal to the set {0,...,sz-1}
      */
-    public static IntVar[] makeIntVarArray(Solver cp, int n, int sz) {
+    public static IntVar[] makeIntVarArray(CPSolver cp, int n, int sz) {
         return makeIntVarArray(n, i -> makeIntVar(cp, sz));
     }
 
@@ -143,7 +143,7 @@ public final class Factory {
      * @param max the upper bound of the domain (included) {@code max > min}
      * @return an array of n variables each with a domain equal to the set {min,...,max}
      */
-    public static IntVar[] makeIntVarArray(Solver cp, int n, int min, int max) {
+    public static IntVar[] makeIntVarArray(CPSolver cp, int n, int min, int max) {
         return makeIntVarArray(n, i -> makeIntVar(cp, min, max));
     }
 
@@ -197,7 +197,7 @@ public final class Factory {
      * @see BranchingScheme#firstFail(IntVar...)
      * @see BranchingScheme#branch(Procedure...)
      */
-    public static DFSearch makeDfs(Solver cp, Supplier<Procedure[]> branching) {
+    public static DFSearch makeDfs(CPSolver cp, Supplier<Procedure[]> branching) {
         return new DFSearch(cp.getStateManager(), branching);
     }
 
@@ -276,7 +276,7 @@ public final class Factory {
      * @see Factory#minimum(IntVar...)
      */
     public static IntVar maximum(IntVar... x) {
-        Solver cp = x[0].getSolver();
+        CPSolver cp = x[0].getSolver();
         int min = Arrays.stream(x).mapToInt(IntVar::min).min().getAsInt();
         int max = Arrays.stream(x).mapToInt(IntVar::max).max().getAsInt();
         IntVar y = makeIntVar(cp, min, max);
@@ -401,7 +401,7 @@ public final class Factory {
      */
     public static BoolVar isEqual(IntVar x, final int c) {
         BoolVar b = makeBoolVar(x.getSolver());
-        Solver cp = x.getSolver();
+        CPSolver cp = x.getSolver();
         try {
             cp.post(new IsEqual(b, x, c));
         } catch (InconsistencyException e) {
@@ -423,7 +423,7 @@ public final class Factory {
      */
     public static BoolVar isLessOrEqual(IntVar x, final int c) {
         BoolVar b = makeBoolVar(x.getSolver());
-        Solver cp = x.getSolver();
+        CPSolver cp = x.getSolver();
         cp.post(new IsLessOrEqual(b, x, c));
         return b;
     }
@@ -509,7 +509,7 @@ public final class Factory {
      * @return a variable equal to {@code array[y]}
      */
     public static IntVar element(int[] array, IntVar y) {
-        Solver cp = y.getSolver();
+        CPSolver cp = y.getSolver();
         IntVar z = makeIntVar(cp, IntStream.of(array).min().getAsInt(), IntStream.of(array).max().getAsInt());
         cp.post(new Element1D(array, y, z));
         return z;
@@ -560,7 +560,7 @@ public final class Factory {
         if (sumMin < (long) Integer.MIN_VALUE || sumMax > (long) Integer.MAX_VALUE) {
             throw new IntOverFlowException("domains are too large for sum constraint and would exceed Integer bounds");
         }
-        Solver cp = x[0].getSolver();
+        CPSolver cp = x[0].getSolver();
         IntVar s = makeIntVar(cp, (int) sumMin, (int) sumMax);
         cp.post(new Sum(x, s));
         return s;

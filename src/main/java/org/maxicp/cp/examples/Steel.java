@@ -19,7 +19,7 @@ import org.maxicp.Factory;
 import org.maxicp.cp.engine.constraints.IsOr;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
 import org.maxicp.search.SearchStatistics;
@@ -83,7 +83,7 @@ public class Steel {
         try {
 
 
-            Solver cp = makeSolver();
+            CPSolver cp = makeSolver();
             IntVar[] x = makeIntVarArray(cp, nOrder, nSlab);
             IntVar[] l = makeIntVarArray(cp, nSlab, maxCapa + 1);
 

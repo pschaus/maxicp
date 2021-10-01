@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -34,14 +34,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class MaximumTest extends SolverTest {
+public class MaximumTest extends CPSolverTest {
 
     @Test
     public void maximumTest1() {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 3, 10);
             IntVar y = Factory.makeIntVar(cp, -5, 20);
             cp.post(new Maximum(x, y));
@@ -87,7 +87,7 @@ public class MaximumTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x1 = Factory.makeIntVar(cp, 0, 0);
             IntVar x2 = Factory.makeIntVar(cp, 1, 1);
             IntVar x3 = Factory.makeIntVar(cp, 2, 2);
@@ -109,7 +109,7 @@ public class MaximumTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x1 = Factory.makeIntVar(cp, 0, 10);
             IntVar x2 = Factory.makeIntVar(cp, 0, 10);
             IntVar x3 = Factory.makeIntVar(cp, -5, 50);
@@ -134,7 +134,7 @@ public class MaximumTest extends SolverTest {
     public void maximumTest4() {
         try {
             try {
-                Solver cp = solverFactory.get();
+                CPSolver cp = solverFactory.get();
                 IntVar[] x = Factory.makeIntVarArray(cp, 4, 5);
                 IntVar y = Factory.makeIntVar(cp, -5, 20);
 

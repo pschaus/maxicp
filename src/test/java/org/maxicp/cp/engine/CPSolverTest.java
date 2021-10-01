@@ -18,7 +18,7 @@ package org.maxicp.cp.engine;
 
 import com.github.guillaumederval.javagrading.GradingRunnerWithParametersFactory;
 import org.maxicp.cp.engine.core.MiniCP;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.state.Copier;
 import org.maxicp.state.Trailer;
 import org.junit.runner.RunWith;
@@ -28,10 +28,10 @@ import java.util.function.Supplier;
 
 @RunWith(Parameterized.class)
 @Parameterized.UseParametersRunnerFactory(GradingRunnerWithParametersFactory.class)
-public abstract class SolverTest {
+public abstract class CPSolverTest {
 
     @Parameterized.Parameters
-    public static Supplier<Solver>[] data() {
+    public static Supplier<CPSolver>[] data() {
         return new Supplier[]{
                 () -> new MiniCP(new Trailer()),
                 () -> new MiniCP(new Copier()),
@@ -39,5 +39,5 @@ public abstract class SolverTest {
     }
 
     @Parameterized.Parameter
-    public Supplier<Solver> solverFactory;
+    public Supplier<CPSolver> solverFactory;
 }

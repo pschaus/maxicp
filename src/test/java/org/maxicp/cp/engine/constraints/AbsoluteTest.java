@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
@@ -28,12 +28,12 @@ import org.maxicp.Factory;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class AbsoluteTest extends SolverTest {
+public class AbsoluteTest extends CPSolverTest {
     @Test
     public void simpleTest0() {
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -5, 5);
             IntVar y = Factory.makeIntVar(cp, -10, 10);
 
@@ -63,7 +63,7 @@ public class AbsoluteTest extends SolverTest {
     @Test
     public void simpleTest1() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -5, 5);
             IntVar y = Factory.makeIntVar(cp, -10, 10);
 
@@ -88,7 +88,7 @@ public class AbsoluteTest extends SolverTest {
     @Test
     public void simpleTest2() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -5, 0);
             IntVar y = Factory.makeIntVar(cp, 4, 4);
 
@@ -109,7 +109,7 @@ public class AbsoluteTest extends SolverTest {
     @Test
     public void simpleTest3() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, 7, 7);
             IntVar y = Factory.makeIntVar(cp, -1000, 12);
 
@@ -130,7 +130,7 @@ public class AbsoluteTest extends SolverTest {
     @Test
     public void simpleTest4() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -5, 10);
             IntVar y = Factory.makeIntVar(cp, -6, 7);
 

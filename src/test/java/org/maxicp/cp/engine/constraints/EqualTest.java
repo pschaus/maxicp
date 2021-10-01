@@ -15,9 +15,9 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
@@ -27,7 +27,7 @@ import org.maxicp.Factory;
 import static org.junit.Assert.*;
 
 
-public class EqualTest extends SolverTest {
+public class EqualTest extends CPSolverTest {
 
     private static boolean equalDom(IntVar x, IntVar y) {
         for (int v = x.min(); v < x.max(); v++) {
@@ -47,7 +47,7 @@ public class EqualTest extends SolverTest {
     public void equal1() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp,0,10);
             IntVar y = Factory.makeIntVar(cp,0,10);
 
@@ -85,7 +85,7 @@ public class EqualTest extends SolverTest {
     public void equal2() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp,Integer.MAX_VALUE-20,Integer.MAX_VALUE-1);
             IntVar y = Factory.makeIntVar(cp,Integer.MAX_VALUE-10,Integer.MAX_VALUE-1);
 

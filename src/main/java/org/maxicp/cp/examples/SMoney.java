@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.BranchingScheme;
@@ -47,7 +47,7 @@ public class SMoney {
     };
 
     public static void main(String[] args) {
-        Solver cp = Factory.makeSolver(false);
+        CPSolver cp = Factory.makeSolver(false);
         IntVar[] values = Factory.makeIntVarArray(cp, Y.val + 1, 0, 9);
         IntVar[] carry = Factory.makeIntVarArray(cp, 4, 0, 1);
 

@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -31,13 +31,13 @@ import org.maxicp.Factory;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class OrTest extends SolverTest {
+public class OrTest extends CPSolverTest {
 
     @Test
     public void or1() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             cp.post(new Or(x));
 
@@ -62,7 +62,7 @@ public class OrTest extends SolverTest {
     public void or2() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             cp.post(new Or(x));
 
@@ -95,7 +95,7 @@ public class OrTest extends SolverTest {
     @Test
     public void or3() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             
             for (BoolVar xi : x) {

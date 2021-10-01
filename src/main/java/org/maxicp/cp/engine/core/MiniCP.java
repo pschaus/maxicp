@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Queue;
 
 
-public class MiniCP implements Solver {
+public class MiniCP implements CPSolver {
 
     private Queue<CPConstraint> propagationQueue = new ArrayDeque<>();
     private List<Procedure> fixPointListeners = new LinkedList<>();

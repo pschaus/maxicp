@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -34,12 +34,12 @@ import java.util.HashSet;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class AllDifferentDCTest extends SolverTest {
+public class AllDifferentDCTest extends CPSolverTest {
 
     @Test
     public void allDifferentTest1() {
 
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
@@ -62,7 +62,7 @@ public class AllDifferentDCTest extends SolverTest {
     @Test
     public void allDifferentTest2() {
 
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
@@ -80,7 +80,7 @@ public class AllDifferentDCTest extends SolverTest {
     }
 
 
-    private static IntVar makeIVar(Solver cp, Integer... values) {
+    private static IntVar makeIVar(CPSolver cp, Integer... values) {
         return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
@@ -88,7 +88,7 @@ public class AllDifferentDCTest extends SolverTest {
     @Test
     public void allDifferentTest3() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = new IntVar[]{
                     makeIVar(cp, 1, 2),
                     makeIVar(cp, 1, 2),
@@ -111,7 +111,7 @@ public class AllDifferentDCTest extends SolverTest {
     @Test
     public void allDifferentTest5() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = new IntVar[]{
                     makeIVar(cp, 1, 2, 3, 4, 5),
                     makeIVar(cp, 2),
@@ -143,7 +143,7 @@ public class AllDifferentDCTest extends SolverTest {
     @Test
     public void allDifferentTest6() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = new IntVar[]{
                     makeIVar(cp, 1, 2, 3, 4, 5),
                     makeIVar(cp, 2, 7),
@@ -193,7 +193,7 @@ public class AllDifferentDCTest extends SolverTest {
     @Test
     public void allDifferentTest7() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = new IntVar[]{
                     makeIVar(cp, 3, 4),
                     makeIVar(cp, 1),
@@ -225,7 +225,7 @@ public class AllDifferentDCTest extends SolverTest {
     @Test
     public void allDifferentTest8() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = new IntVar[]{
                     makeIVar(cp, 0,2,3,5),
                     makeIVar(cp, 4),

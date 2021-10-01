@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.constraints.Cumulative;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
 import org.maxicp.search.SearchStatistics;
@@ -72,7 +72,7 @@ public class RCPSP {
 
         // The Model
 
-        Solver cp = makeSolver();
+        CPSolver cp = makeSolver();
 
         IntVar[] start = makeIntVarArray(cp, nActivities, horizon);
         IntVar[] end = new IntVar[nActivities];

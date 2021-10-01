@@ -16,7 +16,7 @@
 package org.maxicp;
 
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.LimitedDiscrepancyBranching;
 import org.maxicp.search.Sequencer;
 import org.maxicp.util.Procedure;
@@ -55,7 +55,7 @@ import static org.maxicp.Factory.notEqual;
  * });
  * }
  * </pre>
- * @see Factory#makeDfs(Solver, Supplier)
+ * @see Factory#makeDfs(CPSolver, Supplier)
  */
 public final class BranchingScheme {
 
@@ -68,7 +68,7 @@ public final class BranchingScheme {
      * to notify the solver that there are no branches
      * to create any more and that the current state should
      * be considered as a solution.
-     * @see Factory#makeDfs(Solver, Supplier)
+     * @see Factory#makeDfs(CPSolver, Supplier)
      */
     public static final Procedure[] EMPTY = new Procedure[0];
 
@@ -119,7 +119,7 @@ public final class BranchingScheme {
      * The right branch removing this minimum value from the domain.
      * @param x the variable on which the first fail strategy is applied.
      * @return a first-fail branching strategy
-     * @see Factory#makeDfs(Solver, Supplier)
+     * @see Factory#makeDfs(CPSolver, Supplier)
      */
     public static Supplier<Procedure[]> firstFail(IntVar... x) {
         return () -> {

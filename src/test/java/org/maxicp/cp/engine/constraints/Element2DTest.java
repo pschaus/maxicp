@@ -15,9 +15,9 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -30,14 +30,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class Element2DTest extends SolverTest {
+public class Element2DTest extends CPSolverTest {
 
     @Test
     public void element2dTest1() {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -2, 40);
             IntVar y = Factory.makeIntVar(cp, -3, 10);
             IntVar z = Factory.makeIntVar(cp, 2, 40);
@@ -92,7 +92,7 @@ public class Element2DTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -2, 40);
             IntVar y = Factory.makeIntVar(cp, -3, 10);
             IntVar z = Factory.makeIntVar(cp, -20, 40);

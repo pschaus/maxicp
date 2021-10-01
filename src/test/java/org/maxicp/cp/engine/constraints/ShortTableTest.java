@@ -17,9 +17,9 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.Grade;
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
@@ -36,7 +36,7 @@ import java.util.Random;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class ShortTableTest extends SolverTest {
+public class ShortTableTest extends CPSolverTest {
 
 
     private int[][] randomTuples(Random rand, int arity, int nTuples, int minvalue, int maxvalue) {
@@ -51,7 +51,7 @@ public class ShortTableTest extends SolverTest {
     public void simpleTest0() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 2, 1);
             int[][] table = new int[][]{{0, 0}};
             cp.post(new ShortTableCT(x, table, -1));
@@ -68,7 +68,7 @@ public class ShortTableTest extends SolverTest {
     public void simpleTest3() {
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 3, 12);
             int[][] table = new int[][]{{0, 0, 2},
                     {3, 5, 7},
@@ -121,7 +121,7 @@ public class ShortTableTest extends SolverTest {
         SearchStatistics statsAlgo;
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
             cp.post(new ShortTableDecomp(new IntVar[]{x[0], x[1], x[2]}, t1, star));
@@ -133,7 +133,7 @@ public class ShortTableTest extends SolverTest {
         }
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
             cp.post(new ShortTableCT(new IntVar[]{x[0], x[1], x[2]}, t1, star));
@@ -167,7 +167,7 @@ public class ShortTableTest extends SolverTest {
                     {2147483647, 2147483647}
             };
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             final IntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0)));
             final IntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-1, 2)));
@@ -192,7 +192,7 @@ public class ShortTableTest extends SolverTest {
             // This table should accept all values.
             final int[][] table = {{0, 0}};
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             final IntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-5)));
             final IntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-5)));
 
@@ -214,7 +214,7 @@ public class ShortTableTest extends SolverTest {
                     {2147483647, 2147483647} // means *, *
             };
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x0 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(0)));
             IntVar x1 = Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(-1, 2)));
 

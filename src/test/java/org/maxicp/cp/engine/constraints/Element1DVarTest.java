@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -36,9 +36,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class Element1DVarTest extends SolverTest {
+public class Element1DVarTest extends CPSolverTest {
 
-    private static IntVar makeIVar(Solver cp, Integer... values) {
+    private static IntVar makeIVar(CPSolver cp, Integer... values) {
         return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
@@ -47,7 +47,7 @@ public class Element1DVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar y = Factory.makeIntVar(cp, -3, 10);
             IntVar z = Factory.makeIntVar(cp, 2, 40);
 
@@ -87,7 +87,7 @@ public class Element1DVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar y = Factory.makeIntVar(cp, -3, 10);
             IntVar z = Factory.makeIntVar(cp, -4, 40);
 
@@ -130,7 +130,7 @@ public class Element1DVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar y = Factory.makeIntVar(cp, -3, 10);
             IntVar z = Factory.makeIntVar(cp, -20, 40);
 
@@ -159,7 +159,7 @@ public class Element1DVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x0 = makeIVar(cp, 0, 1, 5);
             IntVar x1 = makeIVar(cp, -5, -4, -3, -2, 0, 1, 5);
             IntVar x2 = makeIVar(cp, -2, 0);

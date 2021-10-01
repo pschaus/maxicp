@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.core;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.junit.Test;
@@ -25,12 +25,12 @@ import org.maxicp.Factory;
 import static org.junit.Assert.assertEquals;
 
 
-public class MiniCPTest extends SolverTest {
+public class MiniCPTest extends CPSolverTest {
 
 
     @Test
     public void testSolveSubjectTo() {
-        Solver cp = Factory.makeSolver();
+        CPSolver cp = Factory.makeSolver();
         IntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
 
         DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
@@ -51,7 +51,7 @@ public class MiniCPTest extends SolverTest {
 
     @Test
     public void testDFS() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         IntVar[] values = Factory.makeIntVarArray(cp, 3, 2);
 
         DFSearch dfs = Factory.makeDfs(cp, () -> {

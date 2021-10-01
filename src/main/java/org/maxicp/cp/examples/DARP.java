@@ -18,7 +18,7 @@ package org.maxicp.cp.examples;
 import org.maxicp.cp.engine.constraints.Circuit;
 import org.maxicp.cp.engine.constraints.Element1DVar;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 
@@ -35,7 +35,7 @@ import static org.maxicp.Factory.*;
 public class DARP {
 
     public static IntVar elementVar(IntVar[] array, IntVar y) {
-        Solver cp = y.getSolver();
+        CPSolver cp = y.getSolver();
         int min = IntStream.range(0, array.length).map(i -> array[i].min()).min().getAsInt();
         int max = IntStream.range(0, array.length).map(i -> array[i].max()).max().getAsInt();
         IntVar z = makeIntVar(cp, min,max);
@@ -96,7 +96,7 @@ public class DARP {
         }
 
 
-        Solver cp = makeSolver();
+        CPSolver cp = makeSolver();
 
 
         IntVar [] succ = makeIntVarArray(cp, 2*n+1,2*n+1);

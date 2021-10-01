@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.core;
 
 import com.github.guillaumederval.javagrading.Grade;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
@@ -31,13 +31,13 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 
-public class IntVarTest extends SolverTest {
+public class IntVarTest extends CPSolverTest {
 
     public boolean propagateCalled = false;
 
     @Test
     public void testIntVar() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar x = Factory.makeIntVar(cp, 10);
         IntVar y = Factory.makeIntVar(cp, 10);
@@ -83,7 +83,7 @@ public class IntVarTest extends SolverTest {
     @Test
     public void onDomainChangeOnBind() {
         propagateCalled = false;
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar x = Factory.makeIntVar(cp, 10);
         IntVar y = Factory.makeIntVar(cp, 10);
@@ -122,7 +122,7 @@ public class IntVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar x = Factory.makeIntVar(cp, -10, 10);
 
@@ -175,7 +175,7 @@ public class IntVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             Set<Integer> dom = new HashSet<>(Arrays.asList(-7, -10, 6, 9, 10, 12));
 
@@ -221,7 +221,7 @@ public class IntVarTest extends SolverTest {
     @Test
     public void onBoundChange() {
 
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar x = Factory.makeIntVar(cp, 10);
         IntVar y = Factory.makeIntVar(cp, 10);
@@ -267,7 +267,7 @@ public class IntVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar x = Factory.makeIntVar(cp, 10);
 
@@ -307,7 +307,7 @@ public class IntVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, 10);
 
             CPConstraint cons = new AbstractCPConstraint(cp) {
@@ -354,7 +354,7 @@ public class IntVarTest extends SolverTest {
     @Grade(value = 0.5, cpuTimeout = 1000)
     public void fillArray() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar x = Factory.makeIntVar(cp, 2, 9);
             x.remove(3);
@@ -382,7 +382,7 @@ public class IntVarTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             Set<Integer> dom = new HashSet<>(Arrays.asList(2147483645));
             IntVar var1 = Factory.makeIntVar(cp, dom);
             assertEquals(2147483645, var1.max());

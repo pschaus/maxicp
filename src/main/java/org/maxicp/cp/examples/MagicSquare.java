@@ -18,7 +18,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.BranchingScheme;
@@ -37,7 +37,7 @@ public class MagicSquare {
         int n = 6;
         int sumResult = n * (n * n + 1) / 2;
 
-        Solver cp = Factory.makeSolver();
+        CPSolver cp = Factory.makeSolver();
         IntVar[][] x = new IntVar[n][n];
 
         for (int i = 0; i < n; i++) {

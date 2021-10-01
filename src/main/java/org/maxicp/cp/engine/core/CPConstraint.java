@@ -43,7 +43,7 @@ public interface CPConstraint {
      * @param scheduled a value that is true when the constraint
      *                  is enqueued in the propagation queue,
      *                  false when dequeued
-     * @see Solver#fixPoint()
+     * @see CPSolver#fixPoint()
      */
     void setScheduled(boolean scheduled);
 

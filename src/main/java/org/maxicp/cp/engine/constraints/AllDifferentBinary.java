@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 
 public class AllDifferentBinary extends AbstractCPConstraint {
 
@@ -30,7 +30,7 @@ public class AllDifferentBinary extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        Solver cp = x[0].getSolver();
+        CPSolver cp = x[0].getSolver();
         for (int i = 0; i < x.length; i++) {
             for (int j = i + 1; j < x.length; j++) {
                 cp.post(new NotEqual(x[i], x[j]), false);

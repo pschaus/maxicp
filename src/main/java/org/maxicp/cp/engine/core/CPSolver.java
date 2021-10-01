@@ -21,7 +21,7 @@ import org.maxicp.util.Procedure;
 import org.maxicp.search.DFSearch;
 import org.maxicp.util.exception.InconsistencyException;
 
-public interface Solver {
+public interface CPSolver {
 
     /**
      * Posts the constraint, that is call {@link CPConstraint#post()} and

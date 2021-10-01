@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.constraints.Disjunctive;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
 import org.maxicp.search.SearchStatistics;
@@ -67,7 +67,7 @@ public class JobShop {
                 }
             }
 
-            Solver cp = Factory.makeSolver();
+            CPSolver cp = Factory.makeSolver();
 
             IntVar[][] start = new IntVar[nJobs][nMachines];
             IntVar[][] end = new IntVar[nJobs][nMachines];

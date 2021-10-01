@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -31,13 +31,13 @@ import org.maxicp.Factory;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class IsOrTest extends SolverTest {
+public class IsOrTest extends CPSolverTest {
 
     @Test
     public void isOr1() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             BoolVar b = Factory.makeBoolVar(cp);
             cp.post(new IsOr(b, x));
@@ -91,7 +91,7 @@ public class IsOrTest extends SolverTest {
     @Test
     public void isOr2() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             BoolVar[] x = new BoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
             BoolVar b = Factory.makeBoolVar(cp);
             cp.post(new IsOr(b, x));

@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.core;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.IntOverFlowException;
 import org.junit.Test;
@@ -25,13 +25,13 @@ import static org.maxicp.Factory.makeIntVar;
 import static org.junit.Assert.*;
 
 
-public class IntVarViewOffsetTest extends SolverTest {
+public class IntVarViewOffsetTest extends CPSolverTest {
 
     public boolean propagateCalled = false;
 
     @Test
     public void testIntVar() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar x = Factory.plus(Factory.makeIntVar(cp, -3, 4), 3); // domain is {0,1,2,3,4,5,6,7}
 
@@ -83,7 +83,7 @@ public class IntVarViewOffsetTest extends SolverTest {
     @Test
     public void onDomainChangeOnBind() {
         propagateCalled = false;
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
         IntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
@@ -122,7 +122,7 @@ public class IntVarViewOffsetTest extends SolverTest {
     @Test
     public void onBoundChange() {
 
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1);
         IntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1);
@@ -164,7 +164,7 @@ public class IntVarViewOffsetTest extends SolverTest {
 
     @Test(expected = IntOverFlowException.class)
     public void testOverFlow() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         IntVar x = Factory.plus(Factory.makeIntVar(cp, Integer.MAX_VALUE - 5, Integer.MAX_VALUE - 2), 3);
     }
 

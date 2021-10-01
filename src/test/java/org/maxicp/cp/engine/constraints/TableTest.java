@@ -16,10 +16,10 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
@@ -37,7 +37,7 @@ import java.util.function.BiFunction;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class TableTest extends SolverTest {
+public class TableTest extends CPSolverTest {
 
     private static List<BiFunction<IntVar[], int[][], CPConstraint>> getAlgos() {
         List<BiFunction<IntVar[], int[][], CPConstraint>> algos = new ArrayList<>();
@@ -58,7 +58,7 @@ public class TableTest extends SolverTest {
     public void simpleTest0() {
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 2, 1);
             int[][] table = new int[][]{{0, 0}};
             cp.post(new TableCT(x, table));
@@ -74,7 +74,7 @@ public class TableTest extends SolverTest {
     @Test
     public void simpleTest1() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 3, 12);
             int[][] table = new int[][]{{0, 0, 2},
                     {3, 5, 7},
@@ -127,7 +127,7 @@ public class TableTest extends SolverTest {
         SearchStatistics statsAlgo;
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
             cp.post(new TableDecomp(new IntVar[]{x[0], x[1], x[2]}, t1));
@@ -139,7 +139,7 @@ public class TableTest extends SolverTest {
         }
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
             cp.post(Factory.allDifferent(x));
             cp.post(tc.apply(new IntVar[]{x[0], x[1], x[2]}, t1));

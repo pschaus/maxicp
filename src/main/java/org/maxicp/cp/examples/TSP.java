@@ -18,7 +18,7 @@ package org.maxicp.cp.examples;
 import org.maxicp.cp.engine.constraints.Circuit;
 import org.maxicp.cp.engine.constraints.Element1D;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
 import org.maxicp.util.io.InputReader;
@@ -46,7 +46,7 @@ public class TSP {
 
         int[][] distanceMatrix = reader.getMatrix(n, n);
 
-        Solver cp = makeSolver(false);
+        CPSolver cp = makeSolver(false);
         IntVar[] succ = makeIntVarArray(cp, n, n);
         IntVar[] distSucc = makeIntVarArray(cp, n, 1000);
 

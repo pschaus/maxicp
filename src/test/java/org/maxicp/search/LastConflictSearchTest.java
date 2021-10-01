@@ -19,7 +19,7 @@ import com.github.guillaumederval.javagrading.GradeClass;
 import com.github.guillaumederval.javagrading.GradingRunner;
 import org.maxicp.BranchingScheme;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class LastConflictSearchTest {
     @Test
     public void testExample1() {
         try {
-            Solver cp = Factory.makeSolver();
+            CPSolver cp = Factory.makeSolver();
             IntVar[] x = Factory.makeIntVarArray(cp, 8, 8);
             for(int i = 4; i < 8; i++)
                 x[i].removeAbove(2);

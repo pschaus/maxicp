@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
 import org.maxicp.search.SearchStatistics;
@@ -37,7 +37,7 @@ public class MaximizeTest {
         try {
             try {
 
-                Solver cp = Factory.makeSolver();
+                CPSolver cp = Factory.makeSolver();
                 IntVar y = Factory.makeIntVar(cp, 10, 20);
 
                 IntVar[] x = new IntVar[]{y};

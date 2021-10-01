@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class CircuitTest extends SolverTest {
+public class CircuitTest extends CPSolverTest {
 
 
     int[] circuit1ok = new int[]{1, 2, 3, 4, 5, 0};
@@ -59,7 +59,7 @@ public class CircuitTest extends SolverTest {
         return true;
     }
 
-    public static IntVar[] instanciate(Solver cp, int[] circuit) {
+    public static IntVar[] instanciate(CPSolver cp, int[] circuit) {
         IntVar[] x = new IntVar[circuit.length];
         for (int i = 0; i < circuit.length; i++) {
             x[i] = Factory.makeIntVar(cp, circuit[i], circuit[i]);
@@ -71,7 +71,7 @@ public class CircuitTest extends SolverTest {
     public void testCircuitOk() {
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             cp.post(new Circuit(instanciate(cp, circuit1ok)));
             cp.post(new Circuit(instanciate(cp, circuit2ok)));
         } catch (InconsistencyException e) {
@@ -86,13 +86,13 @@ public class CircuitTest extends SolverTest {
     public void testCircuitKo() {
         try {
             try {
-                Solver cp = solverFactory.get();
+                CPSolver cp = solverFactory.get();
                 cp.post(new Circuit(instanciate(cp, circuit1ko)));
                 fail("should fail");
             } catch (InconsistencyException e) {
             }
             try {
-                Solver cp = Factory.makeSolver();
+                CPSolver cp = Factory.makeSolver();
                 cp.post(new Circuit(instanciate(cp, circuit2ko)));
                 fail("should fail");
             } catch (InconsistencyException e) {
@@ -107,7 +107,7 @@ public class CircuitTest extends SolverTest {
     public void testAllSolutions() {
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
             cp.post(new Circuit(x));
 

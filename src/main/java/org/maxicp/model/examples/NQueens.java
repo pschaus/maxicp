@@ -4,7 +4,7 @@ package org.maxicp.model.examples;
 import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.CPInstantiableConstraint;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.model.IntVar;
 import org.maxicp.model.Model;
 import org.maxicp.model.constraints.AllDifferent;
@@ -36,7 +36,7 @@ public class NQueens {
 
 
 class AllDifferentPersoCP extends AbstractCPConstraint {
-    public AllDifferentPersoCP(Solver cp) {
+    public AllDifferentPersoCP(CPSolver cp) {
         super(cp);
     }
 
@@ -49,7 +49,7 @@ class AllDifferentPersoCP extends AbstractCPConstraint {
         }
 
         @Override
-        public AbstractCPConstraint instantiate(Solver cpSolver) {
+        public AbstractCPConstraint instantiate(CPSolver cpSolver) {
             return new AllDifferentPersoCP(cpSolver/*cpSolver.get(a), cpSolver.get(b)*/);
         }
     }

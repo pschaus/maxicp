@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
 import org.maxicp.search.SearchStatistics;
@@ -77,7 +77,7 @@ public class QAP {
      * @return list of solutions encountered
      */
     public static List<Integer> solve(int n, int[][] w, int[][] d, boolean verbose, Predicate<SearchStatistics> limit) {
-        Solver cp = makeSolver();
+        CPSolver cp = makeSolver();
         IntVar[] x = makeIntVarArray(cp, n, n);
 
         cp.post(allDifferent(x));

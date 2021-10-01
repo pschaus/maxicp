@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.Procedure;
@@ -34,7 +34,7 @@ import static org.maxicp.Factory.notEqual;
 public class NQueens {
     public static void main(String[] args) {
         int n = 8;
-        Solver cp = Factory.makeSolver(false);
+        CPSolver cp = Factory.makeSolver(false);
         IntVar[] q = Factory.makeIntVarArray(cp, n, n);
 
 

@@ -28,11 +28,11 @@ public abstract class AbstractCPConstraint implements CPConstraint {
     /**
      * The solver in which the constraint is created
      */
-    private final Solver cp;
+    private final CPSolver cp;
     private boolean scheduled = false;
     private final State<Boolean> active;
 
-    public AbstractCPConstraint(Solver cp) {
+    public AbstractCPConstraint(CPSolver cp) {
         this.cp = cp;
         active = cp.getStateManager().makeStateRef(true);
     }
@@ -40,7 +40,7 @@ public abstract class AbstractCPConstraint implements CPConstraint {
     public void post() {
     }
 
-    public Solver getSolver() {
+    public CPSolver getSolver() {
         return cp;
     }
 

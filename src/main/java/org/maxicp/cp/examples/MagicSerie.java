@@ -17,7 +17,7 @@ package org.maxicp.cp.examples;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 
@@ -34,7 +34,7 @@ public class MagicSerie {
     public static void main(String[] args) {
 
         int n = 300;
-        Solver cp = makeSolver(false);
+        CPSolver cp = makeSolver(false);
 
         IntVar[] s = makeIntVarArray(cp, n, n);
 

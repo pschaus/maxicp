@@ -18,7 +18,7 @@ package org.maxicp.cp.examples;
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.constraints.TableCT;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.io.InputReader;
@@ -90,7 +90,7 @@ public class Eternity {
         }
         // END STRIP
 
-        Solver cp = makeSolver();
+        CPSolver cp = makeSolver();
 
         //   |         |
         // - +---------+- -

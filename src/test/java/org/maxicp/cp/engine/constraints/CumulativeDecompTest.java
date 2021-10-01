@@ -17,9 +17,9 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.Grade;
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class CumulativeDecompTest extends SolverTest {
+public class CumulativeDecompTest extends CPSolverTest {
 
 
     @Test
@@ -44,7 +44,7 @@ public class CumulativeDecompTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar[] s = Factory.makeIntVarArray(cp, 5, 5);
             int[] d = new int[5];
@@ -70,7 +70,7 @@ public class CumulativeDecompTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
             int[] d = new int[]{5, 5};
@@ -94,7 +94,7 @@ public class CumulativeDecompTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
             int[] d = new int[]{5, 5};
@@ -120,7 +120,7 @@ public class CumulativeDecompTest extends SolverTest {
 
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
 
             IntVar[] s = Factory.makeIntVarArray(cp, 5, 10);
             int[] d = new int[]{5, 10, 3, 6, 1};

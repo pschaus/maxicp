@@ -28,7 +28,7 @@ import java.util.Set;
  */
 public class IntVarImpl implements IntVar {
 
-    private Solver cp;
+    private CPSolver cp;
     private IntDomain domain;
     private StateStack<CPConstraint> onDomain;
     private StateStack<CPConstraint> onBind;
@@ -68,7 +68,7 @@ public class IntVarImpl implements IntVar {
      * @param cp the solver in which the variable is created
      * @param n  the number of values with {@code n > 0}
      */
-    public IntVarImpl(Solver cp, int n) {
+    public IntVarImpl(CPSolver cp, int n) {
         this(cp, 0, n - 1);
     }
 
@@ -80,7 +80,7 @@ public class IntVarImpl implements IntVar {
      * @param min the minimum value of the domain
      * @param max the maximum value of the domain with {@code max >= min}
      */
-    public IntVarImpl(Solver cp, int min, int max) {
+    public IntVarImpl(CPSolver cp, int min, int max) {
         if (min == Integer.MIN_VALUE || max == Integer.MAX_VALUE) throw new InvalidParameterException("consider reducing the domains, Integer.MIN _VALUE and Integer.MAX_VALUE not allowed");
         if (min > max) throw new InvalidParameterException("at least one setValue in the domain");
         this.cp = cp;
@@ -98,7 +98,7 @@ public class IntVarImpl implements IntVar {
      * @param cp the solver in which the variable is created
      * @param values the initial values in the domain, it must be nonempty
      */
-    public IntVarImpl(Solver cp, Set<Integer> values) {
+    public IntVarImpl(CPSolver cp, Set<Integer> values) {
         // STUDENT throw new NotImplementedException();
         // BEGIN STRIP
         this(cp, values.stream().min(Integer::compare).get(), values.stream().max(Integer::compare).get());
@@ -115,7 +115,7 @@ public class IntVarImpl implements IntVar {
     }
 
     @Override
-    public Solver getSolver() {
+    public CPSolver getSolver() {
         return cp;
     }
 

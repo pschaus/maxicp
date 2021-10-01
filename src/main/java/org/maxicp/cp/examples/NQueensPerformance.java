@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 
@@ -28,7 +28,7 @@ import static org.maxicp.Factory.*;
 public class NQueensPerformance {
     public static void main(String[] args) {
         int n = 88;
-        Solver cp = makeSolver();
+        CPSolver cp = makeSolver();
         IntVar[] q = makeIntVarArray(cp, n, n);
 
         for (int i = 0; i < n; i++)

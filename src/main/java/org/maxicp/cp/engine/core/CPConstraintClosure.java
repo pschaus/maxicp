@@ -23,7 +23,7 @@ public class CPConstraintClosure extends AbstractCPConstraint {
 
     private final Procedure filtering;
 
-    public CPConstraintClosure(Solver cp, Procedure filtering) {
+    public CPConstraintClosure(CPSolver cp, Procedure filtering) {
         super(cp);
         this.filtering = filtering;
     }

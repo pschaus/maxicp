@@ -25,7 +25,7 @@ public interface IntVar {
      *
      * @return the solver in which this variable was created
      */
-    Solver getSolver();
+    CPSolver getSolver();
 
     /**
      * Asks that the closure is called whenever the domain

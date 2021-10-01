@@ -15,10 +15,10 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
@@ -31,13 +31,13 @@ import org.maxicp.Factory;
 import static org.junit.Assert.*;
 
 
-public class IsEqualTest extends SolverTest {
+public class IsEqualTest extends CPSolverTest {
 
     @Test
     public void test1() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -4, 7);
 
             BoolVar b = Factory.isEqual(x, -2);
@@ -62,7 +62,7 @@ public class IsEqualTest extends SolverTest {
     public void test2() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -4, 7);
 
             BoolVar b = Factory.isEqual(x, -2);
@@ -88,7 +88,7 @@ public class IsEqualTest extends SolverTest {
     public void test3() {
 
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -4, 7);
             cp.post(Factory.equal(x, -2));
 
@@ -114,7 +114,7 @@ public class IsEqualTest extends SolverTest {
     public void test4() {
         try {
 
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, -4, 7);
             BoolVar b = Factory.makeBoolVar(cp);
 

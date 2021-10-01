@@ -15,13 +15,13 @@
 
 package org.maxicp.cp.engine.core;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 
-public class DomainTest extends SolverTest {
+public class DomainTest extends CPSolverTest {
 
     private static class MyDomainListener implements DomainListener {
 
@@ -60,7 +60,7 @@ public class DomainTest extends SolverTest {
 
     @Test
     public void testDomain1() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         MyDomainListener dlistener = new MyDomainListener();
         IntDomain dom = new SparseSetDomain(cp.getStateManager(), 5, 10);
 
@@ -96,7 +96,7 @@ public class DomainTest extends SolverTest {
 
     @Test
     public void testDomain2() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         MyDomainListener dlistener = new MyDomainListener();
         IntDomain dom = new SparseSetDomain(cp.getStateManager(), 5, 10);
 
@@ -111,7 +111,7 @@ public class DomainTest extends SolverTest {
 
     @Test
     public void testDomain3() {
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
         MyDomainListener dlistener = new MyDomainListener();
         IntDomain dom = new SparseSetDomain(cp.getStateManager(), 5, 10);
 

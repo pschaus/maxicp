@@ -16,9 +16,9 @@
 package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
@@ -33,9 +33,9 @@ import static org.maxicp.Factory.makeIntVar;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
-public class MaximumMatchingTest extends SolverTest {
+public class MaximumMatchingTest extends CPSolverTest {
 
-    private static IntVar makeIVar(Solver cp, Integer... values) {
+    private static IntVar makeIVar(CPSolver cp, Integer... values) {
         return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
@@ -55,7 +55,7 @@ public class MaximumMatchingTest extends SolverTest {
     @Test
     public void test1() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = new IntVar[]{
                     makeIVar(cp, 1, 2),
                     makeIVar(cp, 1, 2),
@@ -87,7 +87,7 @@ public class MaximumMatchingTest extends SolverTest {
     @Test
     public void test2() {
         try {
-            Solver cp = solverFactory.get();
+            CPSolver cp = solverFactory.get();
             IntVar[] x = new IntVar[]{
                     makeIVar(cp, 1, 4, 5),
                     makeIVar(cp, 9, 10), // will be 10

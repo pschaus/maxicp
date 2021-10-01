@@ -15,9 +15,9 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.SolverTest;
+import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.cp.engine.core.Solver;
+import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
 import org.junit.Test;
@@ -27,12 +27,12 @@ import org.maxicp.Factory;
 import static org.junit.Assert.assertEquals;
 
 
-public class AllDifferentTest extends SolverTest {
+public class AllDifferentTest extends CPSolverTest {
 
     @Test
     public void allDifferentTest1() {
 
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
@@ -53,7 +53,7 @@ public class AllDifferentTest extends SolverTest {
     @Test
     public void allDifferentTest2() {
 
-        Solver cp = solverFactory.get();
+        CPSolver cp = solverFactory.get();
 
         IntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
 
