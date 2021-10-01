@@ -23,7 +23,7 @@ import org.maxicp.search.Objective;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class JobShop {
                 }
             }
 
-            CPSolver cp = Factory.makeSolver();
+            CPSolver cp = CPFactory.makeSolver();
 
             CPIntVar[][] start = new CPIntVar[nJobs][nMachines];
             CPIntVar[][] end = new CPIntVar[nJobs][nMachines];
@@ -83,15 +83,15 @@ public class JobShop {
 
                 for (int j = 0; j < nMachines; j++) {
 
-                    start[i][j] = Factory.makeIntVar(cp, 0, horizon);
-                    end[i][j] = Factory.plus(start[i][j], duration[i][j]);
+                    start[i][j] = CPFactory.makeIntVar(cp, 0, horizon);
+                    end[i][j] = CPFactory.plus(start[i][j], duration[i][j]);
                     int m = machine[i][j];
                     startOnMachine[m].add(start[i][j]);
                     durationsOnMachine[m].add(duration[i][j]);
 
                     if (j > 0) {
                         // precedence constraint
-                        cp.post(Factory.lessOrEqual(end[i][j - 1], start[i][j]));
+                        cp.post(CPFactory.lessOrEqual(end[i][j - 1], start[i][j]));
                     }
                 }
                 endLast[i] = end[i][nMachines - 1];
@@ -108,12 +108,12 @@ public class JobShop {
                 cp.post(new Disjunctive(starts, durations));
             }
 
-            CPIntVar makespan = Factory.maximum(endLast);
+            CPIntVar makespan = CPFactory.maximum(endLast);
 
 
             Objective obj = cp.minimize(makespan);
 
-            DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(flatten(start)));
+            DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(flatten(start)));
 
 
             dfs.onSolution(() ->

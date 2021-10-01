@@ -21,7 +21,7 @@ import org.maxicp.cp.engine.core.CPIntVar;
 import java.util.ArrayList;
 import java.util.BitSet;
 
-import static org.maxicp.Factory.minus;
+import static org.maxicp.cp.CPFactory.minus;
 
 /**
  * Negative table constraint

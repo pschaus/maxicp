@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
@@ -47,21 +47,21 @@ public class SMoney {
     };
 
     public static void main(String[] args) {
-        CPSolver cp = Factory.makeSolver(false);
-        CPIntVar[] values = Factory.makeIntVarArray(cp, Y.val + 1, 0, 9);
-        CPIntVar[] carry = Factory.makeIntVarArray(cp, 4, 0, 1);
+        CPSolver cp = CPFactory.makeSolver(false);
+        CPIntVar[] values = CPFactory.makeIntVarArray(cp, Y.val + 1, 0, 9);
+        CPIntVar[] carry = CPFactory.makeIntVarArray(cp, 4, 0, 1);
 
-        cp.post(Factory.allDifferent(values));
-        cp.post(Factory.notEqual(values[S.val], 0));
-        cp.post(Factory.notEqual(values[M.val], 0));
-        cp.post(Factory.equal(values[M.val], carry[3]));
-        cp.post(Factory.equal(Factory.sum(carry[2], values[S.val], values[M.val], Factory.minus(values[O.val]), Factory.mul(carry[3], -10)), 0));
-        cp.post(Factory.equal(Factory.sum(carry[1], values[E.val], values[O.val], Factory.minus(values[N.val]), Factory.mul(carry[2], -10)), 0));
-        cp.post(Factory.equal(Factory.sum(carry[0], values[N.val], values[R.val], Factory.minus(values[E.val]), Factory.mul(carry[1], -10)), 0));
-        cp.post(Factory.equal(Factory.sum(values[D.val], values[E.val], Factory.minus(values[Y.val]), Factory.mul(carry[0], -10)), 0));
+        cp.post(CPFactory.allDifferent(values));
+        cp.post(CPFactory.notEqual(values[S.val], 0));
+        cp.post(CPFactory.notEqual(values[M.val], 0));
+        cp.post(CPFactory.equal(values[M.val], carry[3]));
+        cp.post(CPFactory.equal(CPFactory.sum(carry[2], values[S.val], values[M.val], CPFactory.minus(values[O.val]), CPFactory.mul(carry[3], -10)), 0));
+        cp.post(CPFactory.equal(CPFactory.sum(carry[1], values[E.val], values[O.val], CPFactory.minus(values[N.val]), CPFactory.mul(carry[2], -10)), 0));
+        cp.post(CPFactory.equal(CPFactory.sum(carry[0], values[N.val], values[R.val], CPFactory.minus(values[E.val]), CPFactory.mul(carry[1], -10)), 0));
+        cp.post(CPFactory.equal(CPFactory.sum(values[D.val], values[E.val], CPFactory.minus(values[Y.val]), CPFactory.mul(carry[0], -10)), 0));
 
 
-        DFSearch search = Factory.makeDfs(cp, BranchingScheme.firstFail(values));
+        DFSearch search = CPFactory.makeDfs(cp, BranchingScheme.firstFail(values));
 
         search.onSolution(() ->
                 System.out.println("solution:" + Arrays.toString(values))

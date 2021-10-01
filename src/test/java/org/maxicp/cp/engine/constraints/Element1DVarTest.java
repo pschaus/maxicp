@@ -26,12 +26,12 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.maxicp.Factory.makeIntVar;
+import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -39,7 +39,7 @@ import static org.junit.Assert.fail;
 public class Element1DVarTest extends CPSolverTest {
 
     private static CPIntVar makeIVar(CPSolver cp, Integer... values) {
-        return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
+        return CPFactory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
     @Test
@@ -48,10 +48,10 @@ public class Element1DVarTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
-            CPIntVar z = Factory.makeIntVar(cp, 2, 40);
+            CPIntVar y = CPFactory.makeIntVar(cp, -3, 10);
+            CPIntVar z = CPFactory.makeIntVar(cp, 2, 40);
 
-            CPIntVar[] T = new CPIntVar[]{Factory.makeIntVar(cp, 9, 9), Factory.makeIntVar(cp, 8, 8), Factory.makeIntVar(cp, 7, 7), Factory.makeIntVar(cp, 5, 5), Factory.makeIntVar(cp, 6, 6)};
+            CPIntVar[] T = new CPIntVar[]{CPFactory.makeIntVar(cp, 9, 9), CPFactory.makeIntVar(cp, 8, 8), CPFactory.makeIntVar(cp, 7, 7), CPFactory.makeIntVar(cp, 5, 5), CPFactory.makeIntVar(cp, 6, 6)};
 
             cp.post(new Element1DVar(T, y, z));
 
@@ -88,14 +88,14 @@ public class Element1DVarTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
-            CPIntVar z = Factory.makeIntVar(cp, -4, 40);
+            CPIntVar y = CPFactory.makeIntVar(cp, -3, 10);
+            CPIntVar z = CPFactory.makeIntVar(cp, -4, 40);
 
-            CPIntVar[] T = new CPIntVar[]{Factory.makeIntVar(cp, 1, 2),
-                    Factory.makeIntVar(cp, 3, 4),
-                    Factory.makeIntVar(cp, 5, 6),
-                    Factory.makeIntVar(cp, 7, 8),
-                    Factory.makeIntVar(cp, 9, 10)};
+            CPIntVar[] T = new CPIntVar[]{CPFactory.makeIntVar(cp, 1, 2),
+                    CPFactory.makeIntVar(cp, 3, 4),
+                    CPFactory.makeIntVar(cp, 5, 6),
+                    CPFactory.makeIntVar(cp, 7, 8),
+                    CPFactory.makeIntVar(cp, 9, 10)};
 
             cp.post(new Element1DVar(T, y, z));
 
@@ -131,14 +131,14 @@ public class Element1DVarTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
-            CPIntVar z = Factory.makeIntVar(cp, -20, 40);
+            CPIntVar y = CPFactory.makeIntVar(cp, -3, 10);
+            CPIntVar z = CPFactory.makeIntVar(cp, -20, 40);
 
-            CPIntVar[] T = new CPIntVar[]{Factory.makeIntVar(cp, 9, 9), Factory.makeIntVar(cp, 8, 8), Factory.makeIntVar(cp, 7, 7), Factory.makeIntVar(cp, 5, 5), Factory.makeIntVar(cp, 6, 6)};
+            CPIntVar[] T = new CPIntVar[]{CPFactory.makeIntVar(cp, 9, 9), CPFactory.makeIntVar(cp, 8, 8), CPFactory.makeIntVar(cp, 7, 7), CPFactory.makeIntVar(cp, 5, 5), CPFactory.makeIntVar(cp, 6, 6)};
 
             cp.post(new Element1DVar(T, y, z));
 
-            DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(y, z));
+            DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(y, z));
             dfs.onSolution(() ->
                     assertEquals(T[y.min()].min(), z.min())
             );

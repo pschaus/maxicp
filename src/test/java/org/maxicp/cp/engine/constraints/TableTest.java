@@ -27,7 +27,7 @@ import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Assume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class TableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 2, 1);
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 2, 1);
             int[][] table = new int[][]{{0, 0}};
             cp.post(new TableCT(x, table));
 
@@ -75,7 +75,7 @@ public class TableTest extends CPSolverTest {
     public void simpleTest1() {
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 12);
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 3, 12);
             int[][] table = new int[][]{{0, 0, 2},
                     {3, 5, 7},
                     {6, 9, 10},
@@ -128,24 +128,24 @@ public class TableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
-            cp.post(Factory.allDifferent(x));
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 9);
+            cp.post(CPFactory.allDifferent(x));
             cp.post(new TableDecomp(new CPIntVar[]{x[0], x[1], x[2]}, t1));
             cp.post(new TableDecomp(new CPIntVar[]{x[2], x[3], x[4]}, t2));
             cp.post(new TableDecomp(new CPIntVar[]{x[0], x[2], x[4]}, t3));
-            statsDecomp = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
+            statsDecomp = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsDecomp = null;
         }
 
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
-            cp.post(Factory.allDifferent(x));
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 9);
+            cp.post(CPFactory.allDifferent(x));
             cp.post(tc.apply(new CPIntVar[]{x[0], x[1], x[2]}, t1));
             cp.post(tc.apply(new CPIntVar[]{x[2], x[3], x[4]}, t2));
             cp.post(tc.apply(new CPIntVar[]{x[0], x[2], x[4]}, t3));
-            statsAlgo = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
+            statsAlgo = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsAlgo = null;
         }

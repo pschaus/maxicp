@@ -19,9 +19,9 @@ import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.IntOverFlowException;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
-import static org.maxicp.Factory.makeIntVar;
+import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.*;
 
 
@@ -33,7 +33,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
     public void testIntVar() {
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.plus(Factory.makeIntVar(cp, -3, 4), 3); // domain is {0,1,2,3,4,5,6,7}
+        CPIntVar x = CPFactory.plus(CPFactory.makeIntVar(cp, -3, 4), 3); // domain is {0,1,2,3,4,5,6,7}
 
         assertEquals(0, x.min());
         assertEquals(7, x.max());
@@ -85,8 +85,8 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
         propagateCalled = false;
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
-        CPIntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
+        CPIntVar x = CPFactory.plus(CPFactory.makeIntVar(cp, 10), 1); // 1..11
+        CPIntVar y = CPFactory.plus(CPFactory.makeIntVar(cp, 10), 1); // 1..11
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
 
@@ -124,8 +124,8 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1);
-        CPIntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1);
+        CPIntVar x = CPFactory.plus(CPFactory.makeIntVar(cp, 10), 1);
+        CPIntVar y = CPFactory.plus(CPFactory.makeIntVar(cp, 10), 1);
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
 
@@ -165,7 +165,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
     @Test(expected = IntOverFlowException.class)
     public void testOverFlow() {
         CPSolver cp = solverFactory.get();
-        CPIntVar x = Factory.plus(Factory.makeIntVar(cp, Integer.MAX_VALUE - 5, Integer.MAX_VALUE - 2), 3);
+        CPIntVar x = CPFactory.plus(CPFactory.makeIntVar(cp, Integer.MAX_VALUE - 5, Integer.MAX_VALUE - 2), 3);
     }
 
 

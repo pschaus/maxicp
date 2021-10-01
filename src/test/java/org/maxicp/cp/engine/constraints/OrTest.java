@@ -26,7 +26,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.*;
 
@@ -38,16 +38,16 @@ public class OrTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar[] x = new CPBoolVar[]{CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp)};
             cp.post(new Or(x));
 
             for (CPBoolVar xi : x) {
                 assertTrue(!xi.isBound());
             }
 
-            cp.post(Factory.equal(x[1], 0));
-            cp.post(Factory.equal(x[2], 0));
-            cp.post(Factory.equal(x[3], 0));
+            cp.post(CPFactory.equal(x[1], 0));
+            cp.post(CPFactory.equal(x[2], 0));
+            cp.post(CPFactory.equal(x[3], 0));
             assertTrue(x[0].isTrue());
 
         } catch (InconsistencyException e) {
@@ -63,11 +63,11 @@ public class OrTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar[] x = new CPBoolVar[]{CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp)};
             cp.post(new Or(x));
 
 
-            DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
+            DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x));
 
             dfs.onSolution(() -> {
                         int nTrue = 0;
@@ -96,7 +96,7 @@ public class OrTest extends CPSolverTest {
     public void or3() {
         try {
             CPSolver cp = solverFactory.get();
-            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
+            CPBoolVar[] x = new CPBoolVar[]{CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp)};
             
             for (CPBoolVar xi : x) {
                 xi.assign(false);

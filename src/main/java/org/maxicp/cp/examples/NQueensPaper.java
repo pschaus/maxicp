@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
@@ -23,8 +23,8 @@ import org.maxicp.util.Procedure;
 
 import java.util.Arrays;
 
-import static org.maxicp.Factory.minus;
-import static org.maxicp.Factory.notEqual;
+import static org.maxicp.cp.CPFactory.minus;
+import static org.maxicp.cp.CPFactory.notEqual;
 
 /**
  * The N-Queens problem.
@@ -33,17 +33,17 @@ import static org.maxicp.Factory.notEqual;
 public class NQueensPaper {
     public static void main(String[] args) {
         int n = 8;
-        CPSolver cp = Factory.makeSolver(false);
-        CPIntVar[] q = Factory.makeIntVarArray(cp, n, n);
+        CPSolver cp = CPFactory.makeSolver(false);
+        CPIntVar[] q = CPFactory.makeIntVarArray(cp, n, n);
 
         for (int i = 0; i < n; i++)
             for (int j = i + 1; j < n; j++) {
-                cp.post(Factory.notEqual(q[i], q[j]));
-                cp.post(Factory.notEqual(q[i], q[j], j - i));
-                cp.post(Factory.notEqual(q[i], q[j], i - j));
+                cp.post(CPFactory.notEqual(q[i], q[j]));
+                cp.post(CPFactory.notEqual(q[i], q[j], j - i));
+                cp.post(CPFactory.notEqual(q[i], q[j], i - j));
             }
 
-        DFSearch search = Factory.makeDfs(cp, () -> {
+        DFSearch search = CPFactory.makeDfs(cp, () -> {
             int idx = -1; // index of the first variable that is not bound
             for (int k = 0; k < q.length; k++)
                 if (q[k].size() > 1) {
@@ -55,8 +55,8 @@ public class NQueensPaper {
             else {
                 CPIntVar qi = q[idx];
                 int v = qi.min();
-                Procedure left = () -> cp.post(Factory.equal(qi, v));
-                Procedure right = () -> cp.post(Factory.notEqual(qi, v));
+                Procedure left = () -> cp.post(CPFactory.equal(qi, v));
+                Procedure right = () -> cp.post(CPFactory.notEqual(qi, v));
                 return new Procedure[]{left, right};
             }
         });

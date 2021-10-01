@@ -16,7 +16,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
@@ -25,7 +25,7 @@ import org.maxicp.util.exception.InconsistencyException;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * Disjunctive Scheduling Constraint:
@@ -71,7 +71,7 @@ public class Disjunctive extends AbstractCPConstraint {
         super(start[0].getSolver());
         this.start = start;
         this.duration = duration;
-        this.end = Factory.makeIntVarArray(start.length, i -> plus(start[i], duration[i]));
+        this.end = CPFactory.makeIntVarArray(start.length, i -> plus(start[i], duration[i]));
 
         // STUDENT
         // BEGIN STRIP
@@ -133,7 +133,7 @@ public class Disjunctive extends AbstractCPConstraint {
             }
 
 
-            CPIntVar[] startMirror = Factory.makeIntVarArray(start.length, i -> minus(end[i]));
+            CPIntVar[] startMirror = CPFactory.makeIntVarArray(start.length, i -> minus(end[i]));
             getSolver().post(new Disjunctive(startMirror, duration, false), false);
 
             propagate();

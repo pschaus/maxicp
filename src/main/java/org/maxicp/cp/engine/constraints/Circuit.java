@@ -20,7 +20,7 @@ import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.state.StateInt;
 
-import static org.maxicp.Factory.allDifferent;
+import static org.maxicp.cp.CPFactory.allDifferent;
 
 /**
  * Hamiltonian Circuit Constraint with a successor model

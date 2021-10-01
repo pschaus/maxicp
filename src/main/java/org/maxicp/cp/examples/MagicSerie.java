@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
@@ -24,7 +24,7 @@ import org.maxicp.search.SearchStatistics;
 import java.util.Arrays;
 
 import static org.maxicp.BranchingScheme.*;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * The Magic Series problem.
@@ -40,10 +40,10 @@ public class MagicSerie {
 
         for (int i = 0; i < n; i++) {
             final int fi = i;
-            cp.post(sum(Factory.makeIntVarArray(n, j -> isEqual(s[j], fi)), s[i]));
+            cp.post(sum(CPFactory.makeIntVarArray(n, j -> isEqual(s[j], fi)), s[i]));
         }
         cp.post(sum(s, n));
-        cp.post(sum(Factory.makeIntVarArray(n, i -> mul(s[i], i)), n));
+        cp.post(sum(CPFactory.makeIntVarArray(n, i -> mul(s[i], i)), n));
         cp.post(sum(makeIntVarArray(n - 1, i -> mul(s[i], i - 1)), 0));
 
         long t0 = System.currentTimeMillis();

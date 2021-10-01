@@ -22,7 +22,7 @@ import org.maxicp.util.exception.InconsistencyException;
 import java.util.Arrays;
 import java.util.BitSet;
 
-import static org.maxicp.Factory.minus;
+import static org.maxicp.cp.CPFactory.minus;
 
 /**
  * Implementation of Compact Table algorithm described in

@@ -24,7 +24,7 @@ import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.io.InputReader;
 
 import static org.maxicp.BranchingScheme.firstFail;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 
 /**

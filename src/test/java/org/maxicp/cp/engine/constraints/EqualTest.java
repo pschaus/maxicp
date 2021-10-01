@@ -22,7 +22,7 @@ import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.*;
 
@@ -48,10 +48,10 @@ public class EqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp,0,10);
-            CPIntVar y = Factory.makeIntVar(cp,0,10);
+            CPIntVar x = CPFactory.makeIntVar(cp,0,10);
+            CPIntVar y = CPFactory.makeIntVar(cp,0,10);
 
-            cp.post(Factory.equal(x,y));
+            cp.post(CPFactory.equal(x,y));
 
             x.removeAbove(7);
             cp.fixPoint();
@@ -86,14 +86,14 @@ public class EqualTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp,Integer.MAX_VALUE-20,Integer.MAX_VALUE-1);
-            CPIntVar y = Factory.makeIntVar(cp,Integer.MAX_VALUE-10,Integer.MAX_VALUE-1);
+            CPIntVar x = CPFactory.makeIntVar(cp,Integer.MAX_VALUE-20,Integer.MAX_VALUE-1);
+            CPIntVar y = CPFactory.makeIntVar(cp,Integer.MAX_VALUE-10,Integer.MAX_VALUE-1);
 
-            cp.post(Factory.notEqual(x,Integer.MAX_VALUE-5));
+            cp.post(CPFactory.notEqual(x,Integer.MAX_VALUE-5));
 
-            cp.post(Factory.equal(x,y));
+            cp.post(CPFactory.equal(x,y));
 
-            cp.post(Factory.equal(x,Integer.MAX_VALUE-1));
+            cp.post(CPFactory.equal(x,Integer.MAX_VALUE-1));
 
             assertEquals(y.min(), Integer.MAX_VALUE-1);
 

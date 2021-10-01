@@ -22,9 +22,9 @@ import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
-import static org.maxicp.Factory.makeIntVar;
+import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -36,8 +36,8 @@ public class LessOrEqualTest extends CPSolverTest {
     public void simpleTest0() {
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -5, 5);
-            CPIntVar y = Factory.makeIntVar(cp, -10, 10);
+            CPIntVar x = CPFactory.makeIntVar(cp, -5, 5);
+            CPIntVar y = CPFactory.makeIntVar(cp, -10, 10);
 
             cp.post(new LessOrEqual(x, y));
 

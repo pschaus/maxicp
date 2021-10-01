@@ -26,7 +26,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 
@@ -42,8 +42,8 @@ public class MaximumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 10);
-            CPIntVar y = Factory.makeIntVar(cp, -5, 20);
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 3, 10);
+            CPIntVar y = CPFactory.makeIntVar(cp, -5, 20);
             cp.post(new Maximum(x, y));
 
             assertEquals(9, y.max());
@@ -88,10 +88,10 @@ public class MaximumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x1 = Factory.makeIntVar(cp, 0, 0);
-            CPIntVar x2 = Factory.makeIntVar(cp, 1, 1);
-            CPIntVar x3 = Factory.makeIntVar(cp, 2, 2);
-            CPIntVar y = Factory.maximum(x1, x2, x3);
+            CPIntVar x1 = CPFactory.makeIntVar(cp, 0, 0);
+            CPIntVar x2 = CPFactory.makeIntVar(cp, 1, 1);
+            CPIntVar x3 = CPFactory.makeIntVar(cp, 2, 2);
+            CPIntVar y = CPFactory.maximum(x1, x2, x3);
 
 
             assertEquals(2, y.max());
@@ -110,10 +110,10 @@ public class MaximumTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x1 = Factory.makeIntVar(cp, 0, 10);
-            CPIntVar x2 = Factory.makeIntVar(cp, 0, 10);
-            CPIntVar x3 = Factory.makeIntVar(cp, -5, 50);
-            CPIntVar y = Factory.maximum(x1, x2, x3);
+            CPIntVar x1 = CPFactory.makeIntVar(cp, 0, 10);
+            CPIntVar x2 = CPFactory.makeIntVar(cp, 0, 10);
+            CPIntVar x3 = CPFactory.makeIntVar(cp, -5, 50);
+            CPIntVar y = CPFactory.maximum(x1, x2, x3);
 
             y.removeAbove(5);
             cp.fixPoint();
@@ -135,14 +135,14 @@ public class MaximumTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                CPIntVar[] x = Factory.makeIntVarArray(cp, 4, 5);
-                CPIntVar y = Factory.makeIntVar(cp, -5, 20);
+                CPIntVar[] x = CPFactory.makeIntVarArray(cp, 4, 5);
+                CPIntVar y = CPFactory.makeIntVar(cp, -5, 20);
 
                 CPIntVar[] allIntVars = new CPIntVar[x.length+1];
                 System.arraycopy(x, 0, allIntVars, 0, x.length);
                 allIntVars[x.length] = y;
 
-                DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(allIntVars));
+                DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(allIntVars));
 
                 cp.post(new Maximum(x, y));
                 // 5*5*5*5 // 625

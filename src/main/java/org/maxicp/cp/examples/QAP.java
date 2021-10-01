@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static org.maxicp.BranchingScheme.firstFail;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * The Quadratic Assignment problem.

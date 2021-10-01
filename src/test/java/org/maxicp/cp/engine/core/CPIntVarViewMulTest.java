@@ -19,9 +19,9 @@ import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.IntOverFlowException;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
-import static org.maxicp.Factory.makeIntVar;
+import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.*;
 
 
@@ -33,7 +33,7 @@ public class CPIntVarViewMulTest extends CPSolverTest {
     public void testIntVar() {
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.mul(Factory.mul(Factory.makeIntVar(cp, -3, 4), -3), -1); // domain is {-9,-6,-3,0,3,6,9,12}
+        CPIntVar x = CPFactory.mul(CPFactory.mul(CPFactory.makeIntVar(cp, -3, 4), -3), -1); // domain is {-9,-6,-3,0,3,6,9,12}
 
         assertEquals(-9, x.min());
         assertEquals(12, x.max());
@@ -85,8 +85,8 @@ public class CPIntVarViewMulTest extends CPSolverTest {
         propagateCalled = false;
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.mul(Factory.makeIntVar(cp, 10), 1);
-        CPIntVar y = Factory.mul(Factory.makeIntVar(cp, 10), 1);
+        CPIntVar x = CPFactory.mul(CPFactory.makeIntVar(cp, 10), 1);
+        CPIntVar y = CPFactory.mul(CPFactory.makeIntVar(cp, 10), 1);
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
 
@@ -124,8 +124,8 @@ public class CPIntVarViewMulTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.mul(Factory.makeIntVar(cp, 10), 1);
-        CPIntVar y = Factory.mul(Factory.makeIntVar(cp, 10), 1);
+        CPIntVar x = CPFactory.mul(CPFactory.makeIntVar(cp, 10), 1);
+        CPIntVar y = CPFactory.mul(CPFactory.makeIntVar(cp, 10), 1);
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
 
@@ -166,7 +166,7 @@ public class CPIntVarViewMulTest extends CPSolverTest {
     @Test(expected = IntOverFlowException.class)
     public void testOverFlow() {
         CPSolver cp = solverFactory.get();
-        CPIntVar x = Factory.mul(Factory.makeIntVar(cp, 1000000, 1000000), 10000000);
+        CPIntVar x = CPFactory.mul(CPFactory.makeIntVar(cp, 1000000, 1000000), 10000000);
     }
 
 

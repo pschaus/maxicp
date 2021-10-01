@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.constraints.IsOr;
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.stream.IntStream;
 
 import static org.maxicp.BranchingScheme.*;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * Steel is produced by casting molten iron into slabs.
@@ -141,7 +141,7 @@ public class Steel {
             CPIntVar totLoss = null;
             // STUDENT
             // BEGIN STRIP
-            CPIntVar[] losses = Factory.makeIntVarArray(nSlab, j -> element(loss, l[j]));
+            CPIntVar[] losses = CPFactory.makeIntVarArray(nSlab, j -> element(loss, l[j]));
             totLoss = sum(losses);
             // END STRIP
 

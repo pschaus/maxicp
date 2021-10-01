@@ -20,7 +20,7 @@ import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.exception.InconsistencyException;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,13 +32,13 @@ public class NotEqualTest extends CPSolverTest {
     public void notEqualTest() {
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.makeIntVar(cp, 10);
-        CPIntVar y = Factory.makeIntVar(cp, 10);
+        CPIntVar x = CPFactory.makeIntVar(cp, 10);
+        CPIntVar y = CPFactory.makeIntVar(cp, 10);
 
         try {
-            cp.post(Factory.notEqual(x, y));
+            cp.post(CPFactory.notEqual(x, y));
 
-            cp.post(Factory.equal(x, 6));
+            cp.post(CPFactory.equal(x, 6));
 
             assertFalse(y.contains(6));
             assertEquals(9, y.size());

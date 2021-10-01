@@ -23,7 +23,7 @@ import org.maxicp.search.SearchStatistics;
 import java.util.Arrays;
 
 import static org.maxicp.BranchingScheme.*;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 public class NQueensPerformance {
     public static void main(String[] args) {

@@ -23,20 +23,20 @@ import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.maxicp.Factory.makeIntVar;
+import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class MaximumMatchingTest extends CPSolverTest {
 
     private static CPIntVar makeIVar(CPSolver cp, Integer... values) {
-        return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
+        return CPFactory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
     private void check(CPIntVar[] x, int[] matching, int size, int expectedSize) {

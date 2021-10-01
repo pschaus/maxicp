@@ -26,13 +26,13 @@ import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.Procedure;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import static org.maxicp.Factory.notEqual;
+import static org.maxicp.cp.CPFactory.notEqual;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
@@ -44,8 +44,8 @@ public class Element1DDCTest extends CPSolverTest {
             CPSolver cp = solverFactory.get();
 
             Random rand = new Random(678);
-            CPIntVar y = Factory.makeIntVar(cp, 0, 100);
-            CPIntVar z = Factory.makeIntVar(cp, 0, 100);
+            CPIntVar y = CPFactory.makeIntVar(cp, 0, 100);
+            CPIntVar z = CPFactory.makeIntVar(cp, 0, 100);
 
 
             int[] T = new int[70];
@@ -81,16 +81,16 @@ public class Element1DDCTest extends CPSolverTest {
                 if (!y.isBound() && (z.isBound() || rand.nextBoolean())) {
                     //select a random y
                     int val = possibleY[rand.nextInt(possibleY.length)];
-                    return BranchingScheme.branch(() -> cp.post(Factory.equal(y, val)),
-                            () -> cp.post(Factory.notEqual(y, val)));
+                    return BranchingScheme.branch(() -> cp.post(CPFactory.equal(y, val)),
+                            () -> cp.post(CPFactory.notEqual(y, val)));
                 } else {
                     int val = possibleZ[rand.nextInt(possibleZ.length)];
-                    return BranchingScheme.branch(() -> cp.post(Factory.equal(z, val)),
-                            () -> cp.post(Factory.notEqual(z, val)));
+                    return BranchingScheme.branch(() -> cp.post(CPFactory.equal(z, val)),
+                            () -> cp.post(CPFactory.notEqual(z, val)));
                 }
             };
 
-            DFSearch dfs = Factory.makeDfs(cp, branching);
+            DFSearch dfs = CPFactory.makeDfs(cp, branching);
 
             SearchStatistics stats = dfs.solve();
             assertEquals(stats.numberOfSolutions(), T.length);

@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
@@ -23,7 +23,7 @@ import org.maxicp.search.Objective;
 import org.maxicp.util.io.InputReader;
 import org.maxicp.util.Procedure;
 
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * The Quadratic Assignment problem.
@@ -83,8 +83,8 @@ public class QAPPaper {
                 else {
                     CPIntVar xi = x[idx];
                     int v = xi.min();
-                    Procedure left = () -> cp.post(Factory.equal(xi, v));
-                    Procedure right = () -> cp.post(Factory.notEqual(xi, v));
+                    Procedure left = () -> cp.post(CPFactory.equal(xi, v));
+                    Procedure right = () -> cp.post(CPFactory.notEqual(xi, v));
                     return new Procedure[]{left, right};
                 }
             }

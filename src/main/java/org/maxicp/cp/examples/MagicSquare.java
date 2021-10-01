@@ -16,7 +16,7 @@
 package org.maxicp.cp.examples;
 
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
@@ -37,12 +37,12 @@ public class MagicSquare {
         int n = 6;
         int sumResult = n * (n * n + 1) / 2;
 
-        CPSolver cp = Factory.makeSolver();
+        CPSolver cp = CPFactory.makeSolver();
         CPIntVar[][] x = new CPIntVar[n][n];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                x[i][j] = Factory.makeIntVar(cp, 1, n * n);
+                x[i][j] = CPFactory.makeIntVar(cp, 1, n * n);
             }
         }
 
@@ -54,11 +54,11 @@ public class MagicSquare {
 
 
         // AllDifferent
-        cp.post(Factory.allDifferent(xFlat));
+        cp.post(CPFactory.allDifferent(xFlat));
 
         // Sum on lines
         for (int i = 0; i < n; i++) {
-            cp.post(Factory.sum(x[i], sumResult));
+            cp.post(CPFactory.sum(x[i], sumResult));
         }
 
         // Sum on columns
@@ -66,7 +66,7 @@ public class MagicSquare {
             CPIntVar[] column = new CPIntVar[n];
             for (int i = 0; i < x.length; i++)
                 column[i] = x[i][j];
-            cp.post(Factory.sum(column, sumResult));
+            cp.post(CPFactory.sum(column, sumResult));
         }
 
         // Sum on diagonals
@@ -76,10 +76,10 @@ public class MagicSquare {
             diagonalLeft[i] = x[i][i];
             diagonalRight[i] = x[n - i - 1][i];
         }
-        cp.post(Factory.sum(diagonalLeft, sumResult));
-        cp.post(Factory.sum(diagonalRight, sumResult));
+        cp.post(CPFactory.sum(diagonalLeft, sumResult));
+        cp.post(CPFactory.sum(diagonalRight, sumResult));
 
-        DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(xFlat));
+        DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(xFlat));
 
         dfs.onSolution(() -> {
                     for (int i = 0; i < n; i++) {

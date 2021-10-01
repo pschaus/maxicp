@@ -27,7 +27,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.*;
 
@@ -40,14 +40,14 @@ public class IsLessOrEqualVarTest extends CPSolverTest {
 
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, 0, 5);
-            CPIntVar y = Factory.makeIntVar(cp, 0, 5);
+            CPIntVar x = CPFactory.makeIntVar(cp, 0, 5);
+            CPIntVar y = CPFactory.makeIntVar(cp, 0, 5);
 
-            CPBoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar b = CPFactory.makeBoolVar(cp);
 
             cp.post(new IsLessOrEqualVar(b, x, y));
 
-            DFSearch search = Factory.makeDfs(cp, BranchingScheme.firstFail(x, y));
+            DFSearch search = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x, y));
 
             SearchStatistics stats = search.solve();
 
@@ -69,20 +69,20 @@ public class IsLessOrEqualVarTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -8, 7);
-            CPIntVar y = Factory.makeIntVar(cp, -4, 3);
+            CPIntVar x = CPFactory.makeIntVar(cp, -8, 7);
+            CPIntVar y = CPFactory.makeIntVar(cp, -4, 3);
 
-            CPBoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar b = CPFactory.makeBoolVar(cp);
 
             cp.post(new IsLessOrEqualVar(b, x, y));
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(b, 1));
+            cp.post(CPFactory.equal(b, 1));
             assertEquals(3, x.max());
             cp.getStateManager().restoreState();
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(b, 0));
+            cp.post(CPFactory.equal(b, 0));
             assertEquals(-3, x.min());
             cp.getStateManager().restoreState();
 
@@ -98,11 +98,11 @@ public class IsLessOrEqualVarTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
-            CPIntVar y = Factory.makeIntVar(cp, 0, 7);
-            cp.post(Factory.equal(x, -2));
+            CPIntVar x = CPFactory.makeIntVar(cp, -4, 7);
+            CPIntVar y = CPFactory.makeIntVar(cp, 0, 7);
+            cp.post(CPFactory.equal(x, -2));
 
-            CPBoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar b = CPFactory.makeBoolVar(cp);
             cp.post(new IsLessOrEqualVar(b, x, y));
             assertTrue(b.isTrue());
 
@@ -119,17 +119,17 @@ public class IsLessOrEqualVarTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -4, 7);
-            CPBoolVar b = Factory.makeBoolVar(cp);
+            CPIntVar x = CPFactory.makeIntVar(cp, -4, 7);
+            CPBoolVar b = CPFactory.makeBoolVar(cp);
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(b, 1));
+            cp.post(CPFactory.equal(b, 1));
             cp.post(new IsLessOrEqual(b, x, -2));
             assertEquals(-2, x.max());
             cp.getStateManager().restoreState();
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(b, 0));
+            cp.post(CPFactory.equal(b, 0));
             cp.post(new IsLessOrEqual(b, x, -2));
             assertEquals(-1, x.min());
             cp.getStateManager().restoreState();

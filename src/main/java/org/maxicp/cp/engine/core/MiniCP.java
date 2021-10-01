@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.core;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.search.Objective;
 import org.maxicp.state.StateManager;
 import org.maxicp.state.StateStack;
@@ -91,7 +91,7 @@ public class MiniCP implements CPSolver {
 
     @Override
     public Objective maximize(CPIntVar x) {
-        return minimize(Factory.minus(x));
+        return minimize(CPFactory.minus(x));
     }
 
     @Override

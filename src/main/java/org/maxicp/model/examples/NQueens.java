@@ -1,15 +1,16 @@
 package org.maxicp.model.examples;
 
 
-import org.maxicp.cp.CPFactory;
+import org.maxicp.cp.CPModelInstantiator;
 import org.maxicp.cp.CPInstantiableConstraint;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPSolver;
+import org.maxicp.model.Factory;
 import org.maxicp.model.IntVar;
 import org.maxicp.model.Model;
 import org.maxicp.model.constraints.AllDifferent;
 
-import static org.maxicp.Factory.makeIntVarArray;
+import static org.maxicp.cp.CPFactory.makeIntVarArray;
 
 /**
  * The N-Queens problem.
@@ -18,15 +19,15 @@ import static org.maxicp.Factory.makeIntVarArray;
 public class NQueens {
     public static void main(String[] args) {
         int n = 8;
-        Model model;// = Fatory.makeModel();
+        Model model = Factory.model();
 
-        IntVar[] q = model.makeIntVarArray(n, n);
+        IntVar[] q = Factory.intVarArray(n, n);
 
         model.add(new AllDifferent(q));
 
         model.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
 
-        InstanciatedCPModel s = CPFactory.instantiate(model);
+        InstanciatedCPModel s = CPModelInstantiator.instantiate(model);
 
         //s.getSolver();
         //s.get(var);

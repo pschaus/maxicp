@@ -25,7 +25,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Assume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -95,7 +95,7 @@ public class NegTableTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+                CPIntVar[] x = CPFactory.makeIntVarArray(cp, 3, 2);
                 int[][] table = new int[][]{
                         {0, 0, 0},
                         {1, 0, 0},
@@ -123,10 +123,10 @@ public class NegTableTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+                CPIntVar[] x = CPFactory.makeIntVarArray(cp, 3, 2);
                 int[][] table = new int[][]{{1, 1, 1}};
                 cp.post(new NegTableCT(x, table));
-                DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
+                DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x));
                 SearchStatistics stats = dfs.solve();
                 assertEquals(7, stats.numberOfSolutions());
 
@@ -143,10 +143,10 @@ public class NegTableTest extends CPSolverTest {
         try {
             try {
                 CPSolver cp = solverFactory.get();
-                CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+                CPIntVar[] x = CPFactory.makeIntVarArray(cp, 3, 2);
                 int[][] table = new int[][]{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
                 cp.post(new NegTableCT(x, table));
-                DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
+                DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x));
                 SearchStatistics stats = dfs.solve();
                 assertEquals(7, stats.numberOfSolutions());
 
@@ -198,24 +198,24 @@ public class NegTableTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
-            cp.post(Factory.allDifferent(x));
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 9);
+            cp.post(CPFactory.allDifferent(x));
             cp.post(new TableCT(new CPIntVar[]{x[0], x[1], x[2]}, toPositive(x[0], x[1], x[2], t1)));
             cp.post(new TableCT(new CPIntVar[]{x[2], x[3], x[4]}, toPositive(x[2], x[3], x[4], t2)));
             cp.post(new TableCT(new CPIntVar[]{x[0], x[2], x[4]}, toPositive(x[0], x[2], x[4], t3)));
-            statsDecomp = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
+            statsDecomp = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsDecomp = null;
         }
 
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 9);
-            cp.post(Factory.allDifferent(x));
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 9);
+            cp.post(CPFactory.allDifferent(x));
             cp.post(new NegTableCT(new CPIntVar[]{x[0], x[1], x[2]}, t1));
             cp.post(new NegTableCT(new CPIntVar[]{x[2], x[3], x[4]}, t2));
             cp.post(new NegTableCT(new CPIntVar[]{x[0], x[2], x[4]}, t3));
-            statsAlgo = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
+            statsAlgo = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
         } catch (InconsistencyException e) {
             statsAlgo = null;
         }

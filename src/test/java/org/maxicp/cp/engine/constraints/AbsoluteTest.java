@@ -23,7 +23,7 @@ import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.*;
 
@@ -34,8 +34,8 @@ public class AbsoluteTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -5, 5);
-            CPIntVar y = Factory.makeIntVar(cp, -10, 10);
+            CPIntVar x = CPFactory.makeIntVar(cp, -5, 5);
+            CPIntVar y = CPFactory.makeIntVar(cp, -10, 10);
 
             cp.post(new Absolute(x, y));
 
@@ -64,12 +64,12 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest1() {
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -5, 5);
-            CPIntVar y = Factory.makeIntVar(cp, -10, 10);
+            CPIntVar x = CPFactory.makeIntVar(cp, -5, 5);
+            CPIntVar y = CPFactory.makeIntVar(cp, -10, 10);
 
-            cp.post(Factory.notEqual(x, 0));
-            cp.post(Factory.notEqual(x, 5));
-            cp.post(Factory.notEqual(x, -5));
+            cp.post(CPFactory.notEqual(x, 0));
+            cp.post(CPFactory.notEqual(x, 5));
+            cp.post(CPFactory.notEqual(x, -5));
 
             cp.post(new Absolute(x, y));
 
@@ -89,8 +89,8 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest2() {
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -5, 0);
-            CPIntVar y = Factory.makeIntVar(cp, 4, 4);
+            CPIntVar x = CPFactory.makeIntVar(cp, -5, 0);
+            CPIntVar y = CPFactory.makeIntVar(cp, 4, 4);
 
             cp.post(new Absolute(x, y));
 
@@ -110,8 +110,8 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest3() {
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, 7, 7);
-            CPIntVar y = Factory.makeIntVar(cp, -1000, 12);
+            CPIntVar x = CPFactory.makeIntVar(cp, 7, 7);
+            CPIntVar y = CPFactory.makeIntVar(cp, -1000, 12);
 
             cp.post(new Absolute(x, y));
 
@@ -131,21 +131,21 @@ public class AbsoluteTest extends CPSolverTest {
     public void simpleTest4() {
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -5, 10);
-            CPIntVar y = Factory.makeIntVar(cp, -6, 7);
+            CPIntVar x = CPFactory.makeIntVar(cp, -5, 10);
+            CPIntVar y = CPFactory.makeIntVar(cp, -6, 7);
 
             cp.post(new Absolute(x, y));
 
             assertEquals(7, x.max());
             assertEquals(-5, x.min());
 
-            cp.post(Factory.notEqual(y, 0));
+            cp.post(CPFactory.notEqual(y, 0));
 
-            cp.post(Factory.lessOrEqual(x,4));
+            cp.post(CPFactory.lessOrEqual(x,4));
 
             assertEquals(5, y.max());
 
-            cp.post(Factory.lessOrEqual(x,-2));
+            cp.post(CPFactory.lessOrEqual(x,-2));
 
             assertEquals(2, y.min());
 

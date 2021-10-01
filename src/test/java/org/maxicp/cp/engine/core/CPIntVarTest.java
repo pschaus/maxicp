@@ -21,7 +21,7 @@ import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.InconsistencyException;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,8 +39,8 @@ public class CPIntVarTest extends CPSolverTest {
     public void testIntVar() {
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.makeIntVar(cp, 10);
-        CPIntVar y = Factory.makeIntVar(cp, 10);
+        CPIntVar x = CPFactory.makeIntVar(cp, 10);
+        CPIntVar y = CPFactory.makeIntVar(cp, 10);
 
         cp.getStateManager().saveState();
 
@@ -85,8 +85,8 @@ public class CPIntVarTest extends CPSolverTest {
         propagateCalled = false;
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.makeIntVar(cp, 10);
-        CPIntVar y = Factory.makeIntVar(cp, 10);
+        CPIntVar x = CPFactory.makeIntVar(cp, 10);
+        CPIntVar y = CPFactory.makeIntVar(cp, 10);
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
             @Override
@@ -124,7 +124,7 @@ public class CPIntVarTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            CPIntVar x = Factory.makeIntVar(cp, -10, 10);
+            CPIntVar x = CPFactory.makeIntVar(cp, -10, 10);
 
             cp.getStateManager().saveState();
 
@@ -179,7 +179,7 @@ public class CPIntVarTest extends CPSolverTest {
 
             Set<Integer> dom = new HashSet<>(Arrays.asList(-7, -10, 6, 9, 10, 12));
 
-            CPIntVar x = Factory.makeIntVar(cp, dom);
+            CPIntVar x = CPFactory.makeIntVar(cp, dom);
 
             cp.getStateManager().saveState();
 
@@ -223,8 +223,8 @@ public class CPIntVarTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        CPIntVar x = Factory.makeIntVar(cp, 10);
-        CPIntVar y = Factory.makeIntVar(cp, 10);
+        CPIntVar x = CPFactory.makeIntVar(cp, 10);
+        CPIntVar y = CPFactory.makeIntVar(cp, 10);
 
         CPConstraint cons = new AbstractCPConstraint(cp) {
 
@@ -269,7 +269,7 @@ public class CPIntVarTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            CPIntVar x = Factory.makeIntVar(cp, 10);
+            CPIntVar x = CPFactory.makeIntVar(cp, 10);
 
             CPConstraint cons = new AbstractCPConstraint(cp) {
                 @Override
@@ -308,7 +308,7 @@ public class CPIntVarTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, 10);
+            CPIntVar x = CPFactory.makeIntVar(cp, 10);
 
             CPConstraint cons = new AbstractCPConstraint(cp) {
                 @Override
@@ -356,7 +356,7 @@ public class CPIntVarTest extends CPSolverTest {
         try {
             CPSolver cp = solverFactory.get();
 
-            CPIntVar x = Factory.makeIntVar(cp, 2, 9);
+            CPIntVar x = CPFactory.makeIntVar(cp, 2, 9);
             x.remove(3);
             x.remove(5);
             x.remove(2);
@@ -384,7 +384,7 @@ public class CPIntVarTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
             Set<Integer> dom = new HashSet<>(Arrays.asList(2147483645));
-            CPIntVar var1 = Factory.makeIntVar(cp, dom);
+            CPIntVar var1 = CPFactory.makeIntVar(cp, dom);
             assertEquals(2147483645, var1.max());
 
         } catch (NotImplementedException e) {

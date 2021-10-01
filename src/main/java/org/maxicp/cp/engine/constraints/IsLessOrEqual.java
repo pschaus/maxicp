@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
@@ -37,7 +37,7 @@ public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
      *         x takes a value less or equal to v
      * @param x the variable
      * @param v the constant
-     * @see Factory#isLessOrEqual(CPIntVar, int)
+     * @see CPFactory#isLessOrEqual(CPIntVar, int)
      */
     public IsLessOrEqual(CPBoolVar b, CPIntVar x, int v) {
         super(b.getSolver());

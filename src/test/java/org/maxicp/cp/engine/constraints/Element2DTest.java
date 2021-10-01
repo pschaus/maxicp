@@ -23,9 +23,9 @@ import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
-import static org.maxicp.Factory.makeIntVar;
+import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -38,9 +38,9 @@ public class Element2DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -2, 40);
-            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
-            CPIntVar z = Factory.makeIntVar(cp, 2, 40);
+            CPIntVar x = CPFactory.makeIntVar(cp, -2, 40);
+            CPIntVar y = CPFactory.makeIntVar(cp, -3, 10);
+            CPIntVar z = CPFactory.makeIntVar(cp, 2, 40);
 
             int[][] T = new int[][]{
                     {9, 8, 7, 5, 6},
@@ -93,9 +93,9 @@ public class Element2DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar x = Factory.makeIntVar(cp, -2, 40);
-            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
-            CPIntVar z = Factory.makeIntVar(cp, -20, 40);
+            CPIntVar x = CPFactory.makeIntVar(cp, -2, 40);
+            CPIntVar y = CPFactory.makeIntVar(cp, -3, 10);
+            CPIntVar z = CPFactory.makeIntVar(cp, -20, 40);
 
             int[][] T = new int[][]{
                     {9, 8, 7, 5, 6},
@@ -106,7 +106,7 @@ public class Element2DTest extends CPSolverTest {
 
             cp.post(new Element2D(T, x, y, z));
 
-            DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x, y, z));
+            DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x, y, z));
             dfs.onSolution(() ->
                     assertEquals(T[x.min()][y.min()], z.min())
             );

@@ -16,14 +16,14 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
 
 import java.util.Arrays;
 
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * Cumulative constraint with sum decomposition (very slow).
@@ -50,7 +50,7 @@ public class CumulativeDecomposition extends AbstractCPConstraint {
         super(start[0].getSolver());
         this.start = start;
         this.duration = duration;
-        this.end = Factory.makeIntVarArray(start.length, i -> plus(start[i], duration[i]));
+        this.end = CPFactory.makeIntVarArray(start.length, i -> plus(start[i], duration[i]));
         this.demand = demand;
         this.capa = capa;
     }
@@ -84,7 +84,7 @@ public class CumulativeDecomposition extends AbstractCPConstraint {
                 // END STRIP
             }
 
-            CPIntVar[] overlapHeights = Factory.makeIntVarArray(start.length, i -> mul(overlaps[i], demand[i]));
+            CPIntVar[] overlapHeights = CPFactory.makeIntVarArray(start.length, i -> mul(overlaps[i], demand[i]));
             CPIntVar cumHeight = sum(overlapHeights);
             cumHeight.removeAbove(capa);
 

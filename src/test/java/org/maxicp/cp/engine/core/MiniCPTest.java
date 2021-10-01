@@ -20,7 +20,7 @@ import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,14 +30,14 @@ public class MiniCPTest extends CPSolverTest {
 
     @Test
     public void testSolveSubjectTo() {
-        CPSolver cp = Factory.makeSolver();
-        CPIntVar[] x = Factory.makeIntVarArray(cp, 3, 2);
+        CPSolver cp = CPFactory.makeSolver();
+        CPIntVar[] x = CPFactory.makeIntVarArray(cp, 3, 2);
 
-        DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
+        DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x));
 
 
         SearchStatistics stats1 = dfs.solveSubjectTo(l -> false, () -> {
-            cp.post(Factory.equal(x[0], 0));
+            cp.post(CPFactory.equal(x[0], 0));
         });
 
         assertEquals(4, stats1.numberOfSolutions());
@@ -52,9 +52,9 @@ public class MiniCPTest extends CPSolverTest {
     @Test
     public void testDFS() {
         CPSolver cp = solverFactory.get();
-        CPIntVar[] values = Factory.makeIntVarArray(cp, 3, 2);
+        CPIntVar[] values = CPFactory.makeIntVarArray(cp, 3, 2);
 
-        DFSearch dfs = Factory.makeDfs(cp, () -> {
+        DFSearch dfs = CPFactory.makeDfs(cp, () -> {
             int sel = -1;
             for (int i = 0; i < values.length; i++)
                 if (values[i].size() > 1 && sel == -1)
@@ -62,8 +62,8 @@ public class MiniCPTest extends CPSolverTest {
             final int i = sel;
             if (i == -1)
                 return BranchingScheme.EMPTY;
-            else return BranchingScheme.branch(() -> cp.post(Factory.equal(values[i], 0)),
-                    () -> cp.post(Factory.equal(values[i], 1)));
+            else return BranchingScheme.branch(() -> cp.post(CPFactory.equal(values[i], 0)),
+                    () -> cp.post(CPFactory.equal(values[i], 1)));
         });
 
 

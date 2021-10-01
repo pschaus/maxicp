@@ -15,6 +15,7 @@
 
 package org.maxicp;
 
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.LimitedDiscrepancyBranching;
@@ -27,8 +28,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static org.maxicp.Factory.equal;
-import static org.maxicp.Factory.notEqual;
+import static org.maxicp.cp.CPFactory.equal;
+import static org.maxicp.cp.CPFactory.notEqual;
 
 /**
  * Factory for search procedures.
@@ -55,7 +56,7 @@ import static org.maxicp.Factory.notEqual;
  * });
  * }
  * </pre>
- * @see Factory#makeDfs(CPSolver, Supplier)
+ * @see CPFactory#makeDfs(CPSolver, Supplier)
  */
 public final class BranchingScheme {
 
@@ -68,7 +69,7 @@ public final class BranchingScheme {
      * to notify the solver that there are no branches
      * to create any more and that the current state should
      * be considered as a solution.
-     * @see Factory#makeDfs(CPSolver, Supplier)
+     * @see CPFactory#makeDfs(CPSolver, Supplier)
      */
     public static final Procedure[] EMPTY = new Procedure[0];
 
@@ -119,7 +120,7 @@ public final class BranchingScheme {
      * The right branch removing this minimum value from the domain.
      * @param x the variable on which the first fail strategy is applied.
      * @return a first-fail branching strategy
-     * @see Factory#makeDfs(CPSolver, Supplier)
+     * @see CPFactory#makeDfs(CPSolver, Supplier)
      */
     public static Supplier<Procedure[]> firstFail(CPIntVar... x) {
         return () -> {
@@ -130,8 +131,8 @@ public final class BranchingScheme {
                 return EMPTY;
             else {
                 int v = xs.min();
-                return branch(() -> xs.getSolver().post(Factory.equal(xs, v)),
-                        () -> xs.getSolver().post(Factory.notEqual(xs, v)));
+                return branch(() -> xs.getSolver().post(CPFactory.equal(xs, v)),
+                        () -> xs.getSolver().post(CPFactory.notEqual(xs, v)));
             }
         };
     }

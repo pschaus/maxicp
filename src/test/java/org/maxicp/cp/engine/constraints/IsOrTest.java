@@ -26,7 +26,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.*;
 
@@ -38,8 +38,8 @@ public class IsOrTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
-            CPBoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar[] x = new CPBoolVar[]{CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp)};
+            CPBoolVar b = CPFactory.makeBoolVar(cp);
             cp.post(new IsOr(b, x));
 
             for (CPBoolVar xi : x) {
@@ -47,32 +47,32 @@ public class IsOrTest extends CPSolverTest {
             }
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(x[1], 0));
-            cp.post(Factory.equal(x[2], 0));
-            cp.post(Factory.equal(x[3], 0));
+            cp.post(CPFactory.equal(x[1], 0));
+            cp.post(CPFactory.equal(x[2], 0));
+            cp.post(CPFactory.equal(x[3], 0));
             assertTrue(!b.isBound());
-            cp.post(Factory.equal(x[0], 0));
+            cp.post(CPFactory.equal(x[0], 0));
             assertTrue(b.isFalse());
             cp.getStateManager().restoreState();
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(x[1], 0));
-            cp.post(Factory.equal(x[2], 1));
+            cp.post(CPFactory.equal(x[1], 0));
+            cp.post(CPFactory.equal(x[2], 1));
             assertTrue(b.isTrue());
             cp.getStateManager().restoreState();
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(b, 1));
-            cp.post(Factory.equal(x[1], 0));
-            cp.post(Factory.equal(x[2], 0));
+            cp.post(CPFactory.equal(b, 1));
+            cp.post(CPFactory.equal(x[1], 0));
+            cp.post(CPFactory.equal(x[2], 0));
             assertTrue(!x[0].isBound());
-            cp.post(Factory.equal(x[3], 0));
+            cp.post(CPFactory.equal(x[3], 0));
             assertTrue(x[0].isTrue());
             cp.getStateManager().restoreState();
 
 
             cp.getStateManager().saveState();
-            cp.post(Factory.equal(b, 0));
+            cp.post(CPFactory.equal(b, 0));
             assertTrue(x[0].isFalse());
             assertTrue(x[1].isFalse());
             assertTrue(x[2].isFalse());
@@ -92,11 +92,11 @@ public class IsOrTest extends CPSolverTest {
     public void isOr2() {
         try {
             CPSolver cp = solverFactory.get();
-            CPBoolVar[] x = new CPBoolVar[]{Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp), Factory.makeBoolVar(cp)};
-            CPBoolVar b = Factory.makeBoolVar(cp);
+            CPBoolVar[] x = new CPBoolVar[]{CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp)};
+            CPBoolVar b = CPFactory.makeBoolVar(cp);
             cp.post(new IsOr(b, x));
 
-            DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
+            DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x));
 
             dfs.onSolution(() -> {
                         int nTrue = 0;

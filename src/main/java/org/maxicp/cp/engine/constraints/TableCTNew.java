@@ -21,7 +21,7 @@ import org.maxicp.state.StateSparseBitSet;
 import org.maxicp.util.exception.InconsistencyException;
 
 
-import static org.maxicp.Factory.minus;
+import static org.maxicp.cp.CPFactory.minus;
 
 /**
  * Implementation of Compact Table algorithm described in

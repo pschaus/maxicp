@@ -25,7 +25,7 @@ import org.maxicp.util.io.InputReader;
 import org.maxicp.search.SearchStatistics;
 
 import static org.maxicp.BranchingScheme.*;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * Traveling salesman problem.

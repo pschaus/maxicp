@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
@@ -30,17 +30,17 @@ import org.maxicp.util.Procedure;
 public class MagicSeriePaper {
     public static void main(String[] args) {
         int n = 8;
-        CPSolver cp = Factory.makeSolver(false);
-        CPIntVar[] s = Factory.makeIntVarArray(cp, n, n);
+        CPSolver cp = CPFactory.makeSolver(false);
+        CPIntVar[] s = CPFactory.makeIntVarArray(cp, n, n);
 
         for (int i = 0; i < n; i++) {
             final int fi = i;
-            cp.post(Factory.sum(Factory.makeIntVarArray(n, j -> Factory.isEqual(s[j], fi)), s[i]));
+            cp.post(CPFactory.sum(CPFactory.makeIntVarArray(n, j -> CPFactory.isEqual(s[j], fi)), s[i]));
         }
-        cp.post(Factory.sum(s, n));
-        cp.post(Factory.sum(Factory.makeIntVarArray(n, i -> Factory.mul(s[i], i)), n));
+        cp.post(CPFactory.sum(s, n));
+        cp.post(CPFactory.sum(CPFactory.makeIntVarArray(n, i -> CPFactory.mul(s[i], i)), n));
 
-        DFSearch dfs = Factory.makeDfs(cp, () -> {
+        DFSearch dfs = CPFactory.makeDfs(cp, () -> {
             int idx = -1; // index of the first variable that is not bound
             for (int k = 0; k < s.length; k++)
                 if (s[k].size() > 1) {
@@ -52,8 +52,8 @@ public class MagicSeriePaper {
             else {
                 CPIntVar si = s[idx];
                 int v = si.min();
-                Procedure left = () -> cp.post(Factory.equal(si, v));
-                Procedure right = () -> cp.post(Factory.notEqual(si, v));
+                Procedure left = () -> cp.post(CPFactory.equal(si, v));
+                Procedure right = () -> cp.post(CPFactory.notEqual(si, v));
                 return new Procedure[]{left, right};
             }                
         });

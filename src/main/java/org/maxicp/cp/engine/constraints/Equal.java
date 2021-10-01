@@ -1,6 +1,6 @@
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
 
@@ -14,7 +14,7 @@ public class Equal extends AbstractCPConstraint {
      *
      * @param x the left member
      * @param y the right memer
-     * @see Factory#equal(CPIntVar, CPIntVar)
+     * @see CPFactory#equal(CPIntVar, CPIntVar)
      */
     public Equal(CPIntVar x, CPIntVar y) { // x == y
         super(x.getSolver());

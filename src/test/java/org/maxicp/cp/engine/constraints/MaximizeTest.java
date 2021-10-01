@@ -25,7 +25,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -37,13 +37,13 @@ public class MaximizeTest {
         try {
             try {
 
-                CPSolver cp = Factory.makeSolver();
-                CPIntVar y = Factory.makeIntVar(cp, 10, 20);
+                CPSolver cp = CPFactory.makeSolver();
+                CPIntVar y = CPFactory.makeIntVar(cp, 10, 20);
 
                 CPIntVar[] x = new CPIntVar[]{y};
-                DFSearch dfs = Factory.makeDfs(cp, () -> y.isBound() ? BranchingScheme.EMPTY :
-                        BranchingScheme.branch(() -> cp.post(Factory.equal(y, y.min())),
-                                () -> cp.post(Factory.notEqual(y, y.min()))));
+                DFSearch dfs = CPFactory.makeDfs(cp, () -> y.isBound() ? BranchingScheme.EMPTY :
+                        BranchingScheme.branch(() -> cp.post(CPFactory.equal(y, y.min())),
+                                () -> cp.post(CPFactory.notEqual(y, y.min()))));
                 Objective obj = cp.maximize(y);
 
                 SearchStatistics stats = dfs.solve();

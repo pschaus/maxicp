@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.state.State;
@@ -47,7 +47,7 @@ public class Sum extends AbstractCPConstraint {
      */
     public Sum(CPIntVar[] x, CPIntVar y) {
         this(Arrays.copyOf(x, x.length + 1));
-        this.x[x.length] = Factory.minus(y);
+        this.x[x.length] = CPFactory.minus(y);
     }
 
     /**
@@ -60,7 +60,7 @@ public class Sum extends AbstractCPConstraint {
      */
     public Sum(CPIntVar[] x, int y) {
         this(Arrays.copyOf(x, x.length + 1));
-        this.x[x.length] = Factory.makeIntVar(getSolver(), -y, -y);
+        this.x[x.length] = CPFactory.makeIntVar(getSolver(), -y, -y);
     }
 
     /**

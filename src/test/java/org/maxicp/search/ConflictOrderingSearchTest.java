@@ -24,7 +24,7 @@ import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 
@@ -38,15 +38,15 @@ public class ConflictOrderingSearchTest {
     @Test
     public void testExample1() {
         try {
-            CPSolver cp = Factory.makeSolver();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 8, 8);
+            CPSolver cp = CPFactory.makeSolver();
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 8, 8);
             for(int i = 4; i < 8; i++)
                 x[i].removeAbove(2);
 
             // apply alldifferent on the four last variables.
             // of course, this cannot work!
             CPIntVar[] fourLast = Arrays.stream(x).skip(4).toArray(CPIntVar[]::new);
-            cp.post(Factory.allDifferent(fourLast));
+            cp.post(CPFactory.allDifferent(fourLast));
 
             DFSearch dfs = new DFSearch(cp.getStateManager(), BranchingScheme.conflictOrderingSearch(
                     () -> { //select first unbound variable in x

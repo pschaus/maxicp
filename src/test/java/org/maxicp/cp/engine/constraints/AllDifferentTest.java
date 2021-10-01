@@ -22,7 +22,7 @@ import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.exception.InconsistencyException;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,11 +34,11 @@ public class AllDifferentTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 5);
 
         try {
-            cp.post(Factory.allDifferent(x));
-            cp.post(Factory.equal(x[0], 0));
+            cp.post(CPFactory.allDifferent(x));
+            cp.post(CPFactory.equal(x[0], 0));
             for (int i = 1; i < x.length; i++) {
                 assertEquals(4, x[i].size());
                 assertEquals(1, x[i].min());
@@ -55,12 +55,12 @@ public class AllDifferentTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 5);
 
         try {
-            cp.post(Factory.allDifferent(x));
+            cp.post(CPFactory.allDifferent(x));
 
-            SearchStatistics stats = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
+            SearchStatistics stats = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
             assertEquals(120, stats.numberOfSolutions());
 
         } catch (InconsistencyException e) {

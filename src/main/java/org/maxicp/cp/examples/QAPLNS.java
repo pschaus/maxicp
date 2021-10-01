@@ -25,7 +25,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import static org.maxicp.BranchingScheme.firstFail;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  * The Quadratic Assignment problem.

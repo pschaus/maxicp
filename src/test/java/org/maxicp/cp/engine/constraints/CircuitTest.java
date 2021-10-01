@@ -26,7 +26,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -62,7 +62,7 @@ public class CircuitTest extends CPSolverTest {
     public static CPIntVar[] instanciate(CPSolver cp, int[] circuit) {
         CPIntVar[] x = new CPIntVar[circuit.length];
         for (int i = 0; i < circuit.length; i++) {
-            x[i] = Factory.makeIntVar(cp, circuit[i], circuit[i]);
+            x[i] = CPFactory.makeIntVar(cp, circuit[i], circuit[i]);
         }
         return x;
     }
@@ -92,7 +92,7 @@ public class CircuitTest extends CPSolverTest {
             } catch (InconsistencyException e) {
             }
             try {
-                CPSolver cp = Factory.makeSolver();
+                CPSolver cp = CPFactory.makeSolver();
                 cp.post(new Circuit(instanciate(cp, circuit2ko)));
                 fail("should fail");
             } catch (InconsistencyException e) {
@@ -108,11 +108,11 @@ public class CircuitTest extends CPSolverTest {
 
         try {
             CPSolver cp = solverFactory.get();
-            CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+            CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 5);
             cp.post(new Circuit(x));
 
 
-            DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(x));
+            DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x));
 
             dfs.onSolution(() -> {
                         int[] sol = new int[x.length];

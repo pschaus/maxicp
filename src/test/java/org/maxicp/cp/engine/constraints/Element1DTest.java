@@ -26,9 +26,9 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
-import static org.maxicp.Factory.makeIntVar;
+import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.*;
 
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
@@ -40,8 +40,8 @@ public class Element1DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
-            CPIntVar z = Factory.makeIntVar(cp, 2, 40);
+            CPIntVar y = CPFactory.makeIntVar(cp, -3, 10);
+            CPIntVar z = CPFactory.makeIntVar(cp, 2, 40);
 
             int[] T = new int[]{9, 8, 7, 5, 6};
 
@@ -80,14 +80,14 @@ public class Element1DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar y = Factory.makeIntVar(cp, -3, 10);
-            CPIntVar z = Factory.makeIntVar(cp, -20, 40);
+            CPIntVar y = CPFactory.makeIntVar(cp, -3, 10);
+            CPIntVar z = CPFactory.makeIntVar(cp, -20, 40);
 
             int[] T = new int[]{9, 8, 7, 5, 6};
 
             cp.post(new Element1D(T, y, z));
 
-            DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.firstFail(y, z));
+            DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.firstFail(y, z));
             dfs.onSolution(() ->
                     assertEquals(T[y.min()], z.min())
             );
@@ -108,8 +108,8 @@ public class Element1DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar y = Factory.makeIntVar(cp, 0, 4);
-            CPIntVar z = Factory.makeIntVar(cp, 5, 9);
+            CPIntVar y = CPFactory.makeIntVar(cp, 0, 4);
+            CPIntVar z = CPFactory.makeIntVar(cp, 5, 9);
 
 
             int[] T = new int[]{9, 8, 7, 5, 6};
@@ -136,8 +136,8 @@ public class Element1DTest extends CPSolverTest {
         try {
 
             CPSolver cp = solverFactory.get();
-            CPIntVar y = Factory.makeIntVar(cp, 0, 4);
-            CPIntVar z = Factory.makeIntVar(cp, 5, 9);
+            CPIntVar y = CPFactory.makeIntVar(cp, 0, 4);
+            CPIntVar z = CPFactory.makeIntVar(cp, 5, 9);
 
 
             int[] T = new int[]{9, 8, 7, 5, 6};

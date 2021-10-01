@@ -24,7 +24,7 @@ import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.io.InputReader;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 
@@ -69,17 +69,17 @@ public class StableMatching {
         student: 6,8,4,7,1,5,0,3,2
         */
 
-        CPSolver cp = Factory.makeSolver();
+        CPSolver cp = CPFactory.makeSolver();
 
         // company[s] is the company chosen for student s
-        CPIntVar[] company = Factory.makeIntVarArray(cp, n, n);
+        CPIntVar[] company = CPFactory.makeIntVarArray(cp, n, n);
         // student[c] is the student chosen for company c
-        CPIntVar[] student = Factory.makeIntVarArray(cp, n, n);
+        CPIntVar[] student = CPFactory.makeIntVarArray(cp, n, n);
 
         // companyPref[s] is the preference of student s for the company chosen for s
-        CPIntVar[] companyPref = Factory.makeIntVarArray(cp, n, n + 1);
+        CPIntVar[] companyPref = CPFactory.makeIntVarArray(cp, n, n + 1);
         // studentPref[c] is the preference of company c for the student chosen for c
-        CPIntVar[] studentPref = Factory.makeIntVarArray(cp, n, n + 1);
+        CPIntVar[] studentPref = CPFactory.makeIntVarArray(cp, n, n + 1);
 
 
         for (int s = 0; s < n; s++) {
@@ -87,7 +87,7 @@ public class StableMatching {
             // TODO: model this with Element1DVar
             // STUDENT
             // BEGIN STRIP
-            cp.post(new Element1DVar(student, company[s], Factory.makeIntVar(cp, s, s)));
+            cp.post(new Element1DVar(student, company[s], CPFactory.makeIntVar(cp, s, s)));
             // END STRIP
 
             // TODO: model this with Element1D: rankCompanies[s][company[s]] = companyPref[s]
@@ -103,7 +103,7 @@ public class StableMatching {
             // TODO: model this with Element1DVar
             // STUDENT
             // BEGIN STRIP
-            cp.post(new Element1DVar(company, student[c], Factory.makeIntVar(cp, c, c)));
+            cp.post(new Element1DVar(company, student[c], CPFactory.makeIntVar(cp, c, c)));
             // END STRIP
 
             // TODO: model this with Element1D: rankStudents[c][student[c]] = studentPref[c]
@@ -118,8 +118,8 @@ public class StableMatching {
                 // if student s prefers company c over the chosen company, then the opposite is not true: c prefers their chosen student over s
                 // (companyPref[s] > rankCompanies[s][c]) => (studentPref[c] < rankStudents[c][s])
 
-                CPBoolVar sPrefersC = Factory.isLarger(companyPref[s], rankCompanies[s][c]);
-                CPBoolVar cDoesnot = Factory.isLess(studentPref[c], rankStudents[c][s]);
+                CPBoolVar sPrefersC = CPFactory.isLarger(companyPref[s], rankCompanies[s][c]);
+                CPBoolVar cDoesnot = CPFactory.isLess(studentPref[c], rankStudents[c][s]);
                 cp.post(implies(sPrefersC, cDoesnot));
 
                 // if company c prefers student s over their chosen student, then the opposite is not true: s prefers the chosen company over c
@@ -127,8 +127,8 @@ public class StableMatching {
                 // TODO: model this constraint
                 // STUDENT
                 // BEGIN STRIP
-                CPBoolVar cPrefersS = Factory.isLarger(studentPref[c], rankStudents[c][s]);
-                CPBoolVar sDoesnot = Factory.isLess(companyPref[s], rankCompanies[s][c]);
+                CPBoolVar cPrefersS = CPFactory.isLarger(studentPref[c], rankStudents[c][s]);
+                CPBoolVar sDoesnot = CPFactory.isLess(companyPref[s], rankCompanies[s][c]);
                 cp.post(implies(cPrefersS, sDoesnot));
                 // END STRIP
 
@@ -136,7 +136,7 @@ public class StableMatching {
         }
 
 
-        DFSearch dfs = Factory.makeDfs(cp, BranchingScheme.and(BranchingScheme.firstFail(company), BranchingScheme.firstFail(student)));
+        DFSearch dfs = CPFactory.makeDfs(cp, BranchingScheme.and(BranchingScheme.firstFail(company), BranchingScheme.firstFail(student)));
 
         dfs.onSolution(() -> {
                     System.out.println(Arrays.toString(company));
@@ -158,8 +158,8 @@ public class StableMatching {
      *         the relation "b1 implies b2" is true, and false otherwise.
      */
     private static CPBoolVar implies(CPBoolVar b1, CPBoolVar b2) {
-        CPIntVar notB1 = Factory.plus(Factory.minus(b1), 1);
-        return Factory.isLargerOrEqual(Factory.sum(notB1, b2), 1);
+        CPIntVar notB1 = CPFactory.plus(CPFactory.minus(b1), 1);
+        return CPFactory.isLargerOrEqual(CPFactory.sum(notB1, b2), 1);
     }
 }
 

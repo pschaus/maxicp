@@ -20,8 +20,8 @@ import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
 
-import static org.maxicp.Factory.lessOrEqual;
-import static org.maxicp.Factory.plus;
+import static org.maxicp.cp.CPFactory.lessOrEqual;
+import static org.maxicp.cp.CPFactory.plus;
 
 /**
  * Reified is less or equal constraint {@code b <=> x <= y}.

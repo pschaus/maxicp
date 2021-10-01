@@ -26,7 +26,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -41,11 +41,11 @@ public class AllDifferentDCTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 5);
 
         try {
             cp.post(new AllDifferentDC(x));
-            cp.post(Factory.equal(x[0], 0));
+            cp.post(CPFactory.equal(x[0], 0));
             for (int i = 1; i < x.length; i++) {
                 assertEquals(4, x[i].size());
                 assertEquals(1, x[i].min());
@@ -64,12 +64,12 @@ public class AllDifferentDCTest extends CPSolverTest {
 
         CPSolver cp = solverFactory.get();
 
-        CPIntVar[] x = Factory.makeIntVarArray(cp, 5, 5);
+        CPIntVar[] x = CPFactory.makeIntVarArray(cp, 5, 5);
 
         try {
             cp.post(new AllDifferentDC(x));
 
-            SearchStatistics stats = Factory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
+            SearchStatistics stats = CPFactory.makeDfs(cp, BranchingScheme.firstFail(x)).solve();
             assertEquals(120, stats.numberOfSolutions());
 
         } catch (InconsistencyException e) {
@@ -81,7 +81,7 @@ public class AllDifferentDCTest extends CPSolverTest {
 
 
     private static CPIntVar makeIVar(CPSolver cp, Integer... values) {
-        return Factory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
+        return CPFactory.makeIntVar(cp, new HashSet<>(Arrays.asList(values)));
     }
 
 
@@ -158,7 +158,7 @@ public class AllDifferentDCTest extends CPSolverTest {
 
             cp.post(new AllDifferentDC(x));
 
-            DFSearch dfs = Factory.makeDfs(cp, () -> {
+            DFSearch dfs = CPFactory.makeDfs(cp, () -> {
                 CPIntVar xs = BranchingScheme.selectMin(x,
                         xi -> xi.size() > 1,
                         xi -> -xi.size());
@@ -168,10 +168,10 @@ public class AllDifferentDCTest extends CPSolverTest {
                     int v = xs.min();
                     return BranchingScheme.branch(
                             () -> {
-                                cp.post(Factory.equal(xs, v));
+                                cp.post(CPFactory.equal(xs, v));
                             },
                             () -> {
-                                cp.post(Factory.notEqual(xs, v));
+                                cp.post(CPFactory.notEqual(xs, v));
                             });
                 }
             });

@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
 
@@ -32,7 +32,7 @@ public class NotEqual extends AbstractCPConstraint {
      * @param x the left member
      * @param y the right memer
      * @param v the offset value on y
-     * @see Factory#notEqual(CPIntVar, CPIntVar, int)
+     * @see CPFactory#notEqual(CPIntVar, CPIntVar, int)
      */
     public NotEqual(CPIntVar x, CPIntVar y, int v) { // x != y + v
         super(x.getSolver());
@@ -46,7 +46,7 @@ public class NotEqual extends AbstractCPConstraint {
      * that {@code x != y}
      * @param x the left member
      * @param y the right memer
-     * @see Factory#notEqual(CPIntVar, CPIntVar)
+     * @see CPFactory#notEqual(CPIntVar, CPIntVar)
      */
     public NotEqual(CPIntVar x, CPIntVar y) { // x != y
         this(x, y, 0);

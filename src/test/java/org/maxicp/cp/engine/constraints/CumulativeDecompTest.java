@@ -27,7 +27,7 @@ import org.maxicp.util.exception.NotImplementedException;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.junit.Test;
 import org.maxicp.BranchingScheme;
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -46,7 +46,7 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            CPIntVar[] s = Factory.makeIntVarArray(cp, 5, 5);
+            CPIntVar[] s = CPFactory.makeIntVarArray(cp, 5, 5);
             int[] d = new int[5];
             Arrays.fill(d, 1);
             int[] r = new int[5];
@@ -54,7 +54,7 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             cp.post(new CumulativeDecomposition(s, d, r, 100));
 
-            SearchStatistics stats = Factory.makeDfs(cp, BranchingScheme.firstFail(s)).solve();
+            SearchStatistics stats = CPFactory.makeDfs(cp, BranchingScheme.firstFail(s)).solve();
             assertEquals("cumulative alldiff expect makeIntVarArray permutations", 120, stats.numberOfSolutions());
 
         } catch (InconsistencyException e) {
@@ -72,12 +72,12 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            CPIntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
+            CPIntVar[] s = CPFactory.makeIntVarArray(cp, 2, 10);
             int[] d = new int[]{5, 5};
             int[] r = new int[]{1, 1};
 
             cp.post(new CumulativeDecomposition(s, d, r, 1));
-            cp.post(Factory.equal(s[0], 0));
+            cp.post(CPFactory.equal(s[0], 0));
 
             assertEquals(5, s[1].min());
 
@@ -96,13 +96,13 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            CPIntVar[] s = Factory.makeIntVarArray(cp, 2, 10);
+            CPIntVar[] s = CPFactory.makeIntVarArray(cp, 2, 10);
             int[] d = new int[]{5, 5};
             int[] r = new int[]{1, 1};
 
             cp.post(new CumulativeDecomposition(s, d, r, 1));
 
-            cp.post(Factory.equal(s[0], 5));
+            cp.post(CPFactory.equal(s[0], 5));
 
             assertEquals(0, s[1].max());
 
@@ -122,13 +122,13 @@ public class CumulativeDecompTest extends CPSolverTest {
 
             CPSolver cp = solverFactory.get();
 
-            CPIntVar[] s = Factory.makeIntVarArray(cp, 5, 10);
+            CPIntVar[] s = CPFactory.makeIntVarArray(cp, 5, 10);
             int[] d = new int[]{5, 10, 3, 6, 1};
             int[] r = new int[]{3, 7, 1, 4, 8};
 
             cp.post(new CumulativeDecomposition(s, d, r, 12));
 
-            DFSearch search = Factory.makeDfs(cp, BranchingScheme.firstFail(s));
+            DFSearch search = CPFactory.makeDfs(cp, BranchingScheme.firstFail(s));
 
             SearchStatistics stats = search.solve();
 

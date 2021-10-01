@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.examples;
 
-import org.maxicp.Factory;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.constraints.TableCT;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 import static org.maxicp.BranchingScheme.and;
 import static org.maxicp.BranchingScheme.firstFail;
-import static org.maxicp.Factory.*;
+import static org.maxicp.cp.CPFactory.*;
 
 /**
  *
@@ -108,13 +108,13 @@ public class Eternity {
         CPIntVar[][] l = new CPIntVar[n][m];  // left
 
         for (int i = 0; i < n; i++) {
-            u[i] = Factory.makeIntVarArray(m, j -> makeIntVar(cp, 0, max));
+            u[i] = CPFactory.makeIntVarArray(m, j -> makeIntVar(cp, 0, max));
             id[i] = makeIntVarArray(cp, m, n * m);
         }
         for (int k = 0; k < n; k++) {
             final int i = k;
             if (i < n - 1) d[i] = u[i + 1];
-            else d[i] = Factory.makeIntVarArray(m, j -> makeIntVar(cp, 0, max));
+            else d[i] = CPFactory.makeIntVarArray(m, j -> makeIntVar(cp, 0, max));
         }
         for (int j = 0; j < m; j++) {
             for (int i = 0; i < n; i++) {
