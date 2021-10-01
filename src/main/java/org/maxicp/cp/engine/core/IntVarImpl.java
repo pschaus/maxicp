@@ -30,9 +30,9 @@ public class IntVarImpl implements IntVar {
 
     private Solver cp;
     private IntDomain domain;
-    private StateStack<Constraint> onDomain;
-    private StateStack<Constraint> onBind;
-    private StateStack<Constraint> onBounds;
+    private StateStack<CPConstraint> onDomain;
+    private StateStack<CPConstraint> onBind;
+    private StateStack<CPConstraint> onBounds;
 
     private DomainListener domListener = new DomainListener() {
         @Override
@@ -144,29 +144,29 @@ public class IntVarImpl implements IntVar {
         onDomain.push(constraintClosure(f));
     }
 
-    private Constraint constraintClosure(Procedure f) {
-        Constraint c = new ConstraintClosure(cp, f);
+    private CPConstraint constraintClosure(Procedure f) {
+        CPConstraint c = new CPConstraintClosure(cp, f);
         getSolver().post(c, false);
         return c;
     }
 
     @Override
-    public void propagateOnDomainChange(Constraint c) {
+    public void propagateOnDomainChange(CPConstraint c) {
         onDomain.push(c);
     }
 
     @Override
-    public void propagateOnBind(Constraint c) {
+    public void propagateOnBind(CPConstraint c) {
         onBind.push(c);
     }
 
     @Override
-    public void propagateOnBoundChange(Constraint c) {
+    public void propagateOnBoundChange(CPConstraint c) {
         onBounds.push(c);
     }
 
 
-    protected void scheduleAll(StateStack<Constraint> constraints) {
+    protected void scheduleAll(StateStack<CPConstraint> constraints) {
         for (int i = 0; i < constraints.size(); i++)
             cp.schedule(constraints.get(i));
     }

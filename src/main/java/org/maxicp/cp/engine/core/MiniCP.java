@@ -30,7 +30,7 @@ import java.util.Queue;
 
 public class MiniCP implements Solver {
 
-    private Queue<Constraint> propagationQueue = new ArrayDeque<>();
+    private Queue<CPConstraint> propagationQueue = new ArrayDeque<>();
     private List<Procedure> fixPointListeners = new LinkedList<>();
 
     private final StateManager sm;
@@ -47,7 +47,7 @@ public class MiniCP implements Solver {
         return sm;
     }
 
-    public void schedule(Constraint c) {
+    public void schedule(CPConstraint c) {
         if (c.isActive() && !c.isScheduled()) {
             c.setScheduled(true);
             propagationQueue.add(c);
@@ -78,7 +78,7 @@ public class MiniCP implements Solver {
         }
     }
 
-    private void propagate(Constraint c) {
+    private void propagate(CPConstraint c) {
         c.setScheduled(false);
         if (c.isActive())
             c.propagate();
@@ -95,12 +95,12 @@ public class MiniCP implements Solver {
     }
 
     @Override
-    public void post(Constraint c) {
+    public void post(CPConstraint c) {
         post(c, true);
     }
 
     @Override
-    public void post(Constraint c, boolean enforceFixPoint) {
+    public void post(CPConstraint c, boolean enforceFixPoint) {
         c.post();
         if (enforceFixPoint) fixPoint();
     }

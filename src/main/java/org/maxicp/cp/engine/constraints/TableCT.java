@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.util.exception.InconsistencyException;
 
@@ -30,7 +30,7 @@ import static org.maxicp.Factory.minus;
  * Jordan Demeulenaere, Renaud Hartert, Christophe Lecoutre, Guillaume Perez, Laurent Perron, Jean-Charles Régin, Pierre Schaus
  * <p>See <a href="https://www.info.ucl.ac.be/~pschaus/assets/publi/cp2016-compacttable.pdf">The article.</a>
  */
-public class TableCT extends AbstractConstraint {
+public class TableCT extends AbstractCPConstraint {
     private IntVar[] x; //variables
     private int[][] table; //the table
     //supports[i][v] is the set of tuples supported by x[i]=v

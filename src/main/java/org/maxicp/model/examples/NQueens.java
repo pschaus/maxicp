@@ -3,15 +3,11 @@ package org.maxicp.model.examples;
 
 import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.CPInstantiableConstraint;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.Solver;
-import org.maxicp.model.Constraint;
 import org.maxicp.model.IntVar;
 import org.maxicp.model.Model;
-import org.maxicp.model.Var;
 import org.maxicp.model.constraints.AllDifferent;
-
-import java.util.Arrays;
 
 import static org.maxicp.Factory.makeIntVarArray;
 
@@ -39,7 +35,7 @@ public class NQueens {
 }
 
 
-class AllDifferentPersoCP extends AbstractConstraint {
+class AllDifferentPersoCP extends AbstractCPConstraint {
     public AllDifferentPersoCP(Solver cp) {
         super(cp);
     }
@@ -53,7 +49,7 @@ class AllDifferentPersoCP extends AbstractConstraint {
         }
 
         @Override
-        public AbstractConstraint instantiate(Solver cpSolver) {
+        public AbstractCPConstraint instantiate(Solver cpSolver) {
             return new AllDifferentPersoCP(cpSolver/*cpSolver.get(a), cpSolver.get(b)*/);
         }
     }

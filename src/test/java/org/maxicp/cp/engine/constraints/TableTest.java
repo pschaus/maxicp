@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.SolverTest;
-import org.maxicp.cp.engine.core.Constraint;
+import org.maxicp.cp.engine.core.CPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.cp.engine.core.Solver;
 import org.maxicp.search.SearchStatistics;
@@ -39,8 +39,8 @@ import static org.junit.Assert.*;
 @GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class TableTest extends SolverTest {
 
-    private static List<BiFunction<IntVar[], int[][], Constraint>> getAlgos() {
-        List<BiFunction<IntVar[], int[][], Constraint>> algos = new ArrayList<>();
+    private static List<BiFunction<IntVar[], int[][], CPConstraint>> getAlgos() {
+        List<BiFunction<IntVar[], int[][], CPConstraint>> algos = new ArrayList<>();
         algos.add(TableDecomp::new);
         algos.add(TableCT::new);
         return algos;
@@ -110,7 +110,7 @@ public class TableTest extends SolverTest {
             int[][] tuples2 = randomTuples(rand, 3, 50, 1, 7);
             int[][] tuples3 = randomTuples(rand, 3, 50, 0, 6);
 
-            for (BiFunction<IntVar[], int[][], Constraint> algo : getAlgos()) {
+            for (BiFunction<IntVar[], int[][], CPConstraint> algo : getAlgos()) {
                 try {
                     testTable(algo, tuples1, tuples2, tuples3);
                 } catch (NotImplementedException e) {
@@ -121,7 +121,7 @@ public class TableTest extends SolverTest {
     }
 
 
-    public void testTable(BiFunction<IntVar[], int[][], Constraint> tc, int[][] t1, int[][] t2, int[][] t3) {
+    public void testTable(BiFunction<IntVar[], int[][], CPConstraint> tc, int[][] t1, int[][] t2, int[][] t3) {
 
         SearchStatistics statsDecomp;
         SearchStatistics statsAlgo;

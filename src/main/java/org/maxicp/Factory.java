@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 /**
- * Factory to create {@link Solver}, {@link IntVar}, {@link Constraint}
+ * Factory to create {@link Solver}, {@link IntVar}, {@link CPConstraint}
  * and some modeling utility methods.
  * Example for the n-queens problem:
  * <pre>
@@ -306,8 +306,8 @@ public final class Factory {
      * @param v the value that must be assigned to x
      * @return a constraint so that {@code x = v}
      */
-    public static Constraint equal(IntVar x, int v) {
-        return new AbstractConstraint(x.getSolver()) {
+    public static CPConstraint equal(IntVar x, int v) {
+        return new AbstractCPConstraint(x.getSolver()) {
             @Override
             public void post() {
                 x.assign(v);
@@ -323,8 +323,8 @@ public final class Factory {
      * @param v the value that must be the upper bound on x
      * @return a constraint so that {@code x <= v}
      */
-    public static Constraint lessOrEqual(IntVar x, int v) {
-        return new AbstractConstraint(x.getSolver()) {
+    public static CPConstraint lessOrEqual(IntVar x, int v) {
+        return new AbstractCPConstraint(x.getSolver()) {
             @Override
             public void post() {
                 x.removeAbove(v);
@@ -340,8 +340,8 @@ public final class Factory {
      * @param v the value that must be different from x
      * @return a constraint so that {@code x != y}
      */
-    public static Constraint notEqual(IntVar x, int v) {
-        return new AbstractConstraint(x.getSolver()) {
+    public static CPConstraint notEqual(IntVar x, int v) {
+        return new AbstractCPConstraint(x.getSolver()) {
             @Override
             public void post() {
                 x.remove(v);
@@ -357,7 +357,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x != y}
      */
-    public static Constraint notEqual(IntVar x, IntVar y) {
+    public static CPConstraint notEqual(IntVar x, IntVar y) {
         return new NotEqual(x, y);
     }
 
@@ -370,7 +370,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x = y}
      */
-    public static Constraint equal(IntVar x, IntVar y) {
+    public static CPConstraint equal(IntVar x, IntVar y) {
         return new Equal(x, y);
     }
 
@@ -384,7 +384,7 @@ public final class Factory {
      * @param c a constant
      * @return a constraint so that {@code x != y+c}
      */
-    public static Constraint notEqual(IntVar x, IntVar y, int c) {
+    public static CPConstraint notEqual(IntVar x, IntVar y, int c) {
         return new NotEqual(x, y, c);
     }
 
@@ -481,7 +481,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x <= y}
      */
-    public static Constraint lessOrEqual(IntVar x, IntVar y) {
+    public static CPConstraint lessOrEqual(IntVar x, IntVar y) {
         return new LessOrEqual(x, y);
     }
 
@@ -493,7 +493,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code x >= y}
      */
-    public static Constraint largerOrEqual(IntVar x, IntVar y) {
+    public static CPConstraint largerOrEqual(IntVar x, IntVar y) {
         return new LessOrEqual(y, x);
     }
 
@@ -573,7 +573,7 @@ public final class Factory {
      * @param y a variable
      * @return a constraint so that {@code y = x[0]+x[1]+...+x[n-1]}
      */
-    public static Constraint sum(IntVar[] x, IntVar y) {
+    public static CPConstraint sum(IntVar[] x, IntVar y) {
         return new Sum(x, y);
     }
 
@@ -584,7 +584,7 @@ public final class Factory {
      * @param y a constant
      * @return a constraint so that {@code y = x[0]+x[1]+...+x[n-1]}
      */
-    public static Constraint sum(IntVar[] x, int y) {
+    public static CPConstraint sum(IntVar[] x, int y) {
         return new Sum(x, y);
     }
 
@@ -597,7 +597,7 @@ public final class Factory {
      * @param x a parameter pack of IntVar representing an array of variables
      * @return a constraint so that {@code y = x[0] + ... + x[n-1]}
      */
-    public static Constraint sum(int y, IntVar... x) {
+    public static CPConstraint sum(int y, IntVar... x) {
         return new Sum(x, y);
     }
 
@@ -607,7 +607,7 @@ public final class Factory {
      * @param x an array of variables
      * @return a constraint so that {@code x[i] != x[j] for all i < j}
      */
-    public static Constraint allDifferent(IntVar[] x) {
+    public static CPConstraint allDifferent(IntVar[] x) {
         return new AllDifferentBinary(x);
     }
 
@@ -618,7 +618,7 @@ public final class Factory {
      * @param x an array of variables
      * @return a constraint so that {@code x[i] != x[j] for all i < j}
      */
-    public static Constraint allDifferentAC(IntVar[] x) {
+    public static CPConstraint allDifferentAC(IntVar[] x) {
         return new AllDifferentDC(x);
     }
 }

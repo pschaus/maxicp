@@ -15,9 +15,9 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.BoolVar;
-import org.maxicp.cp.engine.core.Constraint;
+import org.maxicp.cp.engine.core.CPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 import static org.maxicp.Factory.lessOrEqual;
@@ -26,7 +26,7 @@ import static org.maxicp.Factory.plus;
 /**
  * Reified is less or equal constraint {@code b <=> x <= y}.
  */
-public class IsLessOrEqualVar extends AbstractConstraint {
+public class IsLessOrEqualVar extends AbstractCPConstraint {
 
     private final BoolVar b;
     private final IntVar x;
@@ -34,8 +34,8 @@ public class IsLessOrEqualVar extends AbstractConstraint {
 
     // STUDENT
     // BEGIN STRIP
-    private final Constraint lEqC;
-    private final Constraint grC;
+    private final CPConstraint lEqC;
+    private final CPConstraint grC;
     // END STRIP
 
     /**

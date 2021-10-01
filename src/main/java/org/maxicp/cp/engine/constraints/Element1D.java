@@ -16,7 +16,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
@@ -30,7 +30,7 @@ import java.util.Comparator;
  * Element Constraint modeling {@code array[y] = z}
  *
  */
-public class Element1D extends AbstractConstraint {
+public class Element1D extends AbstractCPConstraint {
 
     private final int[] t;
 

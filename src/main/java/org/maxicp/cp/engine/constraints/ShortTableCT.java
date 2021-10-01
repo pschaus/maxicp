@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 import java.util.Arrays;
@@ -26,7 +26,7 @@ import static org.maxicp.Factory.minus;
 /**
  * Table constraint with short tuples (having {@code *} entries)
  */
-public class ShortTableCT extends AbstractConstraint {
+public class ShortTableCT extends AbstractCPConstraint {
 
     private final IntVar[] x; //variables
     private final int[][] table; //the table

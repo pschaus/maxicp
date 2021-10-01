@@ -15,10 +15,10 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
-public class Element1DVar extends AbstractConstraint {
+public class Element1DVar extends AbstractCPConstraint {
 
     private final IntVar[] array;
     private final IntVar y;

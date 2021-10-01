@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
  * Element Constraint modeling {@code matrix[x][y] = z}
  *
  */
-public class Element2D extends AbstractConstraint {
+public class Element2D extends AbstractCPConstraint {
 
     private final int[][] matrix;
     private final IntVar x, y, z;

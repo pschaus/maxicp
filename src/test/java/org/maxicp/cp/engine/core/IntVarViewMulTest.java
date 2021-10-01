@@ -88,7 +88,7 @@ public class IntVarViewMulTest extends SolverTest {
         IntVar x = Factory.mul(Factory.makeIntVar(cp, 10), 1);
         IntVar y = Factory.mul(Factory.makeIntVar(cp, 10), 1);
 
-        Constraint cons = new AbstractConstraint(cp) {
+        CPConstraint cons = new AbstractCPConstraint(cp) {
 
             @Override
             public void post() {
@@ -127,7 +127,7 @@ public class IntVarViewMulTest extends SolverTest {
         IntVar x = Factory.mul(Factory.makeIntVar(cp, 10), 1);
         IntVar y = Factory.mul(Factory.makeIntVar(cp, 10), 1);
 
-        Constraint cons = new AbstractConstraint(cp) {
+        CPConstraint cons = new AbstractCPConstraint(cp) {
 
             @Override
             public void post() {

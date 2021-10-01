@@ -17,7 +17,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.cp.engine.core.IntVar;
 
@@ -28,7 +28,7 @@ import static org.maxicp.Factory.*;
 /**
  * Cumulative constraint with sum decomposition (very slow).
  */
-public class CumulativeDecomposition extends AbstractConstraint {
+public class CumulativeDecomposition extends AbstractCPConstraint {
 
     private final IntVar[] start;
     private final int[] duration;

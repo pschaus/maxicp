@@ -15,13 +15,13 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 /**
  * Less or equal constraint between two variables
  */
-public class LessOrEqual extends AbstractConstraint { // x <= y
+public class LessOrEqual extends AbstractCPConstraint { // x <= y
 
     private final IntVar x;
     private final IntVar y;

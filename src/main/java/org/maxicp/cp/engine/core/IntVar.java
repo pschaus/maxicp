@@ -52,35 +52,35 @@ public interface IntVar {
     void whenDomainChange(Procedure f);
 
     /**
-     * Asks that {@link Constraint#propagate()} is called whenever the domain
+     * Asks that {@link CPConstraint#propagate()} is called whenever the domain
      * of this variable changes.
      * We say that a <i>change</i> event occurs.
      *
-     * @param c the constraint for which the {@link Constraint#propagate()}
+     * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on change events of this variable.
      */
-    void propagateOnDomainChange(Constraint c);
+    void propagateOnDomainChange(CPConstraint c);
 
     /**
-     * Asks that {@link Constraint#propagate()} is called whenever the domain
+     * Asks that {@link CPConstraint#propagate()} is called whenever the domain
      * of this variable is reduced to a singleton.
      * In such a state the variable is bind and we say that a <i>bind</i> event occurs.
      *
-     * @param c the constraint for which the {@link Constraint#propagate()}
+     * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on bind events of this variable.
      */
-    void propagateOnBind(Constraint c);
+    void propagateOnBind(CPConstraint c);
 
     /**
-     * Asks that {@link Constraint#propagate()} is called whenever the
+     * Asks that {@link CPConstraint#propagate()} is called whenever the
      * bound (maximum or minimum values) of the domain
      * of this variable is changes.
      * We say that a <i>bound change</i> event occurs in this case.
      *
-     * @param c the constraint for which the {@link Constraint#propagate()}
+     * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on bound change events of this variable.
      */
-    void propagateOnBoundChange(Constraint c);
+    void propagateOnBoundChange(CPConstraint c);
 
 
     /**

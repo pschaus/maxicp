@@ -15,9 +15,8 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
-import org.maxicp.model.constraints.AllDifferent;
 import org.maxicp.util.GraphUtil;
 import org.maxicp.util.GraphUtil.Graph;
 import org.maxicp.util.exception.InconsistencyException;
@@ -31,7 +30,7 @@ import java.util.Arrays;
  * Algorithm described in
  * "A filtering algorithm for constraints of difference in CSPs" J-C. Régin, AAAI-94
  */
-public class AllDifferentDC extends AbstractConstraint {
+public class AllDifferentDC extends AbstractCPConstraint {
 
     private IntVar[] x;
 

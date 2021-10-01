@@ -16,7 +16,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 
@@ -25,7 +25,7 @@ import org.maxicp.cp.engine.core.IntVar;
  * Element Constraint modeling {@code array[y] = z}
  *
  */
-public class Element1DDomainConsistent extends AbstractConstraint {
+public class Element1DDomainConsistent extends AbstractCPConstraint {
 
     private final int[] t;
     private final IntVar y;

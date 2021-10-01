@@ -1,10 +1,10 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
-public class Equal extends AbstractConstraint {
+public class Equal extends AbstractCPConstraint {
     private final IntVar x, y;
 
 

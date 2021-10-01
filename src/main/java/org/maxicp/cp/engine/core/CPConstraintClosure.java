@@ -18,12 +18,12 @@ package org.maxicp.cp.engine.core;
 
 import org.maxicp.util.Procedure;
 
-public class ConstraintClosure extends AbstractConstraint {
+public class CPConstraintClosure extends AbstractCPConstraint {
 
 
     private final Procedure filtering;
 
-    public ConstraintClosure(Solver cp, Procedure filtering) {
+    public CPConstraintClosure(Solver cp, Procedure filtering) {
         super(cp);
         this.filtering = filtering;
     }

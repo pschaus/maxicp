@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.state.StateInt;
 
@@ -24,7 +24,7 @@ import static org.maxicp.util.exception.InconsistencyException.INCONSISTENCY;
 /**
  * Logical or constraint {@code  x1 or x2 or ... xn}
  */
-public class Or extends AbstractConstraint { // x1 or x2 or ... xn
+public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
 
     private final BoolVar[] x;
     private final int n;

@@ -16,7 +16,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.state.StateInt;
 
@@ -25,7 +25,7 @@ import static org.maxicp.Factory.allDifferent;
 /**
  * Hamiltonian Circuit Constraint with a successor model
  */
-public class Circuit extends AbstractConstraint {
+public class Circuit extends AbstractCPConstraint {
 
     private final IntVar[] x;
     private final StateInt[] dest;

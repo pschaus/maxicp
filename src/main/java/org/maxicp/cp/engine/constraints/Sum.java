@@ -16,7 +16,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.state.State;
 import org.maxicp.state.StateInt;
@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 /**
  * Sum Constraint
  */
-public class Sum extends AbstractConstraint {
+public class Sum extends AbstractCPConstraint {
 
     private int[] free;
     private StateInt nFrees;

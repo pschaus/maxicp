@@ -88,7 +88,7 @@ public class IntVarTest extends SolverTest {
         IntVar x = Factory.makeIntVar(cp, 10);
         IntVar y = Factory.makeIntVar(cp, 10);
 
-        Constraint cons = new AbstractConstraint(cp) {
+        CPConstraint cons = new AbstractCPConstraint(cp) {
             @Override
             public void post() {
                 x.whenBind(() -> propagateCalled = true);
@@ -226,7 +226,7 @@ public class IntVarTest extends SolverTest {
         IntVar x = Factory.makeIntVar(cp, 10);
         IntVar y = Factory.makeIntVar(cp, 10);
 
-        Constraint cons = new AbstractConstraint(cp) {
+        CPConstraint cons = new AbstractCPConstraint(cp) {
 
             @Override
             public void post() {
@@ -271,7 +271,7 @@ public class IntVarTest extends SolverTest {
 
             IntVar x = Factory.makeIntVar(cp, 10);
 
-            Constraint cons = new AbstractConstraint(cp) {
+            CPConstraint cons = new AbstractCPConstraint(cp) {
                 @Override
                 public void post() {
                     x.propagateOnBoundChange(this);
@@ -310,7 +310,7 @@ public class IntVarTest extends SolverTest {
             Solver cp = solverFactory.get();
             IntVar x = Factory.makeIntVar(cp, 10);
 
-            Constraint cons = new AbstractConstraint(cp) {
+            CPConstraint cons = new AbstractCPConstraint(cp) {
                 @Override
                 public void post() {
                     x.propagateOnBoundChange(this);

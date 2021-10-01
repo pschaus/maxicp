@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.state.StateInt;
 
@@ -23,7 +23,7 @@ import org.maxicp.state.StateInt;
 /**
  * Reified logical or constraint
  */
-public class IsOr extends AbstractConstraint { // b <=> x1 or x2 or ... xn
+public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
 
     private final BoolVar b;
     private final BoolVar[] x;

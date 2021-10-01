@@ -23,7 +23,7 @@ import org.maxicp.state.State;
  * Abstract class the most of the constraints
  * should extend.
  */
-public abstract class AbstractConstraint implements Constraint {
+public abstract class AbstractCPConstraint implements CPConstraint {
 
     /**
      * The solver in which the constraint is created
@@ -32,7 +32,7 @@ public abstract class AbstractConstraint implements Constraint {
     private boolean scheduled = false;
     private final State<Boolean> active;
 
-    public AbstractConstraint(Solver cp) {
+    public AbstractCPConstraint(Solver cp) {
         this.cp = cp;
         active = cp.getStateManager().makeStateRef(true);
     }

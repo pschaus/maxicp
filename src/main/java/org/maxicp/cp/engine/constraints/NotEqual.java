@@ -16,13 +16,13 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 /**
  * Not Equal constraint between two variables
  */
-public class NotEqual extends AbstractConstraint {
+public class NotEqual extends AbstractCPConstraint {
     private final IntVar x, y;
     private final int v;
 

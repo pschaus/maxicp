@@ -15,13 +15,13 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 /**
  * Decomposition of table constraint with short tuples (having {@code *} entries)
  */
-public class ShortTableDecomp extends AbstractConstraint {
+public class ShortTableDecomp extends AbstractCPConstraint {
 
     private final IntVar[] x;
     private final int[][] table;

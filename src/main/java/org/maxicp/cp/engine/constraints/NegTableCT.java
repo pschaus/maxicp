@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import static org.maxicp.Factory.minus;
 /**
  * Negative table constraint
  */
-public class NegTableCT extends AbstractConstraint {
+public class NegTableCT extends AbstractCPConstraint {
 
     private IntVar[] x; //variables
     private int[][] table; //the table

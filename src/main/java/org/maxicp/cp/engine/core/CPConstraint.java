@@ -19,9 +19,9 @@ import org.maxicp.state.StateManager;
 
 /**
  * Interface implemented by every Constraint
- * @see AbstractConstraint
+ * @see AbstractCPConstraint
  */
-public interface Constraint {
+public interface CPConstraint {
 
     /**
      * Initializes the constraint when it is posted to the solver.

@@ -17,7 +17,7 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.util.exception.InconsistencyException;
@@ -31,7 +31,7 @@ import static org.maxicp.Factory.*;
  * Disjunctive Scheduling Constraint:
  * Any two pairs of activities cannot overlap in time.
  */
-public class Disjunctive extends AbstractConstraint {
+public class Disjunctive extends AbstractCPConstraint {
 
     private final IntVar[] start;
     private final int[] duration;

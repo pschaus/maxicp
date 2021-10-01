@@ -15,10 +15,10 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
-public class TableDecomp extends AbstractConstraint {
+public class TableDecomp extends AbstractCPConstraint {
     private final IntVar[] x;
     private final int[][] table;
 

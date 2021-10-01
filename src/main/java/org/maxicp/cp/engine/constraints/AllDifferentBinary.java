@@ -15,11 +15,11 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.cp.engine.core.Solver;
 
-public class AllDifferentBinary extends AbstractConstraint {
+public class AllDifferentBinary extends AbstractCPConstraint {
 
     private IntVar[] x;
 

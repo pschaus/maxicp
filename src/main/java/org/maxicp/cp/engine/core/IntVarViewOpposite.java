@@ -50,17 +50,17 @@ public class IntVarViewOpposite implements IntVar {
     }
 
     @Override
-    public void propagateOnDomainChange(Constraint c) {
+    public void propagateOnDomainChange(CPConstraint c) {
         x.propagateOnDomainChange(c);
     }
 
     @Override
-    public void propagateOnBind(Constraint c) {
+    public void propagateOnBind(CPConstraint c) {
         x.propagateOnBind(c);
     }
 
     @Override
-    public void propagateOnBoundChange(Constraint c) {
+    public void propagateOnBoundChange(CPConstraint c) {
         x.propagateOnBoundChange(c);
     }
 

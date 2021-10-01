@@ -16,13 +16,13 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 /**
  * Maximum Constraint
  */
-public class Maximum extends AbstractConstraint {
+public class Maximum extends AbstractCPConstraint {
 
     private final IntVar[] x;
     private final IntVar y;

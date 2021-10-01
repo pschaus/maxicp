@@ -88,7 +88,7 @@ public class IntVarViewOffsetTest extends SolverTest {
         IntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
         IntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1); // 1..11
 
-        Constraint cons = new AbstractConstraint(cp) {
+        CPConstraint cons = new AbstractCPConstraint(cp) {
 
             @Override
             public void post() {
@@ -127,7 +127,7 @@ public class IntVarViewOffsetTest extends SolverTest {
         IntVar x = Factory.plus(Factory.makeIntVar(cp, 10), 1);
         IntVar y = Factory.plus(Factory.makeIntVar(cp, 10), 1);
 
-        Constraint cons = new AbstractConstraint(cp) {
+        CPConstraint cons = new AbstractCPConstraint(cp) {
 
             @Override
             public void post() {

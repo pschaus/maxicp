@@ -24,31 +24,31 @@ import org.maxicp.util.exception.InconsistencyException;
 public interface Solver {
 
     /**
-     * Posts the constraint, that is call {@link Constraint#post()} and
+     * Posts the constraint, that is call {@link CPConstraint#post()} and
      * computes the fix-point.
      * A {@link InconsistencyException} is thrown
      * if by posting the constraint it is proven that there is no solution.
      *
      * @param c the constraint to be posted
      */
-    void post(Constraint c);
+    void post(CPConstraint c);
 
     /**
      * Schedules the constraint to be propagated by the fix-point.
      *
      * @param c the constraint to be scheduled
      */
-    void schedule(Constraint c);
+    void schedule(CPConstraint c);
 
     /**
-     * Posts the constraint that is call {@link Constraint#post()}
+     * Posts the constraint that is call {@link CPConstraint#post()}
      * and optionally computes the fix-point.
      * A {@link InconsistencyException} is thrown
      * if by posting the constraint it is proven that there is no solution.
      * @param c the constraint to be posted
      * @param enforceFixPoint is one wants to compute the fix-point after
      */
-    void post(Constraint c, boolean enforceFixPoint);
+    void post(CPConstraint c, boolean enforceFixPoint);
 
     /**
      * Computes the fix-point with all the scheduled constraints.

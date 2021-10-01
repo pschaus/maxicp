@@ -15,13 +15,13 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 
 /**
  * Absolute value constraint
  */
-public class Absolute extends AbstractConstraint {
+public class Absolute extends AbstractCPConstraint {
 
     private final IntVar x;
     private final IntVar y;

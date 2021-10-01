@@ -16,14 +16,14 @@
 package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.BoolVar;
 import org.maxicp.cp.engine.core.IntVar;
 
 /**
  * Reified less or equal constraint.
  */
-public class IsLessOrEqual extends AbstractConstraint { // b <=> x <= v
+public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
 
     private final BoolVar b;
     private final IntVar x;

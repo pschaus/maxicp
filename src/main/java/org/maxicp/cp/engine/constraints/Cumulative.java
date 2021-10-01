@@ -18,7 +18,7 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.Factory;
 import org.maxicp.cp.engine.constraints.Profile.Rectangle;
-import org.maxicp.cp.engine.core.AbstractConstraint;
+import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.IntVar;
 import org.maxicp.util.exception.InconsistencyException;
 
@@ -30,7 +30,7 @@ import static org.maxicp.Factory.plus;
 /**
  * Cumulative constraint with time-table filtering
  */
-public class Cumulative extends AbstractConstraint {
+public class Cumulative extends AbstractCPConstraint {
 
     private final IntVar[] start;
     private final int[] duration;
