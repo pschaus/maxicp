@@ -21,7 +21,7 @@ public class CPModelInstantiator {
 
         HashMap<Var, CPVar> mapping = new HashMap<Var, CPVar>();
         for(Constraint c: m.getConstraints())
-            instantiateConstraint(mapping, c);
+            instantiateConstraint(solver, mapping, c);
 
         return solver;
     }
@@ -44,9 +44,12 @@ public class CPModelInstantiator {
         }
     }
 
-    static private void instantiateConstraint(HashMap<Var, CPVar> mapping, Constraint c) {
+    static private void instantiateConstraint(CPSolver cp, HashMap<Var, CPVar> mapping, Constraint c) {
         switch (c) {
-            case AllDifferent a -> {}
+            case AllDifferent a -> {
+                CPIntVar[] args = a.scope().stream().map(x -> (CPIntVar) getCPVar(cp, mapping, x)).toArray(CPIntVar[]::new);
+                cp.post(new AllDifferentDC(args));
+            }
             default -> throw new IllegalStateException("Unexpected value: " + c);
         }
     }

@@ -7,11 +7,12 @@ import org.maxicp.model.Var;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public abstract class CPInstantiableConstraint implements Constraint {
     ArrayList<Var> s;
     @Override
-    public Iterable<Var> scope() {
+    public Collection<Var> scope() {
         return s;
     }
 
