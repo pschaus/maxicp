@@ -12,7 +12,7 @@ import java.util.HashMap;
 import static org.maxicp.cp.CPModelInstantiator.getCPVar;
 import static org.maxicp.cp.CPModelInstantiator.instantiateConstraint;
 
-public class InstanciatedCPModel extends Model {
+public class InstanciatedCPModel implements Model {
     final State<ConstraintListNode> model;
     public final CPSolver solver;
     final HashMap<Var, CPVar> mapping;
@@ -30,6 +30,8 @@ public class InstanciatedCPModel extends Model {
     public CPBoolVar getVar(BoolVar v) {
         return (CPBoolVar) getCPVar(solver, mapping, v);
     }
+
+
 
     @Override
     public void add(Constraint c) {
