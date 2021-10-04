@@ -55,9 +55,6 @@ public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
     @Override
     public void propagate() {
         // update watched literals
-        // TODO: implement the filtering using watched literal technique and make sure you pass all the tests
-        // STUDENT throw new NotImplementedException("Or");
-        // BEGIN STRIP
         int i = wL.value();
         while (i < n && x[i].isBound()) {
             if (x[i].isTrue()) {
@@ -89,6 +86,5 @@ public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
             x[wL.value()].propagateOnBind(this);
             x[wR.value()].propagateOnBind(this);
         }
-        // END STRIP
     }
 }

@@ -108,17 +108,9 @@ public class Steel {
                         if (c[i] == col) inSlabWithColor.add(inSlab[j][i]);
                     }
 
-                    // TODO 2: model that presence[col] is true iff at least one order with color col is placed in slab j
-                    // STUDENT
-                    // BEGIN STRIP
                     cp.post(new IsOr((CPBoolVar) presence[col], inSlabWithColor.toArray(new CPBoolVar[0])));
-                    // END STRIP
                 }
-                // TODO 3: restrict the number of colors present in slab j to be <= 2
-                // STUDENT
-                // BEGIN STRIP
                 cp.post(lessOrEqual(sum(presence), 2));
-                // END STRIP
             }
 
 
@@ -131,28 +123,14 @@ public class Steel {
                 cp.post(sum(wj, l[j]));
             }
 
-            // TODO 4: add the redundant constraint that the sum of the loads is equal to the sum of elements
-            // STUDENT
-            // BEGIN STRIP
             cp.post(sum(l, IntStream.of(w).sum()));
-            // END STRIP
 
-            // TODO 5: model the objective function using element constraint + a sum constraint
-            CPIntVar totLoss = null;
-            // STUDENT
-            // BEGIN STRIP
             CPIntVar[] losses = CPFactory.makeIntVarArray(nSlab, j -> element(loss, l[j]));
-            totLoss = sum(losses);
-            // END STRIP
+            CPIntVar totLoss = sum(losses);
 
             Objective obj = cp.minimize(totLoss);
 
 
-            // TODO 6 add static symmetry breaking constraint
-
-            // TODO 7 implement a dynamic symmetry breaking during search
-            // STUDENT DFSearch dfs = makeDfs(cp,firstFail(x));
-            // BEGIN STRIP
             DFSearch dfs = makeDfs(cp,
                     () -> {
                         CPIntVar xs = selectMin(x,
@@ -172,7 +150,6 @@ public class Steel {
                             return branch(branches);
                         }
                     });
-            // END STRIP
             dfs.onSolution(() -> {
                 System.out.println("---");
                 //System.out.println(totLoss);

@@ -39,23 +39,15 @@ public class Absolute extends AbstractCPConstraint {
     }
 
     public void post() {
-        // TODO
-        // STUDENT throw new NotImplementedException("Absolute");
-        // BEGIN STRIP
         y.removeBelow(0);
         x.propagateOnBoundChange(this);
         y.propagateOnBoundChange(this);
         propagate();
-        //we can do more propagation with val remove
-        // END STRIP
     }
 
     @Override
     public void propagate() {
         // y = |x|
-        // TODO
-        // STUDENT throw new NotImplementedException("Absolute");
-        // BEGIN STRIP
         if (x.isBound()) {
             y.assign(Math.abs(x.min()));
             setActive(false);
@@ -94,7 +86,6 @@ public class Absolute extends AbstractCPConstraint {
                 y.remove(y.min());
             }
         }
-        // END STRIP
     }
 
 }

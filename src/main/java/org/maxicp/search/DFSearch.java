@@ -236,10 +236,6 @@ public class DFSearch {
         }
     }
 
-    // STUDENT
-
-    // BEGIN STRIP
-
     // solution to DFS with explicit stack
     private void expandNode(Stack<Procedure> alternatives, SearchStatistics statistics) {
         Procedure[] alts = branching.get();
@@ -274,6 +270,4 @@ public class DFSearch {
             }
         }
     }
-
-    // END STRIP
 }

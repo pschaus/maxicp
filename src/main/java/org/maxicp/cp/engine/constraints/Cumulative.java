@@ -82,28 +82,16 @@ public class Cumulative extends AbstractCPConstraint {
     @Override
     public void propagate() {
         Profile profile = buildProfile();
-        // TODO 2: check that the profile is not exceeding the capa otherwise throw an INCONSISTENCY
         for (int i = 0; i < profile.size(); i++) {
-            // STUDENT throw new NotImplementedException("Cumulative");
-            // BEGIN STRIP
             if (profile.get(i).height() > capa) {
                 throw InconsistencyException.INCONSISTENCY;
             }
-            // END STRIP
         }
 
         for (int i = 0; i < start.length; i++) {
             if (!start[i].isBound()) {
                 // j is the index of the profile rectangle overlapping t
                 int j = profile.rectangleIndex(start[i].min());
-                // TODO 3: push i to the right
-                // hint:
-                // Check that at every-point on the interval
-                // [start[i].getMin() ... start[i].getMin()+duration[i]-1] there is enough space.
-                // You may have to look-ahead on the next profile rectangle(s)
-                // Be careful that the activity you are currently pushing may have contributed to the profile.
-                // STUDENT throw new NotImplementedException();
-                // BEGIN STRIP
                 int t = start[i].min();
                 while (j < profile.size()
                         && profile.get(j).start() < Math.min(t + duration[i], start[i].max())) {
@@ -114,7 +102,6 @@ public class Cumulative extends AbstractCPConstraint {
                     j++;
                 }
                 start[i].removeBelow(t);
-                // END STRIP
             }
         }
     }
@@ -122,16 +109,12 @@ public class Cumulative extends AbstractCPConstraint {
     public Profile buildProfile() {
         ArrayList<Rectangle> mandatoryParts = new ArrayList<Rectangle>();
         for (int i = 0; i < start.length; i++) {
-            // TODO 1: add mandatory part of activity i if any
-            // STUDENT throw new NotImplementedException("Cumulative");
-            // BEGIN STRIP
             if (end[i].min() > start[i].max()) {
                 int s = start[i].max();
                 int e = end[i].min();
                 int d = demand[i];
                 mandatoryParts.add(new Rectangle(s, e, d));
             }
-            // END STRIP
         }
         return new Profile(mandatoryParts.toArray(new Profile.Rectangle[0]));
     }

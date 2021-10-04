@@ -77,8 +77,7 @@ public class Eternity {
         // Table with makeIntVarArray pieces and for each their 4 possible rotations
 
         int[][] table = new int[4 * n * m][5];
-        // STUDENT
-        // BEGIN STRIP
+
         for (int i = 0; i < pieces.length; i++) {
             for (int r = 0; r < 4; r++) {
                 table[i * 4 + r][0] = i;
@@ -88,7 +87,6 @@ public class Eternity {
                 table[i * 4 + r][4] = pieces[i][(r + 3) % 4];
             }
         }
-        // END STRIP
 
         CPSolver cp = makeSolver();
 
@@ -130,16 +128,11 @@ public class Eternity {
 
         // The constraints of the problem
 
-        // TODO: State the constraints of the problem
-
         // Constraint1: all the pieces placed are different
 
         // Constraint2: all the pieces placed are valid ones i.e. one of the given mxn pieces possibly rotated
 
         // Constraint3: place "0" one all external side of the border (gray color)
-
-        // STUDENT
-        // BEGIN STRIP
 
         // all the the pieces placed are different
         cp.post(allDifferent(flatten(id)));
@@ -162,21 +155,16 @@ public class Eternity {
             cp.post(equal(u[0][j], 0));
             cp.post(equal(d[n - 1][j], 0));
         }
-        // END STRIP
 
 
         // The search using the and combinator
 
         DFSearch dfs = makeDfs(cp,
-                /* TODO: continue, are you branching on all the variables ? */
-                // STUDENT and(firstFail(flatten((id))), firstFail(flatten(u)))
-                // BEGIN STRIP
                 and(firstFail(flatten(id)),
                         firstFail(flatten(u)),
                         firstFail(flatten(r)),
                         firstFail(flatten(d)),
                         firstFail(flatten(l)))
-                // END STRIP
         );
 
 

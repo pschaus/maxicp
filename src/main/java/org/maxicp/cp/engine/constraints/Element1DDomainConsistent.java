@@ -47,14 +47,11 @@ public class Element1DDomainConsistent extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        // STUDENT throw new NotImplementedException("Element1D");
-        // BEGIN STRIP
         int [][] table = new int [t.length][2];
         for (int i = 0; i < table.length; i++) {
             table[i][0] = i;
             table[i][1] = t[i];
         }
         getSolver().post(new TableCT(new CPIntVar[]{y,z},table));
-        // END STRIP
     }
 }

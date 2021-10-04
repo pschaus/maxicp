@@ -84,33 +84,14 @@ public class StableMatching {
 
         for (int s = 0; s < n; s++) {
             // the student of the company of student s is s
-            // TODO: model this with Element1DVar
-            // STUDENT
-            // BEGIN STRIP
             cp.post(new Element1DVar(student, company[s], CPFactory.makeIntVar(cp, s, s)));
-            // END STRIP
-
-            // TODO: model this with Element1D: rankCompanies[s][company[s]] = companyPref[s]
-            // STUDENT
-            // BEGIN STRIP
             cp.post(new Element1D(rankCompanies[s], company[s], companyPref[s]));
-            // END STRIP
-
         }
 
         for (int c = 0; c < n; c++) {
             // the company of the student of company c is c
-            // TODO: model this with Element1DVar
-            // STUDENT
-            // BEGIN STRIP
             cp.post(new Element1DVar(company, student[c], CPFactory.makeIntVar(cp, c, c)));
-            // END STRIP
-
-            // TODO: model this with Element1D: rankStudents[c][student[c]] = studentPref[c]
-            // STUDENT
-            // BEGIN STRIP
             cp.post(new Element1D(rankStudents[c], student[c], studentPref[c]));
-            // END STRIP
         }
 
         for (int s = 0; s < n; s++) {
@@ -124,13 +105,9 @@ public class StableMatching {
 
                 // if company c prefers student s over their chosen student, then the opposite is not true: s prefers the chosen company over c
                 // (studentPref[c] > rankStudents[c][s]) => (companyPref[s] < rankCompanies[s][c])
-                // TODO: model this constraint
-                // STUDENT
-                // BEGIN STRIP
                 CPBoolVar cPrefersS = CPFactory.isLarger(studentPref[c], rankStudents[c][s]);
                 CPBoolVar sDoesnot = CPFactory.isLess(companyPref[s], rankCompanies[s][c]);
                 cp.post(implies(cPrefersS, sDoesnot));
-                // END STRIP
 
             }
         }

@@ -57,10 +57,6 @@ public class Circuit extends AbstractCPConstraint {
     @Override
     public void post() {
         getSolver().post(allDifferent(x));
-        // TODO
-        // Hint: use x[i].whenBind(...) to call the bind
-        // STUDENT throw new NotImplementedException("Circuit");
-        // BEGIN STRIP
         if (x.length == 1) {
             x[0].assign(0);
             return;
@@ -75,14 +71,10 @@ public class Circuit extends AbstractCPConstraint {
                 x[i].whenBind(() -> bind(fi));
             }
         }
-        // END STRIP
     }
 
 
     private void bind(int i) {
-        // TODO
-        // STUDENT throw new NotImplementedException("Circuit");
-        // BEGIN STRIP
         int j = x[i].min();
         int origi = orig[i].value();
         int destj = dest[j].value();
@@ -97,6 +89,5 @@ public class Circuit extends AbstractCPConstraint {
             // avoid inner loops
             x[destj].remove(origi); // avoid inner loops
         }
-        // END STRIP
     }
 }

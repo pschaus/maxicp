@@ -25,8 +25,6 @@ import java.util.Map;
  */
 public class CopyMap<K, V> implements Storage, StateMap<K, V> {
 
-    // STUDENT
-    // BEGIN STRIP
     class CopyMapStateEntry implements StateEntry {
         private final Map<K, V> map;
 
@@ -38,51 +36,35 @@ public class CopyMap<K, V> implements Storage, StateMap<K, V> {
             CopyMap.this.map = map;
         }
     }
-    // END STRIP
 
     private Map<K, V> map;
 
     protected CopyMap() {
-        // STUDENT throw new NotImplementedException("CopyMap");
-        // BEGIN STRIP
         map = new IdentityHashMap<>();
-        // END STRIP
     }
 
     protected CopyMap(Map<K, V> m) {
-        // STUDENT throw new NotImplementedException("CopyMap");
-        // BEGIN STRIP
         map = new IdentityHashMap<>();
         for (Map.Entry<K, V> me : m.entrySet())
             m.put(me.getKey(), me.getValue());
-        // END STRIP
     }
 
     @Override
     public void put(K k, V v) {
-        // STUDENT throw new NotImplementedException("CopyMap");
-        // BEGIN STRIP
         map.put(k, v);
-        // END STRIP
     }
 
     @Override
     public V get(K k) {
-        // STUDENT throw new NotImplementedException("CopyMap");
-        // BEGIN STRIP
         return map.get(k);
-        // END STRIP
     }
 
     @Override
     public StateEntry save() {
-        // STUDENT throw new NotImplementedException("CopyMap");
-        // BEGIN STRIP
         Map<K, V> mapCopy = new IdentityHashMap<>();
         for (Map.Entry<K, V> me : map.entrySet())
             mapCopy.put(me.getKey(), me.getValue());
         return new CopyMapStateEntry(mapCopy);
-        // END STRIP
     }
 
 }

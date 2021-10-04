@@ -23,8 +23,6 @@ package org.maxicp.state;
  */
 public class StateLazySparseSet {
 
-    // STUDENT
-    // BEGIN STRIP
     private StateManager sm;
 
     private StateSparseSet sparse;
@@ -216,6 +214,4 @@ public class StateLazySparseSet {
             return sparse.toString();
         }
     }
-
-    // END STRIP
 }

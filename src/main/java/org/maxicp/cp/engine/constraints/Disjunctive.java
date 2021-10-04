@@ -37,8 +37,6 @@ public class Disjunctive extends AbstractCPConstraint {
     private final int[] duration;
     private final CPIntVar[] end;
 
-    // STUDENT
-    // BEGIN STRIP
     private final Integer[] permEst;
     private final int[] rankEst;
     private final int[] startMin;
@@ -52,7 +50,6 @@ public class Disjunctive extends AbstractCPConstraint {
     private final ThetaTree thetaTree;
 
     private final boolean postMirror;
-    // END STRIP
 
     /**
      * Creates a disjunctive constraint that enforces
@@ -73,8 +70,6 @@ public class Disjunctive extends AbstractCPConstraint {
         this.duration = duration;
         this.end = CPFactory.makeIntVarArray(start.length, i -> plus(start[i], duration[i]));
 
-        // STUDENT
-        // BEGIN STRIP
         this.postMirror = postMirror;
         permEst = new Integer[start.length];
         rankEst = new int[start.length];
@@ -93,7 +88,6 @@ public class Disjunctive extends AbstractCPConstraint {
 
         startMin = new int[start.length];
         endMax = new int[start.length];
-        // END STRIP
     }
 
 
@@ -107,10 +101,6 @@ public class Disjunctive extends AbstractCPConstraint {
         getSolver().post(new Cumulative(start, duration, demands, 1), false);
 
 
-        // TODO 1: replace by  posting  binary decomposition using IsLessOrEqualVar
-        // TODO 2: add the mirror filtering as done in the Cumulative Constraint
-        // STUDENT throw new NotImplementedException("Disjunctive");
-        // BEGIN STRIP
         for (int i = 0; i < start.length; i++) {
             start[i].propagateOnBoundChange(this);
         }
@@ -128,7 +118,6 @@ public class Disjunctive extends AbstractCPConstraint {
                     getSolver().post(new IsLessOrEqualVar(jBeforei, endj, start[i]));
                     getSolver().post(new NotEqual(iBeforej, jBeforei), false);
 
-                    // TODO i before j or j before i
                 }
             }
 
@@ -138,22 +127,11 @@ public class Disjunctive extends AbstractCPConstraint {
 
             propagate();
         }
-        // END STRIP
 
     }
 
     @Override
     public void propagate() {
-        // HINT: for the TODO 1-4 you'll need the ThetaTree data-structure
-
-        // TODO 3: add the OverLoadCheck algorithms
-
-        // TODO 4: add the Detectable Precedences algorithm
-
-        // TODO 5: add the Not-Last algorithm
-
-        // TODO 6 (optional, for a bonus): implement the Lambda-Theta tree and implement the Edge-Finding        overLoadChecker();
-
         boolean fixed = false;
         while (!fixed) {
             fixed = true;
@@ -163,8 +141,7 @@ public class Disjunctive extends AbstractCPConstraint {
         }
 
     }
-    // STUDENT
-    // BEGIN STRIP
+
     private void update() {
         Arrays.sort(permEst, Comparator.comparingInt(i -> start[i].min()));
         for (int i = 0; i < start.length; i++) {
@@ -173,11 +150,8 @@ public class Disjunctive extends AbstractCPConstraint {
             endMax[i] = end[i].max();
         }
     }
-    // END STRIP
 
     private void overLoadChecker() {
-        // STUDENT throw new NotImplementedException("Disjunctive");
-        // BEGIN STRIP
         update();
         Arrays.sort(permLct, Comparator.comparingInt(i -> end[i].max()));
         thetaTree.reset();
@@ -188,15 +162,12 @@ public class Disjunctive extends AbstractCPConstraint {
                 throw new InconsistencyException();
             }
         }
-        // END STRIP
     }
 
     /**
      * @return true if one domain was changed by the detectable precedence algo
      */
     private boolean detectablePrecedence() {
-        // STUDENT throw new NotImplementedException("Disjunctive");
-        // BEGIN STRIP
         update();
         boolean changed = false;
         Arrays.sort(permLst, Comparator.comparingInt(i -> start[i].max()));
@@ -226,15 +197,12 @@ public class Disjunctive extends AbstractCPConstraint {
             start[i].removeBelow(startMin[i]);
         }
         return changed;
-        // END STRIP
     }
 
     /**
      * @return true if one domain was changed by the not-last algo
      */
     private boolean notLast() {
-        // STUDENT throw new NotImplementedException("Disjunctive");
-        // BEGIN STRIP
         update();
         boolean changed = false;
         Arrays.sort(permLst, Comparator.comparingInt(i -> start[i].max()));
@@ -268,7 +236,6 @@ public class Disjunctive extends AbstractCPConstraint {
             end[i].removeAbove(endMax[i]);
         }
         return changed;
-        // END STRIP
     }
 
 
