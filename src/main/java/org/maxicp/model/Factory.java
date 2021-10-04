@@ -1,7 +1,5 @@
 package org.maxicp.model;
 
-import org.maxicp.cp.engine.core.CPIntVar;
-import org.maxicp.model.impls.IntVarImpl;
 import org.maxicp.model.impls.ModelImpl;
 
 import java.util.function.Function;
@@ -21,7 +19,7 @@ public final class Factory {
     public static IntVar[] intVarArray(int n, int domSize) {
         IntVar[] out = new IntVar[n];
         for(int i = 0; i < n; i++)
-            out[i] = new IntVarImpl(0, domSize-1);
+            out[i] = new IntVarImplRange(0, domSize-1);
         return out;
     }
 
