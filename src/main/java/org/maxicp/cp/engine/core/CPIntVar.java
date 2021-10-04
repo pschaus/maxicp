@@ -18,7 +18,7 @@ package org.maxicp.cp.engine.core;
 import org.maxicp.util.Procedure;
 import org.maxicp.util.exception.InconsistencyException;
 
-public interface CPIntVar {
+public interface CPIntVar extends CPVar {
 
     /**
      * Returns the solver in which this variable was created.
