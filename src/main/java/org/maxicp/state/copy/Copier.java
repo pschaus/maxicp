@@ -13,9 +13,9 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.copy;
 
-
+import org.maxicp.state.*;
 import org.maxicp.util.Procedure;
 
 import java.util.LinkedList;
@@ -23,39 +23,40 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * StateManager that will lazily store
- * the state of state object
+ * StateManager that will store
+ * the state of every created elements
  * at each {@link #saveState()} call.
- * Only the one that effectively change are stored
- * and at most once between any to call to {@link #saveState()}.
- * This can be seen as an optimized version of {@link Copier}.
  */
-public class Trailer implements StateManager {
+public class Copier implements StateManager {
 
-    static class Backup extends Stack<StateEntry> {
+    class Backup extends Stack<StateEntry> {
+        private int sz;
+
         Backup() {
+            sz = store.size();
+            for (Storage s : store)
+                add(s.save());
         }
 
         void restore() {
+            store.setSize(sz);
             for (StateEntry se : this)
                 se.restore();
         }
     }
 
+    private Stack<Storage> store;
     private Stack<Backup> prior;
-    private Backup current;
-    private long magic = 0L;
-
     private List<Procedure> onRestoreListeners;
 
-    public Trailer() {
+    public Copier() {
+        store = new Stack<Storage>();
         prior = new Stack<Backup>();
-        current = new Backup();
         onRestoreListeners = new LinkedList<Procedure>();
     }
 
     private void notifyRestore() {
-        for (Procedure l : onRestoreListeners) {
+        for (Procedure l: onRestoreListeners) {
             l.call();
         }
     }
@@ -65,32 +66,23 @@ public class Trailer implements StateManager {
         onRestoreListeners.add(listener);
     }
 
-    public long getMagic() {
-        return magic;
-    }
-
-    public void pushState(StateEntry entry) {
-        current.push(entry);
-    }
-
-    @Override
     public int getLevel() {
         return prior.size() - 1;
     }
 
-    @Override
-    public void saveState() {
-        prior.add(current);
-        current = new Backup();
-        magic++;
+
+    public int storeSize() {
+        return store.size();
     }
 
+    @Override
+    public void saveState() {
+        prior.add(new Backup());
+    }
 
     @Override
     public void restoreState() {
-        current.restore();
-        current = prior.pop();
-        magic++;
+        prior.pop().restore();
         notifyRestore();
     }
 
@@ -110,17 +102,24 @@ public class Trailer implements StateManager {
 
     @Override
     public <T> State<T> makeStateRef(T initValue) {
-        return new Trail<>(this,initValue);
+        Copy r = new Copy(initValue);
+        store.add(r);
+        return r;
     }
 
     @Override
     public StateInt makeStateInt(int initValue) {
-        return new TrailInt(this,initValue);
+        CopyInt s = new CopyInt(initValue);
+        store.add(s);
+        return s;
     }
 
     @Override
     public StateMap makeStateMap() {
-        return new TrailMap(this);
+        CopyMap s = new CopyMap<>();
+        store.add(s);
+        return s;
     }
+
 
 }

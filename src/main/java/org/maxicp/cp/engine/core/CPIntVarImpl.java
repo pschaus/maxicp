@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.core;
 
-import org.maxicp.state.StateStack;
+import org.maxicp.state.datastructures.StateStack;
 import org.maxicp.util.Procedure;
 import org.maxicp.util.exception.InconsistencyException;
 
@@ -99,8 +99,6 @@ public class CPIntVarImpl implements CPIntVar {
      * @param values the initial values in the domain, it must be nonempty
      */
     public CPIntVarImpl(CPSolver cp, Set<Integer> values) {
-        // STUDENT throw new NotImplementedException();
-        // BEGIN STRIP
         this(cp, values.stream().min(Integer::compare).get(), values.stream().max(Integer::compare).get());
         if (values.isEmpty()) throw new InvalidParameterException("at least one setValue in the domain");
         for (int i = min(); i < max(); i++) {
@@ -111,7 +109,6 @@ public class CPIntVarImpl implements CPIntVar {
                 }
             }
         }
-        // END STRIP
     }
 
     @Override
@@ -188,10 +185,7 @@ public class CPIntVarImpl implements CPIntVar {
 
     @Override
     public int fillArray(int[] dest) {
-        // STUDENT throw new NotImplementedException();
-        // BEGIN STRIP
         return domain.fillArray(dest);
-        // END STRIP
     }
 
     @Override

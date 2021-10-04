@@ -13,8 +13,13 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.trail;
 
+
+import org.maxicp.state.StateEntry;
+import org.maxicp.state.StateManager;
+import org.maxicp.state.StateMap;
+import org.maxicp.state.trail.Trailer;
 
 import java.util.IdentityHashMap;
 import java.util.Map;

@@ -13,8 +13,12 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.trail;
 
+
+import org.maxicp.state.State;
+import org.maxicp.state.StateEntry;
+import org.maxicp.state.StateManager;
 
 /**
  * Implementation of {@link State} with trail strategy

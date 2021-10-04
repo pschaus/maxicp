@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
-import org.maxicp.state.StateSparseBitSet;
+import org.maxicp.state.datastructures.StateSparseBitSet;
 import org.maxicp.util.exception.InconsistencyException;
 
 

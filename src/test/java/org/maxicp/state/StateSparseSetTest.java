@@ -15,6 +15,7 @@
 
 package org.maxicp.state;
 
+import org.maxicp.state.datastructures.StateSparseSet;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
 
