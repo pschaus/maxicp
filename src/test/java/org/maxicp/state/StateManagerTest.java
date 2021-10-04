@@ -15,14 +15,12 @@
 
 package org.maxicp.state;
 
-import com.github.guillaumederval.javagrading.GradingRunnerWithParametersFactory;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.function.Supplier;
 
 @RunWith(Parameterized.class)
-@Parameterized.UseParametersRunnerFactory(GradingRunnerWithParametersFactory.class)
 public abstract class StateManagerTest {
 
     @Parameterized.Parameters

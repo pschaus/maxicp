@@ -19,7 +19,6 @@ import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.search.DFSearch;
@@ -35,7 +34,6 @@ import java.util.function.Supplier;
 import static org.maxicp.cp.CPFactory.notEqual;
 import static org.junit.Assert.*;
 
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class Element1DDCTest extends CPSolverTest {
 
     @Test

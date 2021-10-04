@@ -15,7 +15,6 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
@@ -36,7 +35,6 @@ import java.util.function.BiFunction;
 
 import static org.junit.Assert.*;
 
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class TableTest extends CPSolverTest {
 
     private static List<BiFunction<CPIntVar[], int[][], CPConstraint>> getAlgos() {

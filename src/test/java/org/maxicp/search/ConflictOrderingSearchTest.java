@@ -15,23 +15,18 @@
 
 package org.maxicp.search;
 
-import com.github.guillaumederval.javagrading.GradeClass;
-import com.github.guillaumederval.javagrading.GradingRunner;
 import org.maxicp.BranchingScheme;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.maxicp.cp.CPFactory;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(GradingRunner.class)
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class ConflictOrderingSearchTest {
 
 

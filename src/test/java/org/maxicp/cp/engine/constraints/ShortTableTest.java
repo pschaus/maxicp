@@ -15,8 +15,6 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import com.github.guillaumederval.javagrading.Grade;
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
@@ -35,7 +33,6 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class ShortTableTest extends CPSolverTest {
 
 
@@ -97,7 +94,6 @@ public class ShortTableTest extends CPSolverTest {
     }
 
     @Test
-    @Grade(value = 1, cpuTimeout = 5000)
     public void randomTest() {
         Random rand = new Random(67292);
 

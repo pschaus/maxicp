@@ -16,7 +16,6 @@
 package org.maxicp.cp.engine;
 
 
-import com.github.guillaumederval.javagrading.GradingRunnerWithParametersFactory;
 import org.maxicp.cp.engine.core.MiniCP;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.state.Copier;
@@ -27,7 +26,6 @@ import org.junit.runners.Parameterized;
 import java.util.function.Supplier;
 
 @RunWith(Parameterized.class)
-@Parameterized.UseParametersRunnerFactory(GradingRunnerWithParametersFactory.class)
 public abstract class CPSolverTest {
 
     @Parameterized.Parameters

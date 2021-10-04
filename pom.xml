@@ -31,12 +31,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.guillaumederval</groupId>
-            <artifactId>JavaGrading</artifactId>
-            <version>8b6c32b36c45600b91fd42ccf130452b9479b9eb</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -93,32 +87,6 @@
                                 </excludes>
                             </artifactSet>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>com.github.guillaumederval.javagrading.GradingListener</value>
-                        </property>
-
-                    </properties>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run-tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

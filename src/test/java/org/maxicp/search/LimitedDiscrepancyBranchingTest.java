@@ -15,8 +15,6 @@
 
 package org.maxicp.search;
 
-import com.github.guillaumederval.javagrading.GradeClass;
-import com.github.guillaumederval.javagrading.GradingRunner;
 import org.maxicp.BranchingScheme;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
@@ -26,14 +24,11 @@ import org.maxicp.util.Procedure;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(GradingRunner.class)
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class LimitedDiscrepancyBranchingTest {
 
 

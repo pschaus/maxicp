@@ -15,8 +15,6 @@
 
 package org.maxicp.search;
 
-import com.github.guillaumederval.javagrading.Grade;
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
 import org.maxicp.state.StateManagerTest;
@@ -32,8 +30,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-
-@GradeClass(totalValue=1, allCorrect=true)
 public class DFSearchTest extends StateManagerTest {
     @Test
     public void testExample1() {
@@ -178,7 +174,6 @@ public class DFSearchTest extends StateManagerTest {
 
 
     @Test
-    @Grade(value = 0.5, cpuTimeout = 2000)
     public void testDeepDFS() {
         testExample1();
         testDFS();
@@ -214,7 +209,6 @@ public class DFSearchTest extends StateManagerTest {
     }
 
     @Test
-    @Grade(value = 0.5, cpuTimeout = 2000)
     public void checkInconsistenciesManagedCorrectly() {
         StateManager sm = stateFactory.get();
         int[] values = new int[3]; //init to 0

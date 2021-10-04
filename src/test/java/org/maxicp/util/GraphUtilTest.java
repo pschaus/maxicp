@@ -15,9 +15,7 @@
 
 package org.maxicp.util;
 
-import com.github.guillaumederval.javagrading.GradingRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +25,6 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-@RunWith(GradingRunner.class)
 public class GraphUtilTest {
 
 
