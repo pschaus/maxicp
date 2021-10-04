@@ -1,4 +1,9 @@
 package org.maxicp.model;
 
-public interface IntVar extends Var {
+import java.util.Iterator;
+
+public interface IntVar extends Var, Iterable<Integer> {
+    int min();
+    int max();
+    Iterator<Integer> iterator();
 }
