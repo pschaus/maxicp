@@ -20,19 +20,19 @@ public class CPModelInstantiator {
         for(Constraint c: m.getConstraints())
             instantiateConstraint(solver, mapping, c);
 
-        return new InstanciatedCPModel(solver, mapping, m);
+        return new InstanciatedCPModel(solver, mapping, m.getCstNode());
     }
 
     static public CPVar getCPVar(CPSolver cp, HashMap<Var, CPVar> mapping, Var v) {
         if(mapping.containsKey(v))
             return mapping.get(v);
         switch (v) {
-            case IntVarImplSet iv -> {
+            case IntVarSetImpl iv -> {
                 CPIntVar cpiv = CPFactory.makeIntVar(cp, iv.dom);
                 mapping.put(v, cpiv);
                 return cpiv;
             }
-            case IntVarImplRange iv -> {
+            case IntVarRangeImpl iv -> {
                 CPIntVar cpiv = CPFactory.makeIntVar(cp, iv.min(), iv.max());
                 mapping.put(v, cpiv);
                 return cpiv;
