@@ -15,6 +15,9 @@
 
 package org.maxicp.state;
 
+import org.maxicp.state.State;
+import org.maxicp.state.StateManager;
+
 /**
  * Object that wraps an integer value
  * that can be saved and restored through

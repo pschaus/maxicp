@@ -17,7 +17,7 @@ package org.maxicp.cp.engine.core;
 
 
 import org.maxicp.state.StateManager;
-import org.maxicp.state.StateSparseSet;
+import org.maxicp.state.datastructures.StateSparseSet;
 
 
 /**

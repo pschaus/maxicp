@@ -13,7 +13,12 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.copy;
+
+import org.maxicp.state.StateInt;
+import org.maxicp.state.StateManager;
+import org.maxicp.state.copy.Copier;
+import org.maxicp.state.copy.Copy;
 
 /**
  * Implementation of {@link StateInt} with copy strategy

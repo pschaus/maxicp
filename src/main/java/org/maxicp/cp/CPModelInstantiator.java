@@ -7,8 +7,8 @@ import org.maxicp.cp.engine.core.CPVar;
 import org.maxicp.cp.engine.core.MiniCP;
 import org.maxicp.model.*;
 import org.maxicp.model.constraints.AllDifferent;
-import org.maxicp.state.Copier;
-import org.maxicp.state.Trailer;
+import org.maxicp.state.copy.Copier;
+import org.maxicp.state.trail.Trailer;
 
 import java.util.HashMap;
 

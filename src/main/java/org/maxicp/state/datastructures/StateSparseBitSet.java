@@ -14,8 +14,12 @@
  */
 
 
-package org.maxicp.state;
+package org.maxicp.state.datastructures;
 
+
+import org.maxicp.state.State;
+import org.maxicp.state.StateInt;
+import org.maxicp.state.StateManager;
 
 import java.util.Arrays;
 

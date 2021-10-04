@@ -15,7 +15,7 @@
 
 package org.maxicp.cp.engine.core;
 
-import org.maxicp.state.StateStack;
+import org.maxicp.state.datastructures.StateStack;
 import org.maxicp.util.Procedure;
 import org.maxicp.util.exception.InconsistencyException;
 

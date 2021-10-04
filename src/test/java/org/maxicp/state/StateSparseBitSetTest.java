@@ -16,6 +16,7 @@
 package org.maxicp.state;
 
 import org.junit.Test;
+import org.maxicp.state.datastructures.StateSparseBitSet;
 
 import static org.junit.Assert.*;
 

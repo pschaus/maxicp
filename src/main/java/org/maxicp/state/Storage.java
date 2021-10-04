@@ -15,6 +15,8 @@
 
 package org.maxicp.state;
 
+import org.maxicp.state.copy.Copier;
+
 /**
  * Object that can be saved by the {@link Copier}.
  */

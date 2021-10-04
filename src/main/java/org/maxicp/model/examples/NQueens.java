@@ -5,7 +5,6 @@ import org.maxicp.cp.CPModelInstantiator;
 import org.maxicp.cp.CPInstantiableConstraint;
 import org.maxicp.cp.InstanciatedCPModel;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.model.Factory;
 import org.maxicp.model.IntVar;
@@ -13,7 +12,6 @@ import org.maxicp.model.Model;
 import org.maxicp.model.constraints.AllDifferent;
 import org.maxicp.search.DFSearch;
 import org.maxicp.state.StateManager;
-import org.maxicp.state.Trailer;
 import org.maxicp.util.Procedure;
 
 import java.util.function.Supplier;
