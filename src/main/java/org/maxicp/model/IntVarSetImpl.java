@@ -1,12 +1,12 @@
 package org.maxicp.model;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class IntVarSetImpl implements IntVar {
-
-    TreeSet<Integer> dom;
+    public final TreeSet<Integer> dom;
     public IntVarSetImpl(Set<Integer> domain) {
         dom = new TreeSet<>();
         dom.addAll(domain);

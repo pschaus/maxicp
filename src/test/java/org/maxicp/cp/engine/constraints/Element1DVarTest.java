@@ -15,7 +15,6 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
@@ -35,7 +34,6 @@ import static org.maxicp.cp.CPFactory.makeIntVar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class Element1DVarTest extends CPSolverTest {
 
     private static CPIntVar makeIVar(CPSolver cp, Integer... values) {

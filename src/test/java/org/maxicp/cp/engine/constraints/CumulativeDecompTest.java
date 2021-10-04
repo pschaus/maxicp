@@ -15,8 +15,6 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import com.github.guillaumederval.javagrading.Grade;
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
@@ -35,7 +33,6 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class CumulativeDecompTest extends CPSolverTest {
 
 
@@ -115,7 +112,6 @@ public class CumulativeDecompTest extends CPSolverTest {
 
 
     @Test
-    @Grade(value = 1, cpuTimeout = 12000)
     public void testCapaOk() {
 
         try {

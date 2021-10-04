@@ -15,7 +15,6 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
@@ -31,7 +30,6 @@ import org.maxicp.cp.CPFactory;
 
 import static org.junit.Assert.*;
 
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class IsLessOrEqualTest extends CPSolverTest {
 
     @Test

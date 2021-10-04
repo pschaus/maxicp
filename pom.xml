@@ -13,8 +13,8 @@
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.16</maven.compiler.source>
-        <maven.compiler.target>1.16</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <argLine>-XX:MaxPermSize=512m</argLine>
         <checkstyle.config.location>${basedir}/checkstyle.xml</checkstyle.config.location>
     </properties>
@@ -29,12 +29,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.guillaumederval</groupId>
-            <artifactId>JavaGrading</artifactId>
-            <version>8b6c32b36c45600b91fd42ccf130452b9479b9eb</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -98,36 +92,19 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>com.github.guillaumederval.javagrading.GradingListener</value>
-                        </property>
-
-                    </properties>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run-tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
                 <configuration>
                     <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

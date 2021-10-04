@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public interface Model {
     void add(Constraint c);
+    ConstraintListNode getCstNode();
     Iterable<Constraint> getConstraints();
 
     default Iterable<Var> getVariables() {
