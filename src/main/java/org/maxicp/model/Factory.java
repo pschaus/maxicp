@@ -1,7 +1,5 @@
 package org.maxicp.model;
 
-import org.maxicp.cp.engine.core.CPIntVar;
-import org.maxicp.model.impls.IntVarImpl;
 import org.maxicp.model.impls.ModelImpl;
 
 import java.util.function.Function;

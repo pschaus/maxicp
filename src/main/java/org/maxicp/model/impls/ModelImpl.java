@@ -15,6 +15,11 @@ public class ModelImpl implements Model {
     }
 
     @Override
+    public ConstraintListNode getCstNode() {
+        return cur;
+    }
+
+    @Override
     public Iterable<Constraint> getConstraints() {
         return cur;
     }

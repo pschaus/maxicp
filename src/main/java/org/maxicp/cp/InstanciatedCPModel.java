@@ -31,8 +31,6 @@ public class InstanciatedCPModel implements Model {
         return (CPBoolVar) getCPVar(solver, mapping, v);
     }
 
-
-
     @Override
     public void add(Constraint c) {
         model.setValue(new ConstraintListNode(model.value(), c));

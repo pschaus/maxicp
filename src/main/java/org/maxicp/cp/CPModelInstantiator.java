@@ -13,6 +13,10 @@ import org.maxicp.state.Trailer;
 import java.util.HashMap;
 
 public class CPModelInstantiator {
+    static public InstanciatedCPModel instantiate(Model m) {
+        return instantiate(m, true);
+    }
+
     static public InstanciatedCPModel instantiate(Model m, boolean useTrailing) {
         CPSolver solver = new MiniCP(useTrailing ? new Trailer() : new Copier());
 
