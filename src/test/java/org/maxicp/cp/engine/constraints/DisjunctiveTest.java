@@ -15,7 +15,6 @@
 
 package org.maxicp.cp.engine.constraints;
 
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
@@ -34,7 +33,6 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class DisjunctiveTest extends CPSolverTest {
 
 

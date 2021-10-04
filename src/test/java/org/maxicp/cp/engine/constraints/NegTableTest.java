@@ -32,7 +32,6 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-//@GradeClass(totalValue = 1, defaultCpuTimeout = 1000)
 public class NegTableTest extends CPSolverTest {
 
     private int[][] randomTuples(Random rand, int arity, int nTuples, int minvalue, int maxvalue, boolean noDuplicates) {

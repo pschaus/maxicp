@@ -26,7 +26,6 @@ public class CPModelInstantiator {
     static public CPVar getCPVar(CPSolver cp, HashMap<Var, CPVar> mapping, Var v) {
         if(mapping.containsKey(v))
             return mapping.get(v);
-
         switch (v) {
             case IntVarImplSet iv -> {
                 CPIntVar cpiv = CPFactory.makeIntVar(cp, iv.dom);

@@ -15,8 +15,6 @@
 
 package org.maxicp.search;
 
-import com.github.guillaumederval.javagrading.Grade;
-import com.github.guillaumederval.javagrading.GradeClass;
 import org.maxicp.state.StateManagerTest;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.Procedure;
@@ -27,11 +25,8 @@ import org.maxicp.BranchingScheme;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-
-@GradeClass(totalValue=1, defaultValue=1, allCorrect=true)
 public class SequencerTest extends StateManagerTest {
     @Test
-    @Grade
     public void testExample1() {
         try {
             Sequencer seq = new Sequencer(SequencerTest::fakeSequencer0, SequencerTest::fakeSequencer1, SequencerTest::fakeSequencer2);
