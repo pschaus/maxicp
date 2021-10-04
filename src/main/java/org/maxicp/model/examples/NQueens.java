@@ -3,7 +3,9 @@ package org.maxicp.model.examples;
 
 import org.maxicp.cp.CPModelInstantiator;
 import org.maxicp.cp.CPInstantiableConstraint;
+import org.maxicp.cp.InstanciatedCPModel;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
+import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.model.Factory;
 import org.maxicp.model.IntVar;
@@ -39,8 +41,6 @@ public class NQueens {
 
         InstanciatedCPModel s = CPModelInstantiator.instantiate(model);
 
-        StateManager sm = new Trailer(); // to replace
-        /*
         Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
             @Override
             public Procedure[] get() {
@@ -50,7 +50,7 @@ public class NQueens {
                         idx=k;
                         break;
                     }
-                if(idx == -1)
+                if (idx == -1)
                     return new Procedure[0];
                 else {
                     IntVar qi = q[idx];
@@ -60,9 +60,18 @@ public class NQueens {
                     return branch(left,right);
                 }
             }
-        };*/
+        };
 
-        //DFSearch search = new DFSearch(sm,branching);
+        CPModelInstantiator.instantiate(model, () -> {
+            DFSearch search = new DFSearch(model,branching);
+        });
+
+        ThreadLocal<Integer> test;
+        StateManager sm = s.solver.getStateManager(); // to replace
+
+
+
+        //
 
     }
 }
