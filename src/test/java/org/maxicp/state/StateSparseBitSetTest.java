@@ -16,6 +16,7 @@
 package org.maxicp.state;
 
 import org.junit.Test;
+import org.maxicp.state.datastructures.BitSet;
 import org.maxicp.state.datastructures.StateSparseBitSet;
 
 import static org.junit.Assert.*;
@@ -29,9 +30,9 @@ public class StateSparseBitSetTest extends StateManagerTest {
         StateManager sm = stateFactory.get();
         StateSparseBitSet set = new StateSparseBitSet(sm, 256);
 
-        StateSparseBitSet.BitSet b1 = set.new BitSet(); // [0..59] U [130..255]
-        StateSparseBitSet.BitSet b2 = set.new BitSet(); // [60..129]
-        StateSparseBitSet.BitSet b3 = set.new BitSet(); // empty
+        StateSparseBitSet.SupportBitSet b1 = set.new SupportBitSet(); // [0..59] U [130..255]
+        StateSparseBitSet.SupportBitSet b2 = set.new SupportBitSet(); // [60..129]
+        StateSparseBitSet.SupportBitSet b3 = set.new SupportBitSet(); // empty
 
         for (int i = 0; i < 256; i++) {
             if (i < 60 || i >= 130) {
