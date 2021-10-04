@@ -2,12 +2,12 @@ package org.maxicp.model;
 
 import java.util.Iterator;
 
-public class IntVarImplRange implements IntVar {
+public class IntVarRangeImpl implements IntVar {
 
     private int min;
     private int max;
 
-    public IntVarImplRange(int min, int max) {
+    public IntVarRangeImpl(int min, int max) {
         this.min = min;
         this.max = max;
     }

@@ -4,10 +4,10 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class IntVarImplSet implements IntVar {
+public class IntVarSetImpl implements IntVar {
 
     TreeSet<Integer> dom;
-    public IntVarImplSet(Set<Integer> domain) {
+    public IntVarSetImpl(Set<Integer> domain) {
         dom = new TreeSet<>();
         dom.addAll(domain);
     }
