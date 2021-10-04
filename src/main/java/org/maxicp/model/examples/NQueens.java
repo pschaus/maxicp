@@ -9,6 +9,12 @@ import org.maxicp.model.Factory;
 import org.maxicp.model.IntVar;
 import org.maxicp.model.Model;
 import org.maxicp.model.constraints.AllDifferent;
+import org.maxicp.search.DFSearch;
+import org.maxicp.state.StateManager;
+import org.maxicp.state.Trailer;
+import org.maxicp.util.Procedure;
+
+import java.util.function.Supplier;
 
 import static org.maxicp.cp.CPFactory.makeIntVarArray;
 
@@ -33,9 +39,31 @@ public class NQueens {
 
         InstanciatedCPModel s = CPModelInstantiator.instantiate(model);
 
-        //s.getSolver();
-        //s.get(var);
-        //s.get(q) ->
+        StateManager sm = new Trailer(); // to replace
+        /*
+        Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
+            @Override
+            public Procedure[] get() {
+                int idx = -1; // index of the first variable that is not bound
+                for (int k = 0; k < q.length; k++)
+                    if (q[k].size() > 1) {
+                        idx=k;
+                        break;
+                    }
+                if(idx == -1)
+                    return new Procedure[0];
+                else {
+                    IntVar qi = q[idx];
+                    int v = qi.min();
+                    Procedure left = () -> Factory.equal(qi, v);
+                    Procedure right = () -> Factory.notEqual(qi, v);
+                    return branch(left,right);
+                }
+            }
+        };*/
+
+        //DFSearch search = new DFSearch(sm,branching);
+
     }
 }
 
