@@ -22,8 +22,12 @@ public class NQueens {
         Model model = Factory.model();
 
         IntVar[] q = Factory.intVarArray(n, n);
+        IntVar[] qLeftDiagonal = Factory.intVarArray(n, i -> q[i].plus(i));
+        IntVar[] qRightDiagonal = Factory.intVarArray(n, i -> q[i].minus(i));
 
         model.add(new AllDifferent(q));
+        model.add(new AllDifferent(qLeftDiagonal));
+        model.add(new AllDifferent(qRightDiagonal));
 
         model.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
 
