@@ -43,22 +43,16 @@ public class Maximum extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        // TODO
-        // STUDENT throw new NotImplementedException("Maximum");
-        // BEGIN STRIP
         for (CPIntVar xi : x) {
             xi.propagateOnBoundChange(this);
         }
         y.propagateOnBoundChange(this);
         propagate();
-        // END STRIP
     }
 
 
     @Override
     public void propagate() {
-        // STUDENT throw new NotImplementedException("Maximum");
-        // BEGIN STRIP
         int max = Integer.MIN_VALUE;
         int min = Integer.MIN_VALUE;
         int nSupport = 0;
@@ -83,6 +77,5 @@ public class Maximum extends AbstractCPConstraint {
         }
         y.removeAbove(max);
         y.removeBelow(min);
-        // END STRIP
     }
 }

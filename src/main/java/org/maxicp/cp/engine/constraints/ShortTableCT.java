@@ -59,9 +59,6 @@ public class ShortTableCT extends AbstractCPConstraint {
         }
 
         // Set values in supportedByVarVal, which contains all the tuples supported by each var-val pair
-        // TODO: compute the supports (be careful, take into account the star value)
-        // STUDENT throw new NotImplementedException("ShortTableCT");
-        // BEGIN STRIP
         for (int t = 0; t < table.length; t++) { //i is the index of the tuple (in table)
             for (int i = 0; i < x.length; i++) { //j is the index of the current variable (in x)
                 if (table[t][i] == star) {
@@ -73,7 +70,6 @@ public class ShortTableCT extends AbstractCPConstraint {
                 }
             }
         }
-        // END STRIP
     }
 
     @Override
@@ -85,9 +81,6 @@ public class ShortTableCT extends AbstractCPConstraint {
 
     @Override
     public void propagate() {
-        // TODO: implement the filtering
-        // STUDENT throw new NotImplementedException("ShortTableCT");
-        // BEGIN STRIP
         // Bit-set of tuple indices all set to 0
         BitSet supportedTuples = new BitSet(table.length);
         supportedTuples.flip(0, table.length);
@@ -109,7 +102,6 @@ public class ShortTableCT extends AbstractCPConstraint {
                 }
             }
         }
-        // END STRIP
 
     }
 }

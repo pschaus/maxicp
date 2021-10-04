@@ -89,20 +89,13 @@ public class NegTableCT extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        // TODO
-        // STUDENT throw new NotImplementedException("NegTableCT");
-        // BEGIN STRIP
         for (CPIntVar var : x)
             var.propagateOnDomainChange(this);
         propagate();
-        // END STRIP
     }
 
     @Override
     public void propagate() {
-        // TODO
-        // STUDENT throw new NotImplementedException("NegTableCT");
-        // BEGIN STRIP
         // Bit-set of tuple indices all set to 0
         BitSet menacing = new BitSet(table.length);
         menacing.flip(0, table.length);
@@ -134,6 +127,5 @@ public class NegTableCT extends AbstractCPConstraint {
                 }
             }
         }
-        // END STRIP
     }
 }

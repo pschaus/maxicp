@@ -96,13 +96,6 @@ public class TableCTNew extends AbstractCPConstraint {
         // Bit-set of tuple indices all set to 0
         collected.clear();
 
-        // TODO 1: compute supportedTuples as
-        // supportedTuples = (supports[0][x[0].min()] | ... | supports[0][x[0].max()] ) & ... &
-        //                   (supports[x.length][x[0].min()] | ... | supports[x.length][x[0].max()] )
-        //
-
-        // STUDENT // This should be displayed instead of the actual code
-        // BEGIN STRIP
         for (int i = 0; i < x.length; i++) {
             collected.clear();
             for (int v = x[i].min(); v <= x[i].max(); v++) {
@@ -116,25 +109,16 @@ public class TableCTNew extends AbstractCPConstraint {
             }
             // if empty, fail
         }
-        // END STRIP
 
-        // TODO 2
         for (int i = 0; i < x.length; i++) {
             for (int v = x[i].min(); v <= x[i].max(); v++) {
                 if (x[i].contains(v)) {
-                    // TODO 2 the condition for removing the setValue v from x[i] is to check if
-                    // there is no intersection between supportedTuples and the support[i][v]
-                    // STUDENT throw new NotImplementedException();
-                    // BEGIN STRIP
                     if (validTuples.hasEmptyIntersection(supports[i][v])) {
                         x[i].remove(v);
                     }
-                    // END STRIP
                 }
             }
         }
 
-
-        //throw new NotImplementedException("TableCT");
     }
 }

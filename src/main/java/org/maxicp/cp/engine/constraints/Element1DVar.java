@@ -24,14 +24,11 @@ public class Element1DVar extends AbstractCPConstraint {
     private final CPIntVar y;
     private final CPIntVar z;
 
-    // STUDENT
-    // BEGIN STRIP
     private final int[] yValues;
     private CPIntVar supMin;
     private CPIntVar supMax;
     private int zMin;
     private int zMax;
-    // END STRIP
 
     public Element1DVar(CPIntVar[] array, CPIntVar y, CPIntVar z) {
         super(y.getSolver());
@@ -39,16 +36,11 @@ public class Element1DVar extends AbstractCPConstraint {
         this.y = y;
         this.z = z;
 
-        // STUDENT
-        // BEGIN STRIP
         yValues = new int[y.size()];
-        // END STRIP
     }
 
     @Override
     public void post() {
-        // STUDENT throw new NotImplementedException();
-        // BEGIN STRIP
         y.removeBelow(0);
         y.removeAbove(array.length - 1);
 
@@ -59,13 +51,10 @@ public class Element1DVar extends AbstractCPConstraint {
         z.propagateOnBoundChange(this);
 
         propagate();
-        // END STRIP
     }
 
     @Override
     public void propagate() {
-        // STUDENT throw new NotImplementedException();
-        // BEGIN STRIP
         zMin = z.min();
         zMax = z.max();
         if (y.isBound()) equalityPropagate();
@@ -78,12 +67,9 @@ public class Element1DVar extends AbstractCPConstraint {
                 z.removeAbove(supMax.max());
             }
         }
-        // END STRIP
 
     }
 
-    // STUDENT
-    // BEGIN STRIP
     private void equalityPropagate() {
         int id = y.min();
         CPIntVar tVar = array[id];
@@ -118,6 +104,5 @@ public class Element1DVar extends AbstractCPConstraint {
             }
         }
     }
-    // END STRIP
 
 }

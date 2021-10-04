@@ -110,9 +110,6 @@ public class AllDifferentDC extends AbstractCPConstraint {
             in[j].clear();
             out[j].clear();
         }
-        // TODO continue the implementation for representing the residual graph
-        // STUDENT throw new NotImplementedException("AllDifferentDC");
-        // BEGIN STRIP
         Arrays.fill(matched, 0, nVal, false);
         for (int i = 0; i < x.length; i++) {
             in[i].add(match[i] - minVal + x.length);
@@ -136,19 +133,11 @@ public class AllDifferentDC extends AbstractCPConstraint {
                 out[sink].add(v - minVal + nVar);
             }
         }
-        // END STRIP
     }
 
 
     @Override
     public void propagate() {
-        // TODO Implement the filtering
-        // hint: use maximumMatching.compute(match) to update the maximum matching
-        //       use updateRange() to update the range of values
-        //       use updateGraph() to update the residual graph
-        //       use  GraphUtil.stronglyConnectedComponents to compute SCC's
-        // STUDENT throw new NotImplementedException("AllDifferentDC");
-        // BEGIN STRIP
         int size = maximumMatching.compute(match);
         if (size < x.length) {
             throw new InconsistencyException();
@@ -163,6 +152,5 @@ public class AllDifferentDC extends AbstractCPConstraint {
                     }
             }
         }
-        // END STRIP
     }
 }

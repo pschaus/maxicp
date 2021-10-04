@@ -70,8 +70,6 @@ public class Element1D extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        // STUDENT throw new NotImplementedException("Element1D");
-        // BEGIN STRIP
 
         y.removeBelow(0);
         y.removeAbove(t.length - 1);
@@ -82,13 +80,10 @@ public class Element1D extends AbstractCPConstraint {
         z.propagateOnBoundChange(this);
         propagate();
 
-        // END STRIP
     }
 
     @Override
     public void propagate() {
-        // STUDENT throw new NotImplementedException("Element1D");
-        // BEGIN STRIP
 
         int l = low.value(), u = up.value();
         int zMin = z.min(), zMax = z.max();
@@ -112,6 +107,5 @@ public class Element1D extends AbstractCPConstraint {
         low.setValue(l);
         up.setValue(u);
 
-        // END STRIP
     }
 }

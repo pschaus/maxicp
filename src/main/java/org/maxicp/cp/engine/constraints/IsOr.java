@@ -66,9 +66,6 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
 
     @Override
     public void propagate() {
-        // TODO Implement the constraint as efficiently as possible and make sure you pass all the tests
-        // STUDENT throw new NotImplementedException();
-        // BEGIN STRIP
         if (b.isTrue()) {
             setActive(false);
             getSolver().post(or, false);
@@ -100,6 +97,5 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
             }
             nUnBounds.setValue(nU);
         }
-        // END STRIP
     }
 }

@@ -66,14 +66,6 @@ public class CumulativeDecomposition extends AbstractCPConstraint {
             CPBoolVar[] overlaps = new CPBoolVar[start.length];
             for (int i = 0; i < start.length; i++) {
                 overlaps[i] = makeBoolVar(getSolver());
-                // TODO
-                // post the constraints to enforce
-                // that overlaps[i] is true iff start[i] <= t && t < start[i] + duration[i]
-                // hint: use IsLessOrEqual, introduce BoolVar, use views minus, plus, etc.
-                //       logical constraints (such as logical and can be modeled with sum)
-
-                // STUDENT throw new NotImplementedException("CumulativeDecomp");
-                // BEGIN STRIP
                 CPBoolVar startsBefore = makeBoolVar(getSolver());
                 CPBoolVar endsAfter = makeBoolVar(getSolver());
                 getSolver().post(new IsLessOrEqual(startsBefore, start[i], t));
@@ -81,7 +73,6 @@ public class CumulativeDecomposition extends AbstractCPConstraint {
                 final int capa = -2;
                 // overlaps = endsAfter & startsBefore
                 getSolver().post(new IsLessOrEqual(overlaps[i], minus(sum(new CPIntVar[]{startsBefore, endsAfter})), capa));
-                // END STRIP
             }
 
             CPIntVar[] overlapHeights = CPFactory.makeIntVarArray(start.length, i -> mul(overlaps[i], demand[i]));

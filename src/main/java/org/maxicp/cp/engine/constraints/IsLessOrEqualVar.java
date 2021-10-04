@@ -32,11 +32,8 @@ public class IsLessOrEqualVar extends AbstractCPConstraint {
     private final CPIntVar x;
     private final CPIntVar y;
 
-    // STUDENT
-    // BEGIN STRIP
     private final CPConstraint lEqC;
     private final CPConstraint grC;
-    // END STRIP
 
     /**
      * Creates a reified is less or equal constraint {@code b <=> x <= y}.
@@ -49,30 +46,20 @@ public class IsLessOrEqualVar extends AbstractCPConstraint {
         this.b = b;
         this.x = x;
         this.y = y;
-        // STUDENT
-        // BEGIN STRIP
         lEqC = lessOrEqual(x, y);
         grC = lessOrEqual(plus(y, 1), x);
-        // END STRIP
     }
 
     @Override
     public void post() {
-        // TODO
-        // STUDENT throw new NotImplementedException();
-        // BEGIN STRIP
         x.propagateOnBoundChange(this);
         y.propagateOnBoundChange(this);
         b.propagateOnBind(this);
         propagate();
-        // END STRIP
     }
 
     @Override
     public void propagate() {
-        // TODO
-        // STUDENT throw new NotImplementedException();
-        // BEGIN STRIP
         if (b.isTrue()) {
             getSolver().post(lEqC, false);
             setActive(false);
@@ -88,6 +75,5 @@ public class IsLessOrEqualVar extends AbstractCPConstraint {
                 setActive(false);
             }
         }
-        // END STRIP
     }
 }

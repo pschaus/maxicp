@@ -26,22 +26,14 @@ import java.util.Map;
  */
 public class TrailMap<K, V> implements StateMap<K, V> {
 
-    // STUDENT
-    // BEGIN STRIP
     private Trailer trail;
     private Map<K, V> map = new IdentityHashMap<>();
-    // END STRIP
 
     protected TrailMap(Trailer trail) {
-        // STUDENT throw new NotImplementedException("TrailMap");
-        // BEGIN STRIP
         this.trail = trail;
-        // END STRIP
     }
 
     public void put(K k, V v) {
-        // STUDENT throw new NotImplementedException("TrailMap");
-        // BEGIN STRIP
         if (!map.containsKey(k)) {
             trail.pushState(new StateEntry() {
                 @Override
@@ -59,13 +51,9 @@ public class TrailMap<K, V> implements StateMap<K, V> {
             });
         }
         map.put(k, v);
-        // END STRIP
     }
 
     public V get(K k) {
-        // STUDENT throw new NotImplementedException("TrailMap");
-        // BEGIN STRIP
         return map.get(k);
-        // END STRIP
     }
 }

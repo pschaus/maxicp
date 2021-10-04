@@ -42,8 +42,6 @@ public class TSPBoundImpact {
      * @return the value that if assigned to v induced the least augmentation of the objective obj
      */
     public static int boundImpactValueSelector(CPIntVar x, CPIntVar obj) {
-        // STUDENT throw new NotImplementedException("boundImpactValueSelector");
-        // BEGIN STRIP
         int val = x.min();
         int best = Integer.MAX_VALUE;
         for (int v = x.min(); v < x.max(); v++) {
@@ -62,7 +60,6 @@ public class TSPBoundImpact {
             }
         }
         return val;
-        // END STRIP
     }
 
 

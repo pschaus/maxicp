@@ -48,9 +48,6 @@ public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
 
     @Override
     public void post() {
-        // TODO
-        // STUDENT throw new NotImplementedException("IsLessOrEqual");
-        // BEGIN STRIP
         if (b.isTrue()) {
             x.removeAbove(v);
         } else if (b.isFalse()) {
@@ -79,6 +76,5 @@ public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
                 }
             });
         }
-        // END STRIP
     }
 }
