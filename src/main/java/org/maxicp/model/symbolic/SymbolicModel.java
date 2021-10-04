@@ -1,13 +1,17 @@
-package org.maxicp.model.impls;
+package org.maxicp.model.symbolic;
 
 import org.maxicp.model.Constraint;
 import org.maxicp.model.ConstraintListNode;
 import org.maxicp.model.Model;
+import org.maxicp.model.ModelDispatcher;
 
-import java.util.Iterator;
-
-public class ModelImpl implements Model {
+public class SymbolicModel implements Model {
     ConstraintListNode cur = null;
+    final ModelDispatcher bm;
+
+    public SymbolicModel(ModelDispatcher bm) {
+        this.bm = bm;
+    }
 
     @Override
     public void add(Constraint c) {
@@ -22,5 +26,10 @@ public class ModelImpl implements Model {
     @Override
     public Iterable<Constraint> getConstraints() {
         return cur;
+    }
+
+    @Override
+    public ModelDispatcher getDispatcher() {
+        return bm;
     }
 }

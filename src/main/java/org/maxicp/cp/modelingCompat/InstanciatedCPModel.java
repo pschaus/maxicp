@@ -1,10 +1,12 @@
-package org.maxicp.cp;
+package org.maxicp.cp.modelingCompat;
 
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.cp.engine.core.CPVar;
 import org.maxicp.model.*;
+import org.maxicp.model.concrete.ConcreteModel;
+import org.maxicp.model.concrete.ConcreteVar;
 import org.maxicp.state.State;
 
 import java.util.HashMap;
@@ -12,12 +14,14 @@ import java.util.HashMap;
 import static org.maxicp.cp.CPModelInstantiator.getCPVar;
 import static org.maxicp.cp.CPModelInstantiator.instantiateConstraint;
 
-public class InstanciatedCPModel implements Model {
+public class InstanciatedCPModel implements ConcreteModel {
     final State<ConstraintListNode> model;
     public final CPSolver solver;
-    final HashMap<Var, CPVar> mapping;
+    final HashMap<Var, ConcreteVar> mapping;
+    final ModelDispatcher bm;
 
-    public InstanciatedCPModel(CPSolver solver, HashMap<Var, CPVar> mapping, ConstraintListNode baseNode) {
+    public InstanciatedCPModel(ModelDispatcher bm, CPSolver solver, HashMap<Var, ConcreteVar> mapping, ConstraintListNode baseNode) {
+        this.bm = bm;
         this.model = solver.getStateManager().makeStateRef(baseNode);
         this.solver = solver;
         this.mapping = mapping;
@@ -45,5 +49,15 @@ public class InstanciatedCPModel implements Model {
     @Override
     public Iterable<Constraint> getConstraints() {
         return model.value();
+    }
+
+    @Override
+    public ModelDispatcher getDispatcher() {
+        return bm;
+    }
+
+    @Override
+    public HashMap<Var, ConcreteVar> getMapping() {
+        return mapping;
     }
 }

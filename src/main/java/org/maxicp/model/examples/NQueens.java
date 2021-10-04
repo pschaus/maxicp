@@ -3,22 +3,16 @@ package org.maxicp.model.examples;
 
 import org.maxicp.cp.CPModelInstantiator;
 import org.maxicp.cp.CPInstantiableConstraint;
-import org.maxicp.cp.InstanciatedCPModel;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
-import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
+import org.maxicp.model.ModelDispatcher;
 import org.maxicp.model.Factory;
 import org.maxicp.model.IntVar;
-import org.maxicp.model.Model;
 import org.maxicp.model.constraints.AllDifferent;
 import org.maxicp.search.DFSearch;
-import org.maxicp.state.StateManager;
-import org.maxicp.state.Trailer;
 import org.maxicp.util.Procedure;
 
 import java.util.function.Supplier;
-
-import static org.maxicp.cp.CPFactory.makeIntVarArray;
 
 /**
  * The N-Queens problem.
@@ -27,19 +21,17 @@ import static org.maxicp.cp.CPFactory.makeIntVarArray;
 public class NQueens {
     public static void main(String[] args) {
         int n = 8;
-        Model model = Factory.model();
+        ModelDispatcher baseModel = Factory.makeModelDispatcher();
 
-        IntVar[] q = Factory.intVarArray(n, n);
-        IntVar[] qLeftDiagonal = Factory.intVarArray(n, i -> q[i].plus(i));
-        IntVar[] qRightDiagonal = Factory.intVarArray(n, i -> q[i].minus(i));
+        IntVar[] q = baseModel.intVarArray(n, n);
+        IntVar[] qLeftDiagonal = baseModel.intVarArray(n, (i) -> q[i].plus(i));
+        IntVar[] qRightDiagonal = baseModel.intVarArray(n, (i) -> q[i].minus(i));
 
-        model.add(new AllDifferent(q));
-        model.add(new AllDifferent(qLeftDiagonal));
-        model.add(new AllDifferent(qRightDiagonal));
+        baseModel.add(new AllDifferent(q));
+        baseModel.add(new AllDifferent(qLeftDiagonal));
+        baseModel.add(new AllDifferent(qRightDiagonal));
 
-        model.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
-
-        InstanciatedCPModel s = CPModelInstantiator.instantiate(model);
+        baseModel.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
 
         Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
             @Override
@@ -62,17 +54,9 @@ public class NQueens {
             }
         };
 
-        CPModelInstantiator.instantiate(model, () -> {
+        CPModelInstantiator.instantiate(baseModel, () -> {
             DFSearch search = new DFSearch(model,branching);
         });
-
-        ThreadLocal<Integer> test;
-        StateManager sm = s.solver.getStateManager(); // to replace
-
-
-
-        //
-
     }
 }
 
