@@ -1,9 +1,12 @@
 package org.maxicp.model;
 
+import org.maxicp.model.concrete.ConcreteModel;
 import org.maxicp.model.symbolic.IntVarRangeImpl;
 import org.maxicp.model.symbolic.SymbolicModel;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ModelDispatcher {
     private Model initialModel;
@@ -80,5 +83,51 @@ public class ModelDispatcher {
 
     public IntVar intVar(int min, int max) {
         return new IntVarRangeImpl(this, min, max);
+    }
+
+    public interface ModelInstantiator<T extends ConcreteModel> {
+        T instanciate();
+    }
+
+    public <T extends ConcreteModel, R> R runAsConcrete(ModelInstantiator<T> instantiator, Function<T, R> fun) {
+        T m = instantiator.instanciate();
+        return runWithModel(m, () -> fun.apply(m));
+    }
+
+    public <T extends ConcreteModel> void runAsConcrete(ModelInstantiator<T> instantiator, Consumer<T> fun) {
+        T m = instantiator.instanciate();
+        runWithModel(m, () -> fun.accept(m));
+    }
+
+    public <T extends ConcreteModel, R> R runAsConcrete(ModelInstantiator<T> instantiator, Supplier<R> fun) {
+        T m = instantiator.instanciate();
+        return runWithModel(m, fun);
+    }
+
+    public <T extends ConcreteModel> void runAsConcrete(ModelInstantiator<T> instantiator, Runnable fun) {
+        T m = instantiator.instanciate();
+        runWithModel(m, fun);
+    }
+
+    public <R> R runWithModel(ConcreteModel model, Supplier<R> fun) {
+        Model oldModel = currentModel.get();
+        currentModel.set(model);
+        try {
+            return fun.get();
+        }
+        finally {
+            currentModel.set(oldModel);
+        }
+    }
+
+    public void runWithModel(ConcreteModel model, Runnable fun) {
+        Model oldModel = currentModel.get();
+        currentModel.set(model);
+        try {
+            fun.run();
+        }
+        finally {
+            currentModel.set(oldModel);
+        }
     }
 }
