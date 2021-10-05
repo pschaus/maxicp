@@ -19,7 +19,8 @@ public class CPModelInstantiator {
     record Instanciator(boolean useTrailing) implements ModelDispatcher.ModelInstantiator<InstanciatedCPModel> {
         @Override
         public InstanciatedCPModel instanciate(Model m) {
-            return null;
+            CPSolver s = new MiniCP(useTrailing ? new Trailer() : new Copier());
+            return new InstanciatedCPModel(m.getDispatcher(), s, m.getCstNode());
         }
     }
 

@@ -11,10 +11,14 @@ import org.maxicp.model.*;
 import org.maxicp.model.concrete.ConcreteModel;
 import org.maxicp.model.concrete.ConcreteVar;
 import org.maxicp.model.constraints.AllDifferent;
+import org.maxicp.model.constraints.Equal;
+import org.maxicp.model.constraints.NotEqual;
 import org.maxicp.model.symbolic.IntVarRangeImpl;
 import org.maxicp.model.symbolic.IntVarSetImpl;
+import org.maxicp.model.symbolic.IntVarViewOffset;
 import org.maxicp.state.State;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class InstanciatedCPModel implements ConcreteModel {
@@ -70,12 +74,12 @@ public class InstanciatedCPModel implements ConcreteModel {
     private void instantiateConstraint(Constraint c) {
         switch (c) {
             case AllDifferent a -> {
-                CPIntVar[] args = a.scope().stream().map(x -> (CPIntVar) createCPVarIfNeeded(x)).toArray(CPIntVar[]::new);
+                CPIntVar[] args = Arrays.stream(a.x).map(this::getVar).toArray(CPIntVar[]::new);
                 solver.post(new AllDifferentDC(args));
             }
-            case CPInstantiableConstraint cpic-> {
-                solver.post(cpic.instantiate(this));
-            }
+            case Equal e -> solver.post(CPFactory.equal(getVar(e.x), e.v));
+            case NotEqual e -> solver.post(CPFactory.notEqual(getVar(e.x), e.v));
+            case CPInstantiableConstraint cpic -> solver.post(cpic.instantiate(this));
             default -> throw new IllegalStateException("Unexpected value: " + c);
         }
     }
@@ -83,18 +87,15 @@ public class InstanciatedCPModel implements ConcreteModel {
     private CPVar createCPVarIfNeeded(Var v) {
         if(mapping.containsKey(v))
             return ((ConcreteCPVar)mapping.get(v)).getVar();
-        switch (v) {
-            case IntVarSetImpl iv -> {
-                CPIntVar cpiv = CPFactory.makeIntVar(solver, iv.dom);
-                mapping.put(v, new ConcreteCPIntVar(v.getDispatcher(), cpiv));
-                return cpiv;
-            }
-            case IntVarRangeImpl iv -> {
-                CPIntVar cpiv = CPFactory.makeIntVar(solver, iv.min(), iv.max());
-                mapping.put(v, new ConcreteCPIntVar(v.getDispatcher(), cpiv));
-                return cpiv;
-            }
+
+        CPIntVar cpiv = switch (v) {
+            case IntVarSetImpl iv -> CPFactory.makeIntVar(solver, iv.dom);
+            case IntVarRangeImpl iv -> CPFactory.makeIntVar(solver, iv.min(), iv.max());
+            case IntVarViewOffset iv -> CPFactory.plus(((CPIntVar)createCPVarIfNeeded(iv.baseVar)), iv.offset);
             default -> throw new IllegalStateException("Unexpected value: " + v);
-        }
+        };
+
+        mapping.put(v, new ConcreteCPIntVar(v.getDispatcher(), cpiv));
+        return cpiv;
     }
 }

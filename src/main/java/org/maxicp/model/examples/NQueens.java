@@ -11,10 +11,14 @@ import org.maxicp.model.ModelDispatcher;
 import org.maxicp.model.Factory;
 import org.maxicp.model.IntVar;
 import org.maxicp.model.constraints.AllDifferent;
+import org.maxicp.model.constraints.Equal;
+import org.maxicp.model.constraints.NotEqual;
 import org.maxicp.search.DFSearch;
 import org.maxicp.util.Procedure;
 
 import java.util.function.Supplier;
+
+import static org.maxicp.BranchingScheme.branch;
 
 /**
  * The N-Queens problem.
@@ -33,37 +37,30 @@ public class NQueens {
         baseModel.add(new AllDifferent(qLeftDiagonal));
         baseModel.add(new AllDifferent(qRightDiagonal));
 
-        baseModel.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
+        baseModel.add(new Equal(q[0], 0));
+        //baseModel.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
 
-        baseModel.runAsConcrete(CPModelInstantiator.withTrailing, () -> {
-            //Here the model is instanciated
-            System.out.println("hello!");
-        });
-
-        /*Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
-            @Override
-            public Procedure[] get() {
-                int idx = -1; // index of the first variable that is not bound
-                for (int k = 0; k < q.length; k++)
-                    if (q[k].size() > 1) {
-                        idx=k;
-                        break;
-                    }
-                if (idx == -1)
-                    return new Procedure[0];
-                else {
-                    IntVar qi = q[idx];
-                    int v = qi.min();
-                    Procedure left = () -> Factory.equal(qi, v);
-                    Procedure right = () -> Factory.notEqual(qi, v);
-                    return branch(left,right);
+        Supplier<Procedure[]> branching = () -> {
+            int idx = -1; // index of the first variable that is not bound
+            for (int k = 0; k < q.length; k++)
+                if (q[k].size() > 1) {
+                    idx=k;
+                    break;
                 }
+            if (idx == -1)
+                return new Procedure[0];
+            else {
+                IntVar qi = q[idx];
+                int v = qi.min();
+                Procedure left = () -> baseModel.add(new Equal(qi, v));
+                Procedure right = () -> baseModel.add(new NotEqual(qi, v));
+                return branch(left,right);
             }
         };
 
-        CPModelInstantiator.instantiate(baseModel, () -> {
-            DFSearch search = new DFSearch(model,branching);
-        });*/
+        baseModel.runAsConcrete(CPModelInstantiator.withTrailing, () -> {
+            //DFSearch search = new DFSearch(baseModel,branching);
+        });
     }
 }
 
