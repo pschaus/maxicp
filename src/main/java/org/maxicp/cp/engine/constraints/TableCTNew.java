@@ -17,6 +17,7 @@ package org.maxicp.cp.engine.constraints;
 
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
+import org.maxicp.state.datastructures.BitSet;
 import org.maxicp.state.datastructures.StateSparseBitSet;
 import org.maxicp.util.exception.InconsistencyException;
 
@@ -35,9 +36,9 @@ public class TableCTNew extends AbstractCPConstraint {
     private int[][] table; //the table
 
     private StateSparseBitSet validTuples;
-    private StateSparseBitSet.BitSet collected;
+    private StateSparseBitSet.SupportBitSet collected;
     //supports[i][v] is the set of tuples supported by x[i]=v
-    private StateSparseBitSet.BitSet[][] supports;
+    private StateSparseBitSet.SupportBitSet[][] supports;
 
     /**
      * Table constraint.
@@ -61,15 +62,15 @@ public class TableCTNew extends AbstractCPConstraint {
         this.table = table;
 
         validTuples = new StateSparseBitSet(x[0].getSolver().getStateManager(),table.length);
-        collected = validTuples.new BitSet();
+        collected = validTuples.new SupportBitSet();
 
         // Allocate supportedByVarVal
-        supports = new StateSparseBitSet.BitSet[x.length][];
+        supports = new StateSparseBitSet.SupportBitSet[x.length][];
         for (int i = 0; i < x.length; i++) {
             this.x[i] = minus(x[i], x[i].min()); // map the variables domain to start at 0
-            supports[i] = new StateSparseBitSet.BitSet[x[i].max() - x[i].min() + 1];
+            supports[i] = new StateSparseBitSet.SupportBitSet[x[i].max() - x[i].min() + 1];
             for (int j = 0; j < supports[i].length; j++)
-                supports[i][j] = validTuples.new BitSet();
+                supports[i][j] = validTuples.new SupportBitSet();
         }
 
         // Set values in supportedByVarVal, which contains all the tuples supported by each var-val pair
