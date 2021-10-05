@@ -17,6 +17,7 @@ import org.maxicp.search.DFSearch;
 import org.maxicp.search.LimitedDepthBranching;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.Procedure;
+import org.maxicp.util.TimeIt;
 
 import java.util.LinkedList;
 import java.util.concurrent.*;
@@ -65,39 +66,51 @@ public class NQueens {
         //
         // Basic standard solving demo
         //
-        baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
-            DFSearch search = cp.dfSearch(branching);
-            System.out.println("Total number of solutions: " + search.solve().numberOfSolutions());
+        long time = TimeIt.run(() -> {
+            baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
+                DFSearch search = cp.dfSearch(branching);
+                System.out.println("Total number of solutions: " + search.solve().numberOfSolutions());
+            });
         });
+        System.out.println("Time taken for simple resolution: " + (time/1000000000.));
+
 
         //
         // Basic EPS solving demo
         //
-        ExecutorService executorService = Executors.newFixedThreadPool(8);
+        long time2 = TimeIt.run(() -> {
+            ExecutorService executorService = Executors.newFixedThreadPool(8);
 
-        Function<Model, SearchStatistics> epsSolve = (m) -> {
-            return baseModel.runAsConcrete(CPModelInstantiator.withTrailing, m, (cp) -> {
-                DFSearch search = cp.dfSearch(branching);
-                return search.solve();
-            });
-        };
-        LinkedList<Future<SearchStatistics>> results = new LinkedList<>();
+            Function<Model, SearchStatistics> epsSolve = (m) -> {
+                return baseModel.runAsConcrete(CPModelInstantiator.withTrailing, m, (cp) -> {
+                    DFSearch search = cp.dfSearch(branching);
+                    return search.solve();
+                });
+            };
+            LinkedList<Future<SearchStatistics>> results = new LinkedList<>();
 
-        // Create subproblems and start EPS
-        baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
-            DFSearch search = cp.dfSearch(new LimitedDepthBranching(branching, 10));
-            search.onSolution(() -> {
-                Model m = cp.symbolicCopy();
-                results.add(executorService.submit(() -> epsSolve.apply(m)));
+            // Create subproblems and start EPS
+            baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
+                DFSearch search = cp.dfSearch(new LimitedDepthBranching(branching, 10));
+                search.onSolution(() -> {
+                    Model m = cp.symbolicCopy();
+                    results.add(executorService.submit(() -> epsSolve.apply(m)));
+                });
+                System.out.println("Number of EPS subproblems generated: " + search.solve().numberOfSolutions());
             });
-            System.out.println("Number of EPS subproblems generated: " + search.solve().numberOfSolutions());
+
+            int count = 0;
+            for (var fr : results) {
+                try {
+                    count += fr.get().numberOfSolutions();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("Total number of solutions (in EPS): " + count);
+            executorService.shutdown();
         });
-
-        int count = 0;
-        for(var fr: results)
-            count += fr.get().numberOfSolutions();
-        System.out.println("Total number of solutions (in EPS): " + count);
-        executorService.shutdown();
+        System.out.println("Time taken for EPS resolution: " + (time2/1000000000.));
     }
 }
 
