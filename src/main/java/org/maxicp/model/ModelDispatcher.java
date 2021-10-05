@@ -86,27 +86,43 @@ public class ModelDispatcher {
     }
 
     public interface ModelInstantiator<T extends ConcreteModel> {
-        T instanciate();
+        T instanciate(Model m);
     }
 
     public <T extends ConcreteModel, R> R runAsConcrete(ModelInstantiator<T> instantiator, Function<T, R> fun) {
-        T m = instantiator.instanciate();
-        return runWithModel(m, () -> fun.apply(m));
+        return runAsConcrete(instantiator, currentModel.get(), fun);
     }
 
     public <T extends ConcreteModel> void runAsConcrete(ModelInstantiator<T> instantiator, Consumer<T> fun) {
-        T m = instantiator.instanciate();
-        runWithModel(m, () -> fun.accept(m));
+        runAsConcrete(instantiator, currentModel.get(), fun);
     }
 
     public <T extends ConcreteModel, R> R runAsConcrete(ModelInstantiator<T> instantiator, Supplier<R> fun) {
-        T m = instantiator.instanciate();
-        return runWithModel(m, fun);
+        return runAsConcrete(instantiator, currentModel.get(), fun);
     }
 
     public <T extends ConcreteModel> void runAsConcrete(ModelInstantiator<T> instantiator, Runnable fun) {
-        T m = instantiator.instanciate();
+        runAsConcrete(instantiator, currentModel.get(), fun);
+    }
+
+    public <T extends ConcreteModel> void runAsConcrete(ModelInstantiator<T> instantiator, Model bm, Runnable fun) {
+        T m = instantiator.instanciate(bm);
         runWithModel(m, fun);
+    }
+
+    public <T extends ConcreteModel, R> R runAsConcrete(ModelInstantiator<T> instantiator, Model bm, Function<T, R> fun) {
+        T m = instantiator.instanciate(bm);
+        return runWithModel(m, () -> fun.apply(m));
+    }
+
+    public <T extends ConcreteModel> void runAsConcrete(ModelInstantiator<T> instantiator, Model bm, Consumer<T> fun) {
+        T m = instantiator.instanciate(bm);
+        runWithModel(m, () -> fun.accept(m));
+    }
+
+    public <T extends ConcreteModel, R> R runAsConcrete(ModelInstantiator<T> instantiator, Model bm, Supplier<R> fun) {
+        T m = instantiator.instanciate(bm);
+        return runWithModel(m, fun);
     }
 
     public <R> R runWithModel(ConcreteModel model, Supplier<R> fun) {

@@ -35,6 +35,11 @@ public class NQueens {
 
         baseModel.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
 
+        baseModel.runAsConcrete(CPModelInstantiator.withTrailing, () -> {
+            //Here the model is instanciated
+            System.out.println("hello!");
+        });
+
         /*Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
             @Override
             public Procedure[] get() {

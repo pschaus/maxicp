@@ -16,12 +16,14 @@ import org.maxicp.state.trail.Trailer;
 import java.util.HashMap;
 
 public class CPModelInstantiator {
-    static public InstanciatedCPModel instantiate(Model m) {
-        return instantiate(m, true);
+    record Instanciator(boolean useTrailing) implements ModelDispatcher.ModelInstantiator<InstanciatedCPModel> {
+        @Override
+        public InstanciatedCPModel instanciate(Model m) {
+            return null;
+        }
     }
 
-    static public InstanciatedCPModel instantiate(Model m, boolean useTrailing) {
-        CPSolver solver = new MiniCP(useTrailing ? new Trailer() : new Copier());
-        return new InstanciatedCPModel(m.getDispatcher(), solver, m.getCstNode());
-    }
+    static public final Instanciator withTrailing = new Instanciator(true);
+    static public final Instanciator withCopying = new Instanciator(false);
+    static public final Instanciator base = new Instanciator(true);
 }
