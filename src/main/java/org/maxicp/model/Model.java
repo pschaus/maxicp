@@ -1,9 +1,16 @@
 package org.maxicp.model;
 
+import org.maxicp.model.symbolic.SymbolicModel;
+
 import java.util.HashSet;
 
 public interface Model {
     void add(Constraint c);
+
+    default Model symbolicCopy() {
+        return new SymbolicModel(this);
+    }
+
     ConstraintListNode getCstNode();
     Iterable<Constraint> getConstraints();
     ModelDispatcher getDispatcher();

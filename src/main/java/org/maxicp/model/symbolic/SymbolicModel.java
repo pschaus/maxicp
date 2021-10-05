@@ -12,6 +12,10 @@ public class SymbolicModel implements Model {
     public SymbolicModel(ModelDispatcher bm) {
         this.bm = bm;
     }
+    public SymbolicModel(Model copyFrom) {
+        this.bm = copyFrom.getDispatcher();
+        this.cur = copyFrom.getCstNode();
+    }
 
     @Override
     public void add(Constraint c) {

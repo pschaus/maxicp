@@ -1,4 +1,4 @@
-package org.maxicp.cp.modelingCompat;
+package org.maxicp.cp;
 
 import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.CPInstantiableConstraint;
@@ -7,6 +7,8 @@ import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSolver;
 import org.maxicp.cp.engine.core.CPVar;
+import org.maxicp.cp.modelingCompat.ConcreteCPIntVar;
+import org.maxicp.cp.modelingCompat.ConcreteCPVar;
 import org.maxicp.model.*;
 import org.maxicp.model.concrete.ConcreteModel;
 import org.maxicp.model.concrete.ConcreteVar;
@@ -16,18 +18,21 @@ import org.maxicp.model.constraints.NotEqual;
 import org.maxicp.model.symbolic.IntVarRangeImpl;
 import org.maxicp.model.symbolic.IntVarSetImpl;
 import org.maxicp.model.symbolic.IntVarViewOffset;
+import org.maxicp.search.DFSearch;
 import org.maxicp.state.State;
+import org.maxicp.util.Procedure;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.Supplier;
 
-public class InstanciatedCPModel implements ConcreteModel {
+public class ConcreteCPModel implements ConcreteModel {
     final State<ConstraintListNode> model;
     public final CPSolver solver;
     final HashMap<Var, ConcreteVar> mapping;
     final ModelDispatcher bm;
 
-    public InstanciatedCPModel(ModelDispatcher bm, CPSolver solver, ConstraintListNode baseNode) {
+    public ConcreteCPModel(ModelDispatcher bm, CPSolver solver, ConstraintListNode baseNode) {
         this.bm = bm;
         this.model = solver.getStateManager().makeStateRef(baseNode);
         this.solver = solver;
@@ -35,6 +40,10 @@ public class InstanciatedCPModel implements ConcreteModel {
 
         for(Constraint c: baseNode)
             instantiateConstraint(c);
+    }
+
+    public DFSearch dfSearch(Supplier<Procedure[]> branching) {
+        return new DFSearch(solver.getStateManager(), branching);
     }
 
     public CPIntVar getVar(IntVar v) {
