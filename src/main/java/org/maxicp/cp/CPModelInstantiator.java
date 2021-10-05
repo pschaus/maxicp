@@ -22,40 +22,6 @@ public class CPModelInstantiator {
 
     static public InstanciatedCPModel instantiate(Model m, boolean useTrailing) {
         CPSolver solver = new MiniCP(useTrailing ? new Trailer() : new Copier());
-
-        HashMap<Var, ConcreteVar> mapping = new HashMap<Var, ConcreteVar>();
-        for(Constraint c: m.getConstraints())
-            instantiateConstraint(solver, mapping, c);
-
-        return new InstanciatedCPModel(m.getDispatcher(), solver, mapping, m.getCstNode());
+        return new InstanciatedCPModel(m.getDispatcher(), solver, m.getCstNode());
     }
-
-    static public CPVar getCPVar(CPSolver cp, HashMap<Var, ConcreteVar> mapping, Var v) {
-        if(mapping.containsKey(v))
-            return ((ConcreteCPVar)mapping.get(v)).getVar();
-        switch (v) {
-            case IntVarSetImpl iv -> {
-                CPIntVar cpiv = CPFactory.makeIntVar(cp, iv.dom);
-                mapping.put(v, new ConcreteCPIntVar(v.getDispatcher(), cpiv));
-                return cpiv;
-            }
-            case IntVarRangeImpl iv -> {
-                CPIntVar cpiv = CPFactory.makeIntVar(cp, iv.min(), iv.max());
-                mapping.put(v, new ConcreteCPIntVar(v.getDispatcher(), cpiv));
-                return cpiv;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + v);
-        }
-    }
-
-    static public void instantiateConstraint(CPSolver cp, HashMap<Var, ConcreteVar> mapping, Constraint c) {
-        switch (c) {
-            case AllDifferent a -> {
-                CPIntVar[] args = a.scope().stream().map(x -> (CPIntVar) getCPVar(cp, mapping, x)).toArray(CPIntVar[]::new);
-                cp.post(new AllDifferentDC(args));
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + c);
-        }
-    }
-
 }
