@@ -23,6 +23,11 @@ public class SymbolicModel implements Model {
     }
 
     @Override
+    public void jumpTo(ConstraintListNode node) {
+        cur = node;
+    }
+
+    @Override
     public ConstraintListNode getCstNode() {
         return cur;
     }

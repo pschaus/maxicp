@@ -1,7 +1,5 @@
 package org.maxicp.cp;
 
-import org.maxicp.cp.CPFactory;
-import org.maxicp.cp.CPInstantiableConstraint;
 import org.maxicp.cp.engine.constraints.AllDifferentDC;
 import org.maxicp.cp.engine.core.CPBoolVar;
 import org.maxicp.cp.engine.core.CPIntVar;
@@ -22,18 +20,19 @@ import org.maxicp.search.DFSearch;
 import org.maxicp.state.State;
 import org.maxicp.util.Procedure;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ConcreteCPModel implements ConcreteModel {
     final State<ConstraintListNode> model;
+    final ConstraintListNode concretizedNode;
     public final CPSolver solver;
     final HashMap<Var, ConcreteVar> mapping;
     final ModelDispatcher bm;
 
     public ConcreteCPModel(ModelDispatcher bm, CPSolver solver, ConstraintListNode baseNode) {
         this.bm = bm;
+        this.concretizedNode = baseNode;
         this.model = solver.getStateManager().makeStateRef(baseNode);
         this.solver = solver;
         this.mapping = new HashMap<>();
@@ -56,8 +55,51 @@ public class ConcreteCPModel implements ConcreteModel {
 
     @Override
     public void add(Constraint c) {
-        model.setValue(new ConstraintListNode(model.value(), c));
         instantiateConstraint(c);
+        model.setValue(new ConstraintListNode(model.value(), c));
+    }
+
+    @Override
+    public void jumpTo(ConstraintListNode node) {
+        //Find the first node in common
+        HashSet<ConstraintListNode> nodeCurrentlyPresent = new HashSet<>();
+
+        ConstraintListNode cur = model.value();
+        while (cur != concretizedNode) {
+            nodeCurrentlyPresent.add(cur);
+            cur = cur.parent();
+        }
+        nodeCurrentlyPresent.add(cur);
+
+        cur = node;
+        while (cur != null && !nodeCurrentlyPresent.contains(cur))
+            cur = cur.parent();
+        ConstraintListNode firstCommonNode = cur;
+
+        //Now list the nodes before this first common node
+        nodeCurrentlyPresent.clear();
+        cur = firstCommonNode;
+        while (cur != null) {
+            nodeCurrentlyPresent.add(cur);
+            cur = cur.parent();
+        }
+
+        // Now revert the solver until we are at a node below the first common node
+        while (!nodeCurrentlyPresent.contains(model.value()))
+            solver.getStateManager().restoreState();
+        solver.getStateManager().saveState();
+
+        // We now juste have to add constraints until we are at the right node
+        ArrayDeque<ConstraintListNode> needConcretization = new ArrayDeque<>();
+        cur = node;
+        while (cur != model.value()) {
+            needConcretization.addFirst(cur);
+            cur = cur.parent();
+        }
+        for(ConstraintListNode cln: needConcretization)
+            instantiateConstraint(cln.value());
+
+        model.setValue(node);
     }
 
     @Override
@@ -67,7 +109,7 @@ public class ConcreteCPModel implements ConcreteModel {
 
     @Override
     public Iterable<Constraint> getConstraints() {
-        return model.value();
+        return getCstNode();
     }
 
     @Override
