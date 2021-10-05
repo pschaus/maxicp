@@ -58,8 +58,9 @@ public class NQueens {
             }
         };
 
-        baseModel.runAsConcrete(CPModelInstantiator.withTrailing, () -> {
-            //DFSearch search = new DFSearch(baseModel,branching);
+        baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cpModel) -> {
+            DFSearch search = new DFSearch(cpModel.solver.getStateManager(), branching);
+            System.out.println(search.solve());
         });
     }
 }
