@@ -71,7 +71,7 @@ public class ModelDispatcher {
         return out;
     }
 
-    public IntVar[] makeIntVarArray(int n, Function<Integer, IntVar> body) {
+    public IntVar[] intVarArray(int n, Function<Integer, IntVar> body) {
         IntVar[] t = new IntVar[n];
         for (int i = 0; i < n; i++)
             t[i] = body.apply(i);

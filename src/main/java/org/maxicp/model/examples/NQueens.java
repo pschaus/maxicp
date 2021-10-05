@@ -24,8 +24,8 @@ public class NQueens {
         ModelDispatcher baseModel = Factory.makeModelDispatcher();
 
         IntVar[] q = baseModel.intVarArray(n, n);
-        IntVar[] qLeftDiagonal = baseModel.intVarArray(n, (i) -> q[i].plus(i));
-        IntVar[] qRightDiagonal = baseModel.intVarArray(n, (i) -> q[i].minus(i));
+        IntVar[] qLeftDiagonal = baseModel.intVarArray(n, i -> q[i].plus(i));
+        IntVar[] qRightDiagonal = baseModel.intVarArray(n, i -> q[i].minus(i));
 
         baseModel.add(new AllDifferent(q));
         baseModel.add(new AllDifferent(qLeftDiagonal));
@@ -33,7 +33,7 @@ public class NQueens {
 
         baseModel.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
 
-        Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
+        /*Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
             @Override
             public Procedure[] get() {
                 int idx = -1; // index of the first variable that is not bound
@@ -56,7 +56,7 @@ public class NQueens {
 
         CPModelInstantiator.instantiate(baseModel, () -> {
             DFSearch search = new DFSearch(model,branching);
-        });
+        });*/
     }
 }
 
