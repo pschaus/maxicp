@@ -18,6 +18,8 @@ package org.maxicp.cp.engine.core;
 
 import org.maxicp.state.State;
 
+import java.util.ArrayList;
+
 
 /**
  * Abstract class the most of the constraints
@@ -32,6 +34,8 @@ public abstract class AbstractCPConstraint implements CPConstraint {
     private boolean scheduled = false;
     private final State<Boolean> active;
 
+    private ArrayList<Delta> deltas;
+
     public AbstractCPConstraint(CPSolver cp) {
         this.cp = cp;
         active = cp.getStateManager().makeStateRef(true);
@@ -45,6 +49,17 @@ public abstract class AbstractCPConstraint implements CPConstraint {
     }
 
     public void propagate() {
+    }
+
+    public void registerDelta(Delta delta) {
+        deltas.add(delta);
+        delta.update();
+    }
+
+    private void updateDeltas() {
+        for (Delta d: deltas) {
+            d.update();
+        }
     }
 
     public void setScheduled(boolean scheduled) {
