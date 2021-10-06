@@ -1,57 +1,20 @@
 package org.maxicp.cp;
 
-import org.maxicp.cp.engine.constraints.AllDifferentDC;
-import org.maxicp.cp.engine.core.CPIntVar;
-import org.maxicp.cp.engine.core.CPSolver;
-import org.maxicp.cp.engine.core.CPVar;
-import org.maxicp.cp.engine.core.MiniCP;
+import org.maxicp.cp.engine.core.*;
 import org.maxicp.model.*;
-import org.maxicp.model.constraints.AllDifferent;
-import org.maxicp.state.Copier;
-import org.maxicp.state.Trailer;
-
-import java.util.HashMap;
+import org.maxicp.state.copy.Copier;
+import org.maxicp.state.trail.Trailer;
 
 public class CPModelInstantiator {
-    static public InstanciatedCPModel instantiate(Model m) {
-        return instantiate(m, true);
-    }
-
-    static public InstanciatedCPModel instantiate(Model m, boolean useTrailing) {
-        CPSolver solver = new MiniCP(useTrailing ? new Trailer() : new Copier());
-
-        HashMap<Var, CPVar> mapping = new HashMap<Var, CPVar>();
-        for(Constraint c: m.getConstraints())
-            instantiateConstraint(solver, mapping, c);
-
-        return new InstanciatedCPModel(solver, mapping, m.getCstNode());
-    }
-
-    static public CPVar getCPVar(CPSolver cp, HashMap<Var, CPVar> mapping, Var v) {
-        if(mapping.containsKey(v))
-            return mapping.get(v);
-        switch (v) {
-            case IntVarSetImpl iv -> {
-                CPIntVar cpiv = CPFactory.makeIntVar(cp, iv.dom);
-                mapping.put(v, cpiv);
-                return cpiv;
-            }
-            case IntVarRangeImpl iv -> {
-                CPIntVar cpiv = CPFactory.makeIntVar(cp, iv.min(), iv.max());
-                mapping.put(v, cpiv);
-                return cpiv;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + v);
+    record Instanciator(boolean useTrailing) implements ModelDispatcher.ModelInstantiator<ConcreteCPModel> {
+        @Override
+        public ConcreteCPModel instanciate(Model m) {
+            CPSolver s = new MiniCP(useTrailing ? new Trailer() : new Copier());
+            return new ConcreteCPModel(m.getDispatcher(), s, m.getCstNode());
         }
     }
 
-    static public void instantiateConstraint(CPSolver cp, HashMap<Var, CPVar> mapping, Constraint c) {
-        switch (c) {
-            case AllDifferent a -> {
-                CPIntVar[] args = a.scope().stream().map(x -> (CPIntVar) getCPVar(cp, mapping, x)).toArray(CPIntVar[]::new);
-                cp.post(new AllDifferentDC(args));
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + c);
-        }
-    }
+    static public final Instanciator withTrailing = new Instanciator(true);
+    static public final Instanciator withCopying = new Instanciator(false);
+    static public final Instanciator base = new Instanciator(true);
 }

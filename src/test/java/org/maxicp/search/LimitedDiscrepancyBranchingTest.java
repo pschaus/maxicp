@@ -18,7 +18,7 @@ package org.maxicp.search;
 import org.maxicp.BranchingScheme;
 import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
-import org.maxicp.state.Trailer;
+import org.maxicp.state.trail.Trailer;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.Procedure;
 import org.maxicp.util.exception.NotImplementedException;

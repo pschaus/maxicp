@@ -5,22 +5,22 @@ import org.maxicp.model.IntVar;
 import org.maxicp.model.Var;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
-public class AllDifferent implements Constraint {
+public class NotEqual implements Constraint {
     ArrayList<Var> s;
-    public final IntVar[] x;
-
     @Override
     public Collection<Var> scope() {
         return s;
     }
 
-    public AllDifferent(IntVar... x) {
+    public final int v;
+    public final IntVar x;
+
+    public NotEqual(IntVar x, int v) {
         this.x = x;
+        this.v = v;
         s = new ArrayList<>();
-        s.addAll(Arrays.asList(x));
+        s.add(x);
     }
 }

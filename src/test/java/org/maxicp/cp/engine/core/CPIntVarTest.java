@@ -15,7 +15,6 @@
 
 package org.maxicp.cp.engine.core;
 
-import com.github.guillaumederval.javagrading.Grade;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.util.NotImplementedExceptionAssume;
 import org.maxicp.util.exception.InconsistencyException;
@@ -170,7 +169,6 @@ public class CPIntVarTest extends CPSolverTest {
 
 
     @Test
-    @Grade(value = 0.5, cpuTimeout = 2000)
     public void arbitrarySetDomains() {
 
         try {
@@ -351,7 +349,6 @@ public class CPIntVarTest extends CPSolverTest {
 
 
     @Test
-    @Grade(value = 0.5, cpuTimeout = 1000)
     public void fillArray() {
         try {
             CPSolver cp = solverFactory.get();

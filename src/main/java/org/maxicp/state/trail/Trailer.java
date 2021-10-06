@@ -13,8 +13,11 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.trail;
 
+
+import org.maxicp.state.*;
+import org.maxicp.state.copy.Copier;
 import org.maxicp.util.Procedure;
 
 import java.util.LinkedList;
@@ -22,40 +25,39 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * StateManager that will store
- * the state of every created elements
+ * StateManager that will lazily store
+ * the state of state object
  * at each {@link #saveState()} call.
+ * Only the one that effectively change are stored
+ * and at most once between any to call to {@link #saveState()}.
+ * This can be seen as an optimized version of {@link Copier}.
  */
-public class Copier implements StateManager {
+public class Trailer implements StateManager {
 
-    class Backup extends Stack<StateEntry> {
-        private int sz;
-
+    static class Backup extends Stack<StateEntry> {
         Backup() {
-            sz = store.size();
-            for (Storage s : store)
-                add(s.save());
         }
 
         void restore() {
-            store.setSize(sz);
             for (StateEntry se : this)
                 se.restore();
         }
     }
 
-    private Stack<Storage> store;
     private Stack<Backup> prior;
+    private Backup current;
+    private long magic = 0L;
+
     private List<Procedure> onRestoreListeners;
 
-    public Copier() {
-        store = new Stack<Storage>();
+    public Trailer() {
         prior = new Stack<Backup>();
+        current = new Backup();
         onRestoreListeners = new LinkedList<Procedure>();
     }
 
     private void notifyRestore() {
-        for (Procedure l: onRestoreListeners) {
+        for (Procedure l : onRestoreListeners) {
             l.call();
         }
     }
@@ -65,23 +67,32 @@ public class Copier implements StateManager {
         onRestoreListeners.add(listener);
     }
 
+    public long getMagic() {
+        return magic;
+    }
+
+    public void pushState(StateEntry entry) {
+        current.push(entry);
+    }
+
+    @Override
     public int getLevel() {
         return prior.size() - 1;
     }
 
-
-    public int storeSize() {
-        return store.size();
-    }
-
     @Override
     public void saveState() {
-        prior.add(new Backup());
+        prior.add(current);
+        current = new Backup();
+        magic++;
     }
+
 
     @Override
     public void restoreState() {
-        prior.pop().restore();
+        current.restore();
+        current = prior.pop();
+        magic++;
         notifyRestore();
     }
 
@@ -101,24 +112,17 @@ public class Copier implements StateManager {
 
     @Override
     public <T> State<T> makeStateRef(T initValue) {
-        Copy r = new Copy(initValue);
-        store.add(r);
-        return r;
+        return new Trail<>(this,initValue);
     }
 
     @Override
     public StateInt makeStateInt(int initValue) {
-        CopyInt s = new CopyInt(initValue);
-        store.add(s);
-        return s;
+        return new TrailInt(this,initValue);
     }
 
     @Override
     public StateMap makeStateMap() {
-        CopyMap s = new CopyMap<>();
-        store.add(s);
-        return s;
+        return new TrailMap(this);
     }
-
 
 }

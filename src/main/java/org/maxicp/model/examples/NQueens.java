@@ -3,83 +3,121 @@ package org.maxicp.model.examples;
 
 import org.maxicp.cp.CPModelInstantiator;
 import org.maxicp.cp.CPInstantiableConstraint;
-import org.maxicp.cp.InstanciatedCPModel;
 import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
-import org.maxicp.cp.engine.core.CPSolver;
+import org.maxicp.cp.ConcreteCPModel;
+import org.maxicp.model.Model;
+import org.maxicp.model.ModelDispatcher;
 import org.maxicp.model.Factory;
 import org.maxicp.model.IntVar;
-import org.maxicp.model.Model;
 import org.maxicp.model.constraints.AllDifferent;
+import org.maxicp.model.constraints.Equal;
+import org.maxicp.model.constraints.NotEqual;
 import org.maxicp.search.DFSearch;
-import org.maxicp.state.StateManager;
-import org.maxicp.state.Trailer;
+import org.maxicp.search.LimitedDepthBranching;
+import org.maxicp.search.SearchStatistics;
 import org.maxicp.util.Procedure;
+import org.maxicp.util.TimeIt;
 
+import java.util.LinkedList;
+import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.maxicp.cp.CPFactory.makeIntVarArray;
+import static org.maxicp.BranchingScheme.branch;
 
 /**
  * The N-Queens problem.
  * <a href="http://csplib.org/Problems/prob054/">CSPLib</a>.
  */
 public class NQueens {
-    public static void main(String[] args) {
-        int n = 8;
-        Model model = Factory.model();
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        int n = 13;
+        ModelDispatcher baseModel = Factory.makeModelDispatcher();
 
-        IntVar[] q = Factory.intVarArray(n, n);
-        IntVar[] qLeftDiagonal = Factory.intVarArray(n, i -> q[i].plus(i));
-        IntVar[] qRightDiagonal = Factory.intVarArray(n, i -> q[i].minus(i));
+        IntVar[] q = baseModel.intVarArray(n, n);
+        IntVar[] qLeftDiagonal = baseModel.intVarArray(n, i -> q[i].plus(i));
+        IntVar[] qRightDiagonal = baseModel.intVarArray(n, i -> q[i].minus(i));
 
-        model.add(new AllDifferent(q));
-        model.add(new AllDifferent(qLeftDiagonal));
-        model.add(new AllDifferent(qRightDiagonal));
+        baseModel.add(new AllDifferent(q));
+        baseModel.add(new AllDifferent(qLeftDiagonal));
+        baseModel.add(new AllDifferent(qRightDiagonal));
 
-        model.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
+        //baseModel.add(new AllDifferentPersoCP.mconstraint(q[0], q[1]));
 
-        InstanciatedCPModel s = CPModelInstantiator.instantiate(model);
-
-        Supplier<Procedure[]> branching = new Supplier<Procedure[]>() {
-            @Override
-            public Procedure[] get() {
-                int idx = -1; // index of the first variable that is not bound
-                for (int k = 0; k < q.length; k++)
-                    if (q[k].size() > 1) {
-                        idx=k;
-                        break;
-                    }
-                if (idx == -1)
-                    return new Procedure[0];
-                else {
-                    IntVar qi = q[idx];
-                    int v = qi.min();
-                    Procedure left = () -> Factory.equal(qi, v);
-                    Procedure right = () -> Factory.notEqual(qi, v);
-                    return branch(left,right);
+        Supplier<Procedure[]> branching = () -> {
+            int idx = -1; // index of the first variable that is not bound
+            for (int k = 0; k < q.length; k++)
+                if (q[k].size() > 1) {
+                    idx=k;
+                    break;
                 }
+            if (idx == -1)
+                return new Procedure[0];
+            else {
+                IntVar qi = q[idx];
+                int v = qi.min();
+                Procedure left = () -> baseModel.add(new Equal(qi, v));
+                Procedure right = () -> baseModel.add(new NotEqual(qi, v));
+                return branch(left,right);
             }
         };
 
-        CPModelInstantiator.instantiate(model, () -> {
-            DFSearch search = new DFSearch(model,branching);
+        //
+        // Basic standard solving demo
+        //
+        long time = TimeIt.run(() -> {
+            baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
+                DFSearch search = cp.dfSearch(branching);
+                System.out.println("Total number of solutions: " + search.solve().numberOfSolutions());
+            });
         });
-
-        ThreadLocal<Integer> test;
-        StateManager sm = s.solver.getStateManager(); // to replace
-
+        System.out.println("Time taken for simple resolution: " + (time/1000000000.));
 
 
         //
+        // Basic EPS solving demo
+        //
+        long time2 = TimeIt.run(() -> {
+            ExecutorService executorService = Executors.newFixedThreadPool(8);
 
+            Function<Model, SearchStatistics> epsSolve = (m) -> {
+                return baseModel.runAsConcrete(CPModelInstantiator.withTrailing, m, (cp) -> {
+                    DFSearch search = cp.dfSearch(branching);
+                    return search.solve();
+                });
+            };
+            LinkedList<Future<SearchStatistics>> results = new LinkedList<>();
+
+            // Create subproblems and start EPS
+            baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
+                DFSearch search = cp.dfSearch(new LimitedDepthBranching(branching, 10));
+                search.onSolution(() -> {
+                    Model m = cp.symbolicCopy();
+                    results.add(executorService.submit(() -> epsSolve.apply(m)));
+                });
+                System.out.println("Number of EPS subproblems generated: " + search.solve().numberOfSolutions());
+            });
+
+            int count = 0;
+            for (var fr : results) {
+                try {
+                    count += fr.get().numberOfSolutions();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("Total number of solutions (in EPS): " + count);
+            executorService.shutdown();
+        });
+        System.out.println("Time taken for EPS resolution: " + (time2/1000000000.));
     }
 }
 
 
 class AllDifferentPersoCP extends AbstractCPConstraint {
-    public AllDifferentPersoCP(CPSolver cp) {
-        super(cp);
+    public AllDifferentPersoCP(CPIntVar... x) {
+        super(x[0].getSolver());
     }
 
     static public class mconstraint extends CPInstantiableConstraint {
@@ -91,8 +129,8 @@ class AllDifferentPersoCP extends AbstractCPConstraint {
         }
 
         @Override
-        public AbstractCPConstraint instantiate(CPSolver cpSolver) {
-            return new AllDifferentPersoCP(cpSolver/*cpSolver.get(a), cpSolver.get(b)*/);
+        public AbstractCPConstraint instantiate(ConcreteCPModel model) {
+            return new AllDifferentPersoCP(model.getVar(a), model.getVar(b));
         }
     }
 }

@@ -2,7 +2,7 @@ package org.maxicp;
 
 import org.maxicp.state.State;
 import org.maxicp.state.StateManager;
-import org.maxicp.state.Trailer;
+import org.maxicp.state.trail.Trailer;
 
 public class Debug {
     public static void main(String[] args) {

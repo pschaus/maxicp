@@ -14,8 +14,12 @@
  */
 
 
-package org.maxicp.state;
+package org.maxicp.state.datastructures;
 
+
+import org.maxicp.state.State;
+import org.maxicp.state.StateInt;
+import org.maxicp.state.StateManager;
 
 import java.util.Arrays;
 
@@ -34,34 +38,21 @@ public class StateSparseBitSet {
     private int[] nonZeroIdx;
     private StateInt nNonZero;
 
-
     /**
      * Bitset of the same capacity as the outer {@link StateSparseBitSet}.
      * It is not synchronized with  {@link StateManager}.
      * It is rather intended to be used as parameter to the
      * {@link #intersect(BitSet)} method to modify the outer {@link StateSparseBitSet}.
      */
-    public class BitSet {
+    public class SupportBitSet extends BitSet{
 
-        private long[] words;
-
-        /**
-         * Initializes a bit-set with the same capacity as the outer {@link StateSparseBitSet}.
-         * All the bits are initially unset. The set it represents is thus empty.
-         */
-        public BitSet() {
-            words = new long[nWords];
+        public SupportBitSet(){
+            super(nWords);
         }
 
-        /**
-         * Set the ith bit
-         *
-         * @param i the bit to set
-         */
-        public void set(int i) {
-            words[i >>> 6] |= 1L << i; // << is a cyclic shift, (1L << 64) == 1L
+        public SupportBitSet(BitSet anotherBitSet){
+            super(anotherBitSet);
         }
-
 
         /**
          * Unset all the bits
@@ -95,8 +86,8 @@ public class StateSparseBitSet {
                 words[nonZeroIdx[i]] &= other.words[nonZeroIdx[i]];
             }
         }
-    }
 
+    }
 
     /**
      * Creates a StateSparseSet with n bits, initially all set
@@ -112,6 +103,10 @@ public class StateSparseBitSet {
         nonZeroIdx = new int[nWords];
         Arrays.setAll(nonZeroIdx, i -> i);
         nNonZero = sm.makeStateInt(nWords);
+    }
+
+    public int getnWords(){
+        return nWords;
     }
 
     /**

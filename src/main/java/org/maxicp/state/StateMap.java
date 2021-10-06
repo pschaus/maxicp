@@ -15,6 +15,8 @@
 
 package org.maxicp.state;
 
+import org.maxicp.state.StateManager;
+
 /**
  * A generic map that can revert its state
  * with {@link StateManager#saveState()} / {@link StateManager#restoreState()}

@@ -13,7 +13,10 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.datastructures;
+
+import org.maxicp.state.State;
+import org.maxicp.state.StateManager;
 
 /**
  * A sparse-set that lazily switch

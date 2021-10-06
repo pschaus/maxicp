@@ -18,8 +18,8 @@ package org.maxicp.cp.engine;
 
 import org.maxicp.cp.engine.core.MiniCP;
 import org.maxicp.cp.engine.core.CPSolver;
-import org.maxicp.state.Copier;
-import org.maxicp.state.Trailer;
+import org.maxicp.state.copy.Copier;
+import org.maxicp.state.trail.Trailer;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 

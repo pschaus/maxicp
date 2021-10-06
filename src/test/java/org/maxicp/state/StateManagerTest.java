@@ -17,6 +17,8 @@ package org.maxicp.state;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.maxicp.state.copy.Copier;
+import org.maxicp.state.trail.Trailer;
 
 import java.util.function.Supplier;
 

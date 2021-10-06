@@ -1,7 +1,5 @@
 package org.maxicp.model;
 
-import org.maxicp.model.impls.ModelImpl;
-
 import java.util.Iterator;
 
 public record ConstraintListNode(ConstraintListNode parent, Constraint value) implements Iterable<Constraint> {
