@@ -16,6 +16,7 @@ import org.maxicp.model.constraints.NotEqual;
 import org.maxicp.model.symbolic.IntVarRangeImpl;
 import org.maxicp.model.symbolic.IntVarSetImpl;
 import org.maxicp.model.symbolic.IntVarViewOffset;
+import org.maxicp.model.symbolic.SymbolicModel;
 import org.maxicp.search.DFSearch;
 import org.maxicp.state.State;
 import org.maxicp.util.Procedure;
@@ -24,13 +25,13 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class ConcreteCPModel implements ConcreteModel {
-    final State<ConstraintListNode> model;
-    final ConstraintListNode concretizedNode;
+    final State<SymbolicModel> model;
+    final SymbolicModel concretizedNode;
     public final CPSolver solver;
     final HashMap<Var, ConcreteVar> mapping;
     final ModelDispatcher bm;
 
-    public ConcreteCPModel(ModelDispatcher bm, CPSolver solver, ConstraintListNode baseNode) {
+    public ConcreteCPModel(ModelDispatcher bm, CPSolver solver, SymbolicModel baseNode) {
         this.bm = bm;
         this.concretizedNode = baseNode;
         this.model = solver.getStateManager().makeStateRef(baseNode);
@@ -56,15 +57,15 @@ public class ConcreteCPModel implements ConcreteModel {
     @Override
     public void add(Constraint c) {
         instantiateConstraint(c);
-        model.setValue(new ConstraintListNode(model.value(), c));
+        model.setValue(model.value().add(c));
     }
 
     @Override
-    public void jumpTo(ConstraintListNode node) {
+    public void jumpTo(SymbolicModel node) {
         //Find the first node in common
-        HashSet<ConstraintListNode> nodeCurrentlyPresent = new HashSet<>();
+        HashSet<SymbolicModel> nodeCurrentlyPresent = new HashSet<>();
 
-        ConstraintListNode cur = model.value();
+        SymbolicModel cur = model.value();
         while (cur != concretizedNode) {
             nodeCurrentlyPresent.add(cur);
             cur = cur.parent();
@@ -74,7 +75,7 @@ public class ConcreteCPModel implements ConcreteModel {
         cur = node;
         while (cur != null && !nodeCurrentlyPresent.contains(cur))
             cur = cur.parent();
-        ConstraintListNode firstCommonNode = cur;
+        SymbolicModel firstCommonNode = cur;
 
         //Now list the nodes before this first common node
         nodeCurrentlyPresent.clear();
@@ -90,26 +91,26 @@ public class ConcreteCPModel implements ConcreteModel {
         solver.getStateManager().saveState();
 
         // We now juste have to add constraints until we are at the right node
-        ArrayDeque<ConstraintListNode> needConcretization = new ArrayDeque<>();
+        ArrayDeque<SymbolicModel> needConcretization = new ArrayDeque<>();
         cur = node;
         while (cur != model.value()) {
             needConcretization.addFirst(cur);
             cur = cur.parent();
         }
-        for(ConstraintListNode cln: needConcretization)
-            instantiateConstraint(cln.value());
+        for(SymbolicModel cln: needConcretization)
+            instantiateConstraint(cln.c());
 
         model.setValue(node);
     }
 
     @Override
-    public ConstraintListNode getCstNode() {
+    public SymbolicModel symbolicCopy() {
         return model.value();
     }
 
     @Override
     public Iterable<Constraint> getConstraints() {
-        return getCstNode();
+        return model.value();
     }
 
     @Override
