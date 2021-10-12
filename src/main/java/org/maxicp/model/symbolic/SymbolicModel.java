@@ -1,44 +1,58 @@
 package org.maxicp.model.symbolic;
 
 import org.maxicp.model.Constraint;
-import org.maxicp.model.ConstraintListNode;
 import org.maxicp.model.Model;
 import org.maxicp.model.ModelDispatcher;
 
-public class SymbolicModel implements Model {
-    ConstraintListNode cur = null;
-    final ModelDispatcher bm;
+import java.util.Iterator;
 
-    public SymbolicModel(ModelDispatcher bm) {
-        this.bm = bm;
-    }
-    public SymbolicModel(Model copyFrom) {
-        this.bm = copyFrom.getDispatcher();
-        this.cur = copyFrom.getCstNode();
-    }
 
+public record SymbolicModel(Constraint c, SymbolicModel parent, ModelDispatcher md) implements Model, Iterable<Constraint> {
     @Override
-    public void add(Constraint c) {
-        cur = new ConstraintListNode(cur, c);
-    }
-
-    @Override
-    public void jumpTo(ConstraintListNode node) {
-        cur = node;
-    }
-
-    @Override
-    public ConstraintListNode getCstNode() {
-        return cur;
+    public SymbolicModel symbolicCopy() {
+        return this;
     }
 
     @Override
     public Iterable<Constraint> getConstraints() {
-        return cur;
+        return this;
     }
 
     @Override
     public ModelDispatcher getDispatcher() {
-        return bm;
+        return md;
+    }
+
+    @Override
+    public Iterator<Constraint> iterator() {
+        return new ConstraintListIterator(this);
+    }
+
+    private static class ConstraintListIterator implements Iterator<Constraint> {
+        private SymbolicModel cur;
+
+        public ConstraintListIterator(SymbolicModel start) {
+            cur = start;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cur.parent != null;
+        }
+
+        @Override
+        public Constraint next() {
+            Constraint c = cur.c;
+            cur = cur.parent;
+            return c;
+        }
+    }
+
+    public static SymbolicModel emptyModel(ModelDispatcher md) {
+        return new SymbolicModel(null, null, md);
+    }
+
+    public SymbolicModel add(Constraint c) {
+        return new SymbolicModel(c, this, md);
     }
 }
