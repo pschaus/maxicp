@@ -17,6 +17,7 @@ import org.maxicp.model.symbolic.IntVarRangeImpl;
 import org.maxicp.model.symbolic.IntVarSetImpl;
 import org.maxicp.model.symbolic.IntVarViewOffset;
 import org.maxicp.model.symbolic.SymbolicModel;
+import org.maxicp.search.BestFirstSearch;
 import org.maxicp.search.DFSearch;
 import org.maxicp.state.State;
 import org.maxicp.util.Procedure;
@@ -44,6 +45,10 @@ public class ConcreteCPModel implements ConcreteModel {
 
     public DFSearch dfSearch(Supplier<Procedure[]> branching) {
         return new DFSearch(solver.getStateManager(), branching);
+    }
+
+    public <U extends Comparable<U>> BestFirstSearch<U> bestFirstSearch(Supplier<Procedure[]> branching, Supplier<U> nodeEvaluator) {
+        return new BestFirstSearch<U>(bm, solver.getStateManager(), branching, nodeEvaluator);
     }
 
     public CPIntVar getVar(IntVar v) {
