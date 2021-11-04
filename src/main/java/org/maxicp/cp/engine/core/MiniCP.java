@@ -80,8 +80,11 @@ public class MiniCP implements CPSolver {
 
     private void propagate(CPConstraint c) {
         c.setScheduled(false);
-        if (c.isActive())
+        if (c.isActive()) {
             c.propagate();
+            c.updateDeltas();
+        }
+
     }
 
     @Override

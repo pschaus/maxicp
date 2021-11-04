@@ -150,6 +150,9 @@ public interface IntDomain {
      */
     int fillArray(int[] dest);
 
-    @Override
+    int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] arr);
+
+
+        @Override
     String toString();
 }

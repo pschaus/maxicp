@@ -32,7 +32,7 @@ import static org.maxicp.BranchingScheme.branch;
  */
 public class NQueens {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        int n = 13;
+        int n = 11;
         ModelDispatcher baseModel = Factory.makeModelDispatcher();
 
         IntVar[] q = baseModel.intVarArray(n, n);

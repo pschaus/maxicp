@@ -127,6 +127,22 @@ public class CPIntVarViewOffset implements CPIntVar {
     }
 
     @Override
+    public int fillDeltaArray(int oldMin, int oldMax, int oldSize, int[] arr) {
+        int s = x.fillDeltaArray(oldMin - o,oldMax - o,oldSize,arr);
+        for (int i = 0; i < s; i++) {
+            arr[i] += o;
+        }
+        return s;
+    }
+
+    @Override
+    public DeltaCPIntVar delta(CPConstraint c) {
+        DeltaCPIntVar delta = new DeltaCPIntVarImpl(this);
+        c.registerDelta(delta);
+        return delta;
+    }
+
+    @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
         b.append("{");

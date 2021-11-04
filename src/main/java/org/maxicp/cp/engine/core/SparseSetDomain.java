@@ -145,4 +145,10 @@ public class SparseSetDomain implements IntDomain {
         return b.toString();
     }
 
+    @Override
+    public int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] arr) {
+        return domain.fillDeltaArray(oldMin, oldMax, oldSize, arr);
+    }
+
+
 }

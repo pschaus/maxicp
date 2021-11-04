@@ -162,6 +162,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
         }
     }
 
+
     @Test(expected = IntOverFlowException.class)
     public void testOverFlow() {
         CPSolver cp = solverFactory.get();

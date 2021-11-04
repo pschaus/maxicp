@@ -291,4 +291,14 @@ public class StateSparseSet {
         b.append("}");
         return b.toString();
     }
+
+    public int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] arr) {
+        int currSize = size();
+        for (int i = 0; i < oldSize-currSize ; i++) {
+            arr[i] = values[currSize+i]+ofs;
+        }
+        return oldSize-currSize;
+    }
+
+
 }

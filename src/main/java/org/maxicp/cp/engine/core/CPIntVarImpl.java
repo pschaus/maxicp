@@ -212,4 +212,18 @@ public class CPIntVarImpl implements CPIntVar {
     public void removeAbove(int v) {
         domain.removeAbove(v, domListener);
     }
+
+    @Override
+    public int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] arr) {
+        return domain.fillDeltaArray(oldMin,oldMax,oldSize,arr);
+    }
+
+    @Override
+    public DeltaCPIntVar delta(CPConstraint c) {
+        DeltaCPIntVar delta = new DeltaCPIntVarImpl(this);
+        c.registerDelta(delta);
+        return delta;
+    }
+
+
 }

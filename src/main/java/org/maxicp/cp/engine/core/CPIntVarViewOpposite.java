@@ -17,6 +17,7 @@
 package org.maxicp.cp.engine.core;
 
 import org.maxicp.util.Procedure;
+import org.maxicp.util.exception.NotImplementedException;
 
 /**
  * A view on a variable of type {@code -x}
@@ -84,6 +85,22 @@ public class CPIntVarViewOpposite implements CPIntVar {
         int s = x.fillArray(dest);
         for (int i = 0; i < s; i++) {
             dest[i] = -dest[i];
+        }
+        return s;
+    }
+
+    @Override
+    public DeltaCPIntVar delta(CPConstraint c) {
+        DeltaCPIntVar delta = new DeltaCPIntVarImpl(this);
+        c.registerDelta(delta);
+        return delta;
+    }
+
+    @Override
+    public int fillDeltaArray(int oldMin, int oldMax, int oldSize, int[] arr) {
+        int s = x.fillDeltaArray(-oldMax,-oldMin,oldSize,arr);
+        for (int i = 0; i < s; i++) {
+            arr[i] = - arr[i];
         }
         return s;
     }

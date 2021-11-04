@@ -39,6 +39,7 @@ public abstract class AbstractCPConstraint implements CPConstraint {
     public AbstractCPConstraint(CPSolver cp) {
         this.cp = cp;
         active = cp.getStateManager().makeStateRef(true);
+        deltas = new ArrayList<>();
     }
 
     public void post() {
@@ -51,12 +52,14 @@ public abstract class AbstractCPConstraint implements CPConstraint {
     public void propagate() {
     }
 
+    @Override
     public void registerDelta(Delta delta) {
         deltas.add(delta);
         delta.update();
     }
 
-    private void updateDeltas() {
+    @Override
+    public void updateDeltas() {
         for (Delta d: deltas) {
             d.update();
         }
@@ -77,4 +80,6 @@ public abstract class AbstractCPConstraint implements CPConstraint {
     public boolean isActive() {
         return active.value();
     }
+
+
 }

@@ -72,5 +72,9 @@ public interface CPConstraint {
      */
     boolean isActive();
 
+    void registerDelta(Delta delta);
+
+    void updateDeltas();
+
 
 }

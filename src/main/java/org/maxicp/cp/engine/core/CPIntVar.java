@@ -161,4 +161,8 @@ public interface CPIntVar extends CPVar {
      *            is thrown if the domain becomes empty
      */
     void removeAbove(int v);
+
+    int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] arr);
+
+    DeltaCPIntVar delta(CPConstraint c);
 }

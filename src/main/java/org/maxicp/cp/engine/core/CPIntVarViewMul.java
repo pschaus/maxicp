@@ -94,6 +94,22 @@ public class CPIntVarViewMul implements CPIntVar {
     }
 
     @Override
+    public int fillDeltaArray(int oldMin, int oldMax, int oldSize, int[] arr) {
+        int s = x.fillDeltaArray(oldMin/a,oldMax/a,oldSize,arr);
+        for (int i = 0; i < s; i++) {
+            arr[i] *= a;
+        }
+        return s;
+    }
+
+    @Override
+    public DeltaCPIntVar delta(CPConstraint c) {
+        DeltaCPIntVar delta = new DeltaCPIntVarImpl(this);
+        c.registerDelta(delta);
+        return delta;
+    }
+
+    @Override
     public int fillArray(int[] dest) {
         int s = x.fillArray(dest);
         for (int i = 0; i < s; i++) {
@@ -148,6 +164,8 @@ public class CPIntVarViewMul implements CPIntVar {
         int q = a / b;
         return (a > 0 && q * b != a) ? q + 1 : q;
     }
+
+
 
     @Override
     public String toString() {
