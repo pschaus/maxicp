@@ -150,7 +150,6 @@ public class DeltaCPIntVarTest extends CPSolverTest {
             }
         });
         SearchStatistics stats = dfs.solve();
-        System.out.println(stats);
 
 
     }
