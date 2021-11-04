@@ -162,7 +162,25 @@ public interface CPIntVar extends CPVar {
      */
     void removeAbove(int v);
 
-    int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] arr);
+    /**
+     * Copies the values of the domain that have been
+     * removed (delta set) wrt to a previous state of the domain
+     * described by oldMin, oldMax and oldSize
+     *
+     * @param dest an array large enough {@code dest.length >= oldSize-size()}
+     * @return the size of delta set stored in prefix of dest
+     */
+    int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] dest);
 
+    /**
+     * Returns a delta object allowing to retrieve the changes
+     * in the domain of the variable (removed values) since
+     * the previous call to the {@code Constraint.propagate} of the constraint.
+     * This can be useful to implement some constraint with
+     * incremental reasoning.
+     *
+     * @param c the constraint wrt the delta set is computed
+     * @return the delta object
+     */
     DeltaCPIntVar delta(CPConstraint c);
 }
