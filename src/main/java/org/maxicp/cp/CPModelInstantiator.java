@@ -2,6 +2,7 @@ package org.maxicp.cp;
 
 import org.maxicp.cp.engine.core.*;
 import org.maxicp.model.*;
+import org.maxicp.model.symbolic.SymbolicModel;
 import org.maxicp.state.copy.Copier;
 import org.maxicp.state.trail.Trailer;
 
@@ -10,7 +11,7 @@ public class CPModelInstantiator {
         @Override
         public ConcreteCPModel instanciate(Model m) {
             CPSolver s = new MiniCP(useTrailing ? new Trailer() : new Copier());
-            return new ConcreteCPModel(m.getDispatcher(), s, m.getCstNode());
+            return new ConcreteCPModel(m.getDispatcher(), s, m.symbolicCopy());
         }
     }
 

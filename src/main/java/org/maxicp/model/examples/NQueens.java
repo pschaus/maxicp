@@ -13,9 +13,8 @@ import org.maxicp.model.IntVar;
 import org.maxicp.model.constraints.AllDifferent;
 import org.maxicp.model.constraints.Equal;
 import org.maxicp.model.constraints.NotEqual;
-import org.maxicp.search.DFSearch;
-import org.maxicp.search.LimitedDepthBranching;
-import org.maxicp.search.SearchStatistics;
+import org.maxicp.model.symbolic.SymbolicModel;
+import org.maxicp.search.*;
 import org.maxicp.util.Procedure;
 import org.maxicp.util.TimeIt;
 
@@ -66,7 +65,9 @@ public class NQueens {
         //
         // Basic standard solving demo
         //
+        System.out.println("--- SIMPLE SOLVING");
         long time = TimeIt.run(() -> {
+
             baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
                 DFSearch search = cp.dfSearch(branching);
                 System.out.println("Total number of solutions: " + search.solve().numberOfSolutions());
@@ -78,6 +79,7 @@ public class NQueens {
         //
         // Basic EPS solving demo
         //
+        System.out.println("--- EPS (DFS for decomposition)");
         long time2 = TimeIt.run(() -> {
             ExecutorService executorService = Executors.newFixedThreadPool(8);
 
@@ -111,6 +113,49 @@ public class NQueens {
             executorService.shutdown();
         });
         System.out.println("Time taken for EPS resolution: " + (time2/1000000000.));
+
+        //
+        // EPS with bigger-cartesian-product-first decomposition solving demo
+        //
+        System.out.println("--- EPS (BestFirstSearch based on Cartesian Space for decomposition)");
+        long time3 = TimeIt.run(() -> {
+            ExecutorService executorService = Executors.newFixedThreadPool(8);
+
+            Function<Model, SearchStatistics> epsSolve = (m) -> {
+                return baseModel.runAsConcrete(CPModelInstantiator.withTrailing, m, (cp) -> {
+                    DFSearch search = cp.dfSearch(branching);
+                    return search.solve();
+                });
+            };
+            LinkedList<Future<SearchStatistics>> results = new LinkedList<>();
+
+            // Create subproblems and start EPS
+            baseModel.runAsConcrete(CPModelInstantiator.withTrailing, (cp) -> {
+                BestFirstSearch<Double> search = cp.bestFirstSearch(branching, () -> -CartesianSpaceEvaluator.evaluate(q));
+                search.onSolution(() -> {
+                    Model m = cp.symbolicCopy();
+                    results.add(executorService.submit(() -> epsSolve.apply(m)));
+                });
+                int count = search.solve(ss -> ss.numberOfNodes() > 1000).numberOfSolutions();
+                for(SymbolicModel m: search.getUnexploredModels()) {
+                    results.add(executorService.submit(() -> epsSolve.apply(m)));
+                    count += 1;
+                }
+                System.out.println("Number of EPS subproblems generated: " + count);
+            });
+
+            int count = 0;
+            for (var fr : results) {
+                try {
+                    count += fr.get().numberOfSolutions();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("Total number of solutions (in EPS): " + count);
+            executorService.shutdown();
+        });
+        System.out.println("Time taken for EPS resolution: " + (time3/1000000000.));
     }
 }
 

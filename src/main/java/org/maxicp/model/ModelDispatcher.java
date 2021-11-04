@@ -13,7 +13,7 @@ public class ModelDispatcher {
     private final ThreadLocal<Model> currentModel;
 
     public ModelDispatcher() {
-        initialModel = new SymbolicModel(this);
+        initialModel = SymbolicModel.emptyModel(this);
         currentModel = ThreadLocal.withInitial(() -> this.initialModel);
     }
 
@@ -39,15 +39,11 @@ public class ModelDispatcher {
      * @param c constraint to add
      */
     public void add(Constraint c) {
-        getModel().add(c);
-    }
-
-    /**
-     * Shortcut for baseModel.getModel().getCstNode();
-     * @return the root constraint node, which is a actually a linked list of all constraints in the current model
-     */
-    public ConstraintListNode getCstNode() {
-        return getModel().getCstNode();
+        switch (getModel()) {
+            case SymbolicModel sm -> setModel(sm.add(c));
+            case ConcreteModel cm -> cm.add(c);
+            default -> throw new IllegalStateException("Unexpected value: " + getModel());
+        }
     }
 
     /**
