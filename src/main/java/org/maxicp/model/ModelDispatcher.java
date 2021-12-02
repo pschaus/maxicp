@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModelDispatcher {
+
     private Model initialModel;
     private final ThreadLocal<Model> currentModel;
 
@@ -29,7 +30,7 @@ public class ModelDispatcher {
      * @param m
      */
     public void setModel(Model m) {
-        if(m.getDispatcher() != this)
+        if (m.getDispatcher() != this)
             throw new RuntimeException("Model being assigned to this BaseModel does not originate from here");
         currentModel.set(m);
     }

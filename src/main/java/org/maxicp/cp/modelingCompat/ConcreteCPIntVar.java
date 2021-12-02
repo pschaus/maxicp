@@ -7,6 +7,7 @@ import org.maxicp.model.concrete.ConcreteIntVar;
 import org.maxicp.model.concrete.ConcreteVar;
 
 public class ConcreteCPIntVar implements ConcreteIntVar, ConcreteCPVar {
+
     final CPIntVar v;
     final ModelDispatcher md;
 
@@ -48,5 +49,10 @@ public class ConcreteCPIntVar implements ConcreteIntVar, ConcreteCPVar {
     @Override
     public CPVar getVar() {
         return v;
+    }
+
+    @Override
+    public String toString() {
+        return v.toString();
     }
 }

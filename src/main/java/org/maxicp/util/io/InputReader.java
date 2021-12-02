@@ -59,7 +59,37 @@ public class InputReader {
         return Integer.parseInt(tokenizer.nextToken());
     }
 
-    public int[][] getMatrix(int n, int m) throws RuntimeException {
+    public double getDouble() throws RuntimeException {
+        if (!tokenizer.hasMoreTokens()) {
+            try {
+                String line;
+                do {
+                    line = in.readLine();
+                    if (line == null) {
+                        System.out.println("No more line to read");
+                        throw new RuntimeException("End of file");
+                    }
+                    tokenizer = new StringTokenizer(line);
+                } while (!tokenizer.hasMoreTokens());
+
+            } catch (IOException e) {
+                throw new RuntimeException(e.toString());
+            }
+        }
+        return Double.parseDouble(tokenizer.nextToken());
+    }
+
+    public double[][] getDoubleMatrix(int n, int m) throws RuntimeException {
+        double[][] matrix = new double[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                matrix[i][j] = getDouble();
+            }
+        }
+        return matrix;
+    }
+
+    public int[][] getIntMatrix(int n, int m) throws RuntimeException {
         int[][] matrix = new int[n][m];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {

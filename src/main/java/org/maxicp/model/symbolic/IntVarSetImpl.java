@@ -2,6 +2,8 @@ package org.maxicp.model.symbolic;
 
 import org.maxicp.model.IntVar;
 import org.maxicp.model.ModelDispatcher;
+import org.maxicp.model.concrete.ConcreteIntVar;
+import org.maxicp.model.concrete.ConcreteModel;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -45,6 +47,14 @@ public class IntVarSetImpl implements SymbolicIntVar {
             idx++;
         }
         return idx;
+    }
+
+    @Override
+    public String toString() {
+        if (getDispatcher().getModel() instanceof ConcreteModel cm) {
+            return ((ConcreteIntVar) cm.getMapping().get(this)).toString();
+        }
+        return dom.toString();
     }
 
     @Override

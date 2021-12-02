@@ -45,8 +45,8 @@ public class StableMatching {
 
         InputReader reader = new InputReader("data/stable_matching.txt");
         int n = reader.getInt();
-        int[][] rankCompanies = reader.getMatrix(n, n);
-        int[][] rankStudents = reader.getMatrix(n, n);
+        int[][] rankCompanies = reader.getIntMatrix(n, n);
+        int[][] rankStudents = reader.getIntMatrix(n, n);
 
         // you should get six solutions:
         /*

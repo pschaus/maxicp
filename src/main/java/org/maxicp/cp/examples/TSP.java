@@ -44,7 +44,7 @@ public class TSP {
 
         int n = reader.getInt();
 
-        int[][] distanceMatrix = reader.getMatrix(n, n);
+        int[][] distanceMatrix = reader.getIntMatrix(n, n);
 
         CPSolver cp = makeSolver(false);
         CPIntVar[] succ = makeIntVarArray(cp, n, n);

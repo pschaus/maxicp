@@ -1,6 +1,8 @@
 package org.maxicp.model.symbolic;
 
 import org.maxicp.model.ModelDispatcher;
+import org.maxicp.model.concrete.ConcreteIntVar;
+import org.maxicp.model.concrete.ConcreteModel;
 
 public class IntVarRangeImpl implements SymbolicIntVar {
 
@@ -36,9 +38,17 @@ public class IntVarRangeImpl implements SymbolicIntVar {
 
     @Override
     public int initFillArray(int[] array) {
-        for(int i = 0; i < initSize(); i++)
-            array[i] = min+i;
+        for (int i = 0; i < initSize(); i++)
+            array[i] = min + i;
         return initSize();
+    }
+
+    @Override
+    public String toString() {
+        if (getDispatcher().getModel() instanceof ConcreteModel cm) {
+            return ((ConcreteIntVar) cm.getMapping().get(this)).toString();
+        }
+        return "{"+initMin()+".."+initMax()+"}";
     }
 
     @Override
