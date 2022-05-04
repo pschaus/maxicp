@@ -52,23 +52,23 @@ public class IsEqual extends AbstractCPConstraint { // b <=> x == v
         propagate();
         if (isActive()) {
             x.propagateOnDomainChange(this);
-            b.propagateOnBind(this);
+            b.propagateOnFix(this);
         }
     }
 
     @Override
     public void propagate() {
         if (b.isTrue()) {
-            x.assign(v);
+            x.fix(v);
             setActive(false);
         } else if (b.isFalse()) {
             x.remove(v);
             setActive(false);
         } else if (!x.contains(v)) {
-            b.assign(false);
+            b.fix(false);
             setActive(false);
-        } else if (x.isBound()) {
-            b.assign(true);
+        } else if (x.isFixed()) {
+            b.fix(true);
             setActive(false);
         }
     }

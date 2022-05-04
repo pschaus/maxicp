@@ -46,12 +46,12 @@ public class CPIntVarTest extends CPSolverTest {
 
         try {
 
-            assertFalse(x.isBound());
+            assertFalse(x.isFixed());
             x.remove(5);
             assertEquals(9, x.size());
-            x.assign(7);
+            x.fix(7);
             assertEquals(1, x.size());
-            assertTrue(x.isBound());
+            assertTrue(x.isFixed());
             assertEquals(7, x.min());
             assertEquals(7, x.max());
 
@@ -60,7 +60,7 @@ public class CPIntVarTest extends CPSolverTest {
         }
 
         try {
-            x.assign(8);
+            x.fix(8);
             fail("should have failed");
         } catch (InconsistencyException expectedException) {
         }
@@ -69,7 +69,7 @@ public class CPIntVarTest extends CPSolverTest {
         cp.getStateManager().restoreState();
         cp.getStateManager().saveState();
 
-        assertFalse(x.isBound());
+        assertFalse(x.isFixed());
         assertEquals(10, x.size());
 
         for (int i = 0; i < 10; i++) {
@@ -90,7 +90,7 @@ public class CPIntVarTest extends CPSolverTest {
         CPConstraint cons = new AbstractCPConstraint(cp) {
             @Override
             public void post() {
-                x.whenBind(() -> propagateCalled = true);
+                x.whenFixed(() -> propagateCalled = true);
                 y.whenDomainChange(() -> propagateCalled = true);
             }
         };
@@ -100,7 +100,7 @@ public class CPIntVarTest extends CPSolverTest {
             x.remove(8);
             cp.fixPoint();
             assertFalse(propagateCalled);
-            x.assign(4);
+            x.fix(4);
             cp.fixPoint();
             assertTrue(propagateCalled);
             propagateCalled = false;
@@ -130,15 +130,15 @@ public class CPIntVarTest extends CPSolverTest {
 
             try {
 
-                assertFalse(x.isBound());
+                assertFalse(x.isFixed());
                 x.remove(-9);
                 x.remove(-10);
 
 
                 assertEquals(19, x.size());
-                x.assign(-4);
+                x.fix(-4);
                 assertEquals(1, x.size());
-                assertTrue(x.isBound());
+                assertTrue(x.isFixed());
                 assertEquals(-4, x.min());
 
             } catch (InconsistencyException e) {
@@ -146,7 +146,7 @@ public class CPIntVarTest extends CPSolverTest {
             }
 
             try {
-                x.assign(8);
+                x.fix(8);
                 fail("should have failed");
             } catch (InconsistencyException expectedException) {
             }
@@ -189,13 +189,13 @@ public class CPIntVarTest extends CPSolverTest {
                     else assertFalse(x.contains(i));
                 }
 
-                x.assign(-7);
+                x.fix(-7);
             } catch (InconsistencyException e) {
                 fail("should not fail here");
             }
 
             try {
-                x.assign(-10);
+                x.fix(-10);
                 fail("should have failed");
             } catch (InconsistencyException expectedException) {
             }
@@ -228,7 +228,7 @@ public class CPIntVarTest extends CPSolverTest {
 
             @Override
             public void post() {
-                x.whenBind(() -> propagateCalled = true);
+                x.whenFixed(() -> propagateCalled = true);
                 y.whenDomainChange(() -> propagateCalled = true);
             }
         };
@@ -241,7 +241,7 @@ public class CPIntVarTest extends CPSolverTest {
             x.remove(9);
             cp.fixPoint();
             assertFalse(propagateCalled);
-            x.assign(4);
+            x.fix(4);
             cp.fixPoint();
             assertTrue(propagateCalled);
             propagateCalled = false;

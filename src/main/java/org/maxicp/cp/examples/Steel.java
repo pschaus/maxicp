@@ -140,7 +140,7 @@ public class Steel {
                         else {
                             int maxUsed = -1;
                             for (CPIntVar xi : x)
-                                if (xi.isBound() && xi.min() > maxUsed)
+                                if (xi.isFixed() && xi.min() > maxUsed)
                                     maxUsed = xi.min();
                             Procedure[] branches = new Procedure[maxUsed + 2];
                             for (int i = 0; i <= maxUsed + 1; i++) {

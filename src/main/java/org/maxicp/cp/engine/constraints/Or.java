@@ -56,7 +56,7 @@ public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
     public void propagate() {
         // update watched literals
         int i = wL.value();
-        while (i < n && x[i].isBound()) {
+        while (i < n && x[i].isFixed()) {
             if (x[i].isTrue()) {
                 setActive(false);
                 return;
@@ -65,7 +65,7 @@ public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
         }
         wL.setValue(i);
         i = wR.value();
-        while (i >= 0 && x[i].isBound() && i >= wL.value()) {
+        while (i >= 0 && x[i].isFixed() && i >= wL.value()) {
             if (x[i].isTrue()) {
                 setActive(false);
                 return;
@@ -77,14 +77,14 @@ public class Or extends AbstractCPConstraint { // x1 or x2 or ... xn
         if (wL.value() > wR.value()) {
             throw INCONSISTENCY;
         } else if (wL.value() == wR.value()) { // only one unassigned var
-            x[wL.value()].assign(true);
+            x[wL.value()].fix(true);
             setActive(false);
         } else {
             assert (wL.value() != wR.value());
-            assert (!x[wL.value()].isBound());
-            assert (!x[wR.value()].isBound());
-            x[wL.value()].propagateOnBind(this);
-            x[wR.value()].propagateOnBind(this);
+            assert (!x[wL.value()].isFixed());
+            assert (!x[wR.value()].isFixed());
+            x[wL.value()].propagateOnFix(this);
+            x[wR.value()].propagateOnFix(this);
         }
     }
 }

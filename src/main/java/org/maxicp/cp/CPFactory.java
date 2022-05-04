@@ -232,6 +232,16 @@ public final class CPFactory {
     }
 
     /**
+     *  A boolean variable that is a view of {@code !b}.
+     *
+     * @param b a boolean variable
+     * @return a boolean variable that is a view of {@code !b}
+     */
+    public static CPBoolVar not(CPBoolVar b) {
+        return new CPBoolVarImpl(plus(minus(b),1));
+    }
+
+    /**
      * A variable that is a view of {@code x+v}.
      *
      * @param x a variable
@@ -311,7 +321,7 @@ public final class CPFactory {
         return new AbstractCPConstraint(x.getSolver()) {
             @Override
             public void post() {
-                x.assign(v);
+                x.fix(v);
             }
         };
     }

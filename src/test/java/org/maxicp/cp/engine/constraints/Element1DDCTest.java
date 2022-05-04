@@ -55,7 +55,7 @@ public class Element1DDCTest extends CPSolverTest {
             assertTrue(y.max() < 70);
 
             Supplier<Procedure[]> branching = () -> {
-                if (y.isBound() && z.isBound()) {
+                if (y.isFixed() && z.isFixed()) {
                     assertEquals(T[y.min()], z.min());
                     return BranchingScheme.EMPTY;
                 }
@@ -76,7 +76,7 @@ public class Element1DDCTest extends CPSolverTest {
                 }
                 assertEquals(possibleValues.size(), possibleValues2.size());
 
-                if (!y.isBound() && (z.isBound() || rand.nextBoolean())) {
+                if (!y.isFixed() && (z.isFixed() || rand.nextBoolean())) {
                     //select a random y
                     int val = possibleY[rand.nextInt(possibleY.length)];
                     return BranchingScheme.branch(() -> cp.post(CPFactory.equal(y, val)),

@@ -57,7 +57,7 @@ public interface IntDomain {
      * @return true if the domain contains a single element,
      *         false otherwise
      */
-    boolean isBound();
+    boolean isSingleton();
 
     /**
      * Removes a value from the domain and notifies appropriately the listener.

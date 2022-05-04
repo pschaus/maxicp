@@ -110,7 +110,7 @@ public class MiniCP implements CPSolver {
 
     @Override
     public void post(CPBoolVar b) {
-        b.assign(true);
+        b.fix(true);
         fixPoint();
     }
 }

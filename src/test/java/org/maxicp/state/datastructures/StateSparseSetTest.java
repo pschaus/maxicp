@@ -13,8 +13,10 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.datastructures;
 
+import org.maxicp.state.StateManager;
+import org.maxicp.state.StateManagerTest;
 import org.maxicp.state.datastructures.StateSparseSet;
 import org.maxicp.util.exception.NotImplementedException;
 import org.junit.Test;

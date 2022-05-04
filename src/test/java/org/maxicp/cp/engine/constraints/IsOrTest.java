@@ -41,14 +41,14 @@ public class IsOrTest extends CPSolverTest {
             cp.post(new IsOr(b, x));
 
             for (CPBoolVar xi : x) {
-                assertTrue(!xi.isBound());
+                assertTrue(!xi.isFixed());
             }
 
             cp.getStateManager().saveState();
             cp.post(CPFactory.equal(x[1], 0));
             cp.post(CPFactory.equal(x[2], 0));
             cp.post(CPFactory.equal(x[3], 0));
-            assertTrue(!b.isBound());
+            assertTrue(!b.isFixed());
             cp.post(CPFactory.equal(x[0], 0));
             assertTrue(b.isFalse());
             cp.getStateManager().restoreState();
@@ -63,7 +63,7 @@ public class IsOrTest extends CPSolverTest {
             cp.post(CPFactory.equal(b, 1));
             cp.post(CPFactory.equal(x[1], 0));
             cp.post(CPFactory.equal(x[2], 0));
-            assertTrue(!x[0].isBound());
+            assertTrue(!x[0].isFixed());
             cp.post(CPFactory.equal(x[3], 0));
             assertTrue(x[0].isTrue());
             cp.getStateManager().restoreState();

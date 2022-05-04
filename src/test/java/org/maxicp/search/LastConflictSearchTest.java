@@ -46,7 +46,7 @@ public class LastConflictSearchTest {
             DFSearch dfs = new DFSearch(cp.getStateManager(), BranchingScheme.lastConflict(
                     () -> { //select first unbound variable in x
                         for(CPIntVar z: x)
-                            if(!z.isBound())
+                            if(!z.isFixed())
                                 return z;
                         return null;
                     },

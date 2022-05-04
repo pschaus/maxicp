@@ -36,11 +36,11 @@ public interface CPBoolVar extends CPIntVar {
     boolean isFalse();
 
     /**
-     * Assigns the variable
+     * Fixes the variable
      * @param b the value to assign to this boolean variable
      * @exception InconsistencyException
      *            is thrown if the value is not in the domain
      */
-    void assign(boolean b);
+    void fix(boolean b);
 
 }

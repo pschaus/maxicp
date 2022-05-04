@@ -89,7 +89,7 @@ public class Cumulative extends AbstractCPConstraint {
         }
 
         for (int i = 0; i < start.length; i++) {
-            if (!start[i].isBound()) {
+            if (!start[i].isFixed()) {
                 // j is the index of the profile rectangle overlapping t
                 int j = profile.rectangleIndex(start[i].min());
                 int t = start[i].min();

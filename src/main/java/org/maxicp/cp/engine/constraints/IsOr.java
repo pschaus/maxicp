@@ -58,9 +58,9 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
 
     @Override
     public void post() {
-        b.propagateOnBind(this);
+        b.propagateOnFix(this);
         for (CPBoolVar xi : x) {
-            xi.propagateOnBind(this);
+            xi.propagateOnFix(this);
         }
     }
 
@@ -71,7 +71,7 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
             getSolver().post(or, false);
         } else if (b.isFalse()) {
             for (CPBoolVar xi : x) {
-                xi.assign(false);
+                xi.fix(false);
             }
             setActive(false);
         } else {
@@ -79,9 +79,9 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
             for (int i = nU - 1; i >= 0; i--) {
                 int idx = unBounds[i];
                 CPBoolVar y = x[idx];
-                if (y.isBound()) {
+                if (y.isFixed()) {
                     if (y.isTrue()) {
-                        b.assign(true);
+                        b.fix(true);
                         setActive(false);
                         return;
                     }
@@ -92,7 +92,7 @@ public class IsOr extends AbstractCPConstraint { // b <=> x1 or x2 or ... xn
                 }
             }
             if (nU == 0) {
-                b.assign(false);
+                b.fix(false);
                 setActive(false);
             }
             nUnBounds.setValue(nU);

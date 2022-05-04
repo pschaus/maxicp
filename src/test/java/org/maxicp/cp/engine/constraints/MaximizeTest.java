@@ -41,7 +41,7 @@ public class MaximizeTest {
                 CPIntVar y = CPFactory.makeIntVar(cp, 10, 20);
 
                 CPIntVar[] x = new CPIntVar[]{y};
-                DFSearch dfs = CPFactory.makeDfs(cp, () -> y.isBound() ? BranchingScheme.EMPTY :
+                DFSearch dfs = CPFactory.makeDfs(cp, () -> y.isFixed() ? BranchingScheme.EMPTY :
                         BranchingScheme.branch(() -> cp.post(CPFactory.equal(y, y.min())),
                                 () -> cp.post(CPFactory.notEqual(y, y.min()))));
                 Objective obj = cp.maximize(y);

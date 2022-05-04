@@ -44,7 +44,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
 
         try {
 
-            assertFalse(x.isBound());
+            assertFalse(x.isFixed());
 
             x.remove(0);
             assertFalse(x.contains(0));
@@ -56,8 +56,8 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
             assertEquals(6, x.max());
             x.removeBelow(3);
             assertEquals(4, x.min());
-            x.assign(5);
-            assertTrue(x.isBound());
+            x.fix(5);
+            assertTrue(x.isFixed());
             assertEquals(5, x.max());
 
 
@@ -67,7 +67,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
         }
 
         try {
-            x.assign(4);
+            x.fix(4);
             fail("should have failed");
         } catch (InconsistencyException expectedException) {
         }
@@ -92,7 +92,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
 
             @Override
             public void post() {
-                x.whenBind(() -> propagateCalled = true);
+                x.whenFixed(() -> propagateCalled = true);
                 y.whenDomainChange(() -> propagateCalled = true);
             }
         };
@@ -102,7 +102,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
             x.remove(9);
             cp.fixPoint();
             assertFalse(propagateCalled);
-            x.assign(5);
+            x.fix(5);
             cp.fixPoint();
             assertTrue(propagateCalled);
             propagateCalled = false;
@@ -131,7 +131,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
 
             @Override
             public void post() {
-                x.whenBind(() -> propagateCalled = true);
+                x.whenFixed(() -> propagateCalled = true);
                 y.whenDomainChange(() -> propagateCalled = true);
             }
         };
@@ -144,7 +144,7 @@ public class CPIntVarViewOffsetTest extends CPSolverTest {
             x.remove(10);
             cp.fixPoint();
             assertFalse(propagateCalled);
-            x.assign(5);
+            x.fix(5);
             cp.fixPoint();
             assertTrue(propagateCalled);
             propagateCalled = false;

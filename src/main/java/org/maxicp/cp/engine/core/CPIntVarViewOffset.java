@@ -43,13 +43,13 @@ public class CPIntVarViewOffset implements CPIntVar {
     }
 
     @Override
-    public void whenBind(Procedure f) {
-        x.whenBind(f);
+    public void whenFixed(Procedure f) {
+        x.whenFixed(f);
     }
 
     @Override
-    public void whenBoundsChange(Procedure f) {
-        x.whenBoundsChange(f);
+    public void whenBoundChange(Procedure f) {
+        x.whenBoundChange(f);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class CPIntVarViewOffset implements CPIntVar {
     }
 
     @Override
-    public void propagateOnBind(CPConstraint c) {
-        x.propagateOnBind(c);
+    public void propagateOnFix(CPConstraint c) {
+        x.propagateOnFix(c);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class CPIntVarViewOffset implements CPIntVar {
     }
 
     @Override
-    public boolean isBound() {
-        return x.isBound();
+    public boolean isFixed() {
+        return x.isFixed();
     }
 
     @Override
@@ -112,8 +112,8 @@ public class CPIntVarViewOffset implements CPIntVar {
     }
 
     @Override
-    public void assign(int v) {
-        x.assign(v - o);
+    public void fix(int v) {
+        x.fix(v - o);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.maxicp.model;
 
 import org.maxicp.model.concrete.ConcreteModel;
+import org.maxicp.model.constraints.Element1D;
+import org.maxicp.model.constraints.Element2D;
 import org.maxicp.model.symbolic.IntVarRangeImpl;
 import org.maxicp.model.symbolic.SymbolicModel;
 
@@ -142,5 +144,38 @@ public class ModelDispatcher {
         finally {
             currentModel.set(oldModel);
         }
+    }
+
+
+    public IntVar element(int [] T, IntVar y) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < T.length; i++) {
+            if (y.contains(i)) {
+                min = Math.min(min,T[i]);
+                max = Math.max(max,T[i]);
+            }
+        }
+        IntVar z = intVar(min,max);
+        add(new Element1D(T,y,z));
+        return z;
+    }
+
+
+    public IntVar element(int [][] T, IntVar x, IntVar y) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < T.length; i++) {
+            for (int j = 0; j < T[i].length; j++) {
+                if (x.contains(i) && y.contains(j)) {
+                    min = Math.min(min,T[i][j]);
+                    max = Math.max(max,T[i][j]);
+                }
+            }
+
+        }
+        IntVar z = intVar(min,max);
+        add(new Element2D(T,x,y,z));
+        return z;
     }
 }

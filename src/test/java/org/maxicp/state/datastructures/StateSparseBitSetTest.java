@@ -13,9 +13,11 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.datastructures;
 
 import org.junit.Test;
+import org.maxicp.state.StateManager;
+import org.maxicp.state.StateManagerTest;
 import org.maxicp.state.datastructures.BitSet;
 import org.maxicp.state.datastructures.StateSparseBitSet;
 

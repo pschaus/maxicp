@@ -57,7 +57,7 @@ public class SparseSetDomain implements IntDomain {
     }
 
     @Override
-    public boolean isBound() {
+    public boolean isSingleton() {
         return domain.size() == 1;
     }
 

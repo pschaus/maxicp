@@ -117,7 +117,7 @@ public class CPIntVarImpl implements CPIntVar {
     }
 
     @Override
-    public boolean isBound() {
+    public boolean isFixed() {
         return domain.size() == 1;
     }
 
@@ -127,12 +127,12 @@ public class CPIntVarImpl implements CPIntVar {
     }
 
     @Override
-    public void whenBind(Procedure f) {
+    public void whenFixed(Procedure f) {
         onBind.push(constraintClosure(f));
     }
 
     @Override
-    public void whenBoundsChange(Procedure f) {
+    public void whenBoundChange(Procedure f) {
         onBounds.push(constraintClosure(f));
     }
 
@@ -153,7 +153,7 @@ public class CPIntVarImpl implements CPIntVar {
     }
 
     @Override
-    public void propagateOnBind(CPConstraint c) {
+    public void propagateOnFix(CPConstraint c) {
         onBind.push(c);
     }
 
@@ -199,7 +199,7 @@ public class CPIntVarImpl implements CPIntVar {
     }
 
     @Override
-    public void assign(int v) {
+    public void fix(int v) {
         domain.removeAllBut(v, domListener);
     }
 

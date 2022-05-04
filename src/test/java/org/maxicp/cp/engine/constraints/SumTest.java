@@ -93,7 +93,7 @@ public class SumTest extends CPSolverTest {
 
             x[0].removeBelow(1);
             // 1-5 + 1-2 + 0-1 = 5
-            x[1].assign(1);
+            x[1].fix(1);
             // 1-5 + 1 + 0-1 = 5
             cp.fixPoint();
 

@@ -54,19 +54,19 @@ public class NotEqual extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        if (y.isBound())
+        if (y.isFixed())
             x.remove(y.min() + v);
-        else if (x.isBound())
+        else if (x.isFixed())
             y.remove(x.min() - v);
         else {
-            x.propagateOnBind(this);
-            y.propagateOnBind(this);
+            x.propagateOnFix(this);
+            y.propagateOnFix(this);
         }
     }
 
     @Override
     public void propagate() {
-        if (y.isBound())
+        if (y.isFixed())
             x.remove(y.min() + v);
         else y.remove(x.min() - v);
         setActive(false);

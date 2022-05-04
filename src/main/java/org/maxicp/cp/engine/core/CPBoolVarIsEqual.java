@@ -23,27 +23,27 @@ public class CPBoolVarIsEqual extends CPIntVarImpl implements CPBoolVar {
         super(x.getSolver(), 0, 1);
 
         if (!x.contains(v)) {
-            assign(false);
-        } else if (x.isBound() && x.min() == v) {
-            assign(true);
+            fix(false);
+        } else if (x.isFixed() && x.min() == v) {
+            fix(true);
         } else {
 
-            this.whenBind(() -> {
-                if (isTrue()) x.assign(v);
+            this.whenFixed(() -> {
+                if (isTrue()) x.fix(v);
                 else x.remove(v);
             });
 
             x.whenDomainChange(() -> {
                 if (!x.contains(v)) {
-                    this.assign(false);
+                    this.fix(false);
                 }
             });
 
-            x.whenBind(() -> {
+            x.whenFixed(() -> {
                 if (x.min() == v) {
-                    assign(true);
+                    fix(true);
                 } else {
-                    assign(false);
+                    fix(false);
                 }
             });
 
@@ -62,7 +62,7 @@ public class CPBoolVarIsEqual extends CPIntVarImpl implements CPBoolVar {
     }
 
     @Override
-    public void assign(boolean b) throws InconsistencyException {
-        assign(b ? 1 : 0);
+    public void fix(boolean b) throws InconsistencyException {
+        fix(b ? 1 : 0);
     }
 }

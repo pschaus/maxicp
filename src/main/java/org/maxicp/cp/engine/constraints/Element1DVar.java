@@ -57,10 +57,10 @@ public class Element1DVar extends AbstractCPConstraint {
     public void propagate() {
         zMin = z.min();
         zMax = z.max();
-        if (y.isBound()) equalityPropagate();
+        if (y.isFixed()) equalityPropagate();
         else {
             filterY();
-            if (y.isBound())
+            if (y.isFixed())
                 equalityPropagate();
             else {
                 z.removeBelow(supMin.min());

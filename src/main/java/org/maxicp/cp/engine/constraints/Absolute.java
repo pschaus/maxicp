@@ -48,15 +48,15 @@ public class Absolute extends AbstractCPConstraint {
     @Override
     public void propagate() {
         // y = |x|
-        if (x.isBound()) {
-            y.assign(Math.abs(x.min()));
+        if (x.isFixed()) {
+            y.fix(Math.abs(x.min()));
             setActive(false);
-        } else if (y.isBound()) { // y is bound
+        } else if (y.isFixed()) { // y is bound
             // y = |x|
             if (!x.contains(-y.min())) {
-                x.assign(y.min());
+                x.fix(y.min());
             } else if (!x.contains(y.min())) {
-                x.assign(-y.min());
+                x.fix(-y.min());
             } else {
                 // x can be (y or -y)
                 // remove everything except y and -y from x

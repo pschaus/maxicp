@@ -53,11 +53,11 @@ public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
         } else if (b.isFalse()) {
             x.removeBelow(v + 1);
         } else if (x.max() <= v) {
-            b.assign(1);
+            b.fix(1);
         } else if (x.min() > v) {
-            b.assign(0);
+            b.fix(0);
         } else {
-            b.whenBind(() -> {
+            b.whenFixed(() -> {
                 // should deactivate the constraint as it is entailed
                 if (b.isTrue()) {
                     x.removeAbove(v);
@@ -66,13 +66,13 @@ public class IsLessOrEqual extends AbstractCPConstraint { // b <=> x <= v
                     x.removeBelow(v + 1);
                 }
             });
-            x.whenBoundsChange(() -> {
+            x.whenBoundChange(() -> {
                 if (x.max() <= v) {
                     // should deactivate the constraint as it is entailed
-                    b.assign(1);
+                    b.fix(1);
                 } else if (x.min() > v) {
                     // should deactivate the constraint as it is entailed
-                    b.assign(0);
+                    b.fix(0);
                 }
             });
         }

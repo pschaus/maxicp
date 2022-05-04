@@ -92,8 +92,8 @@ public class AbsoluteTest extends CPSolverTest {
 
             cp.post(new Absolute(x, y));
 
-            assertTrue(x.isBound());
-            assertTrue(y.isBound());
+            assertTrue(x.isFixed());
+            assertTrue(y.isFixed());
             assertEquals(-4, x.max());
 
 
@@ -113,8 +113,8 @@ public class AbsoluteTest extends CPSolverTest {
 
             cp.post(new Absolute(x, y));
 
-            assertTrue(x.isBound());
-            assertTrue(y.isBound());
+            assertTrue(x.isFixed());
+            assertTrue(y.isFixed());
             assertEquals(7, y.max());
 
 
@@ -150,8 +150,8 @@ public class AbsoluteTest extends CPSolverTest {
             y.removeBelow(5);
             cp.fixPoint();
 
-            assertTrue(x.isBound());
-            assertTrue(y.isBound());
+            assertTrue(x.isFixed());
+            assertTrue(y.isFixed());
 
 
         } catch (InconsistencyException e) {

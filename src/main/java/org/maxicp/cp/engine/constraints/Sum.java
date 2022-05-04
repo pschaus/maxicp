@@ -99,7 +99,7 @@ public class Sum extends AbstractCPConstraint {
             max[idx] = x[idx].max();
             sumMin += min[idx]; // Update partial sum
             sumMax += max[idx];
-            if (x[idx].isBound()) {
+            if (x[idx].isFixed()) {
                 sumFixed.setValue(sumFixed.value() + x[idx].min());
                 free[i] = free[nU - 1]; // Swap the variables
                 free[nU - 1] = idx;

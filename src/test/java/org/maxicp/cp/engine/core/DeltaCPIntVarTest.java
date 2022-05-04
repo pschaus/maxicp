@@ -19,12 +19,9 @@ import org.junit.Assert;
 import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.junit.Test;
-import org.maxicp.cp.engine.constraints.LessOrEqual;
-import org.maxicp.model.IntVar;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.SearchStatistics;
 import org.maxicp.state.State;
-import org.maxicp.state.copy.Copy;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -142,7 +139,7 @@ public class DeltaCPIntVarTest extends CPSolverTest {
         });
 
         DFSearch dfs = makeDfs(cp, () -> {
-            if (x.isBound()) return EMPTY;
+            if (x.isFixed()) return EMPTY;
             else {
                 final int v = x.min()+(x.max()-x.min())/2;
                 return branch(() -> cp.post(CPFactory.lessOrEqual(x, v)),

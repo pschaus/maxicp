@@ -58,17 +58,17 @@ public class Circuit extends AbstractCPConstraint {
     public void post() {
         getSolver().post(allDifferent(x));
         if (x.length == 1) {
-            x[0].assign(0);
+            x[0].fix(0);
             return;
         }
         for (int i = 0; i < x.length; i++) {
             x[i].remove(i);
         }
         for (int i = 0; i < x.length; i++) {
-            if (x[i].isBound()) bind(i);
+            if (x[i].isFixed()) bind(i);
             else {
                 final int fi = i;
-                x[i].whenBind(() -> bind(fi));
+                x[i].whenFixed(() -> bind(fi));
             }
         }
     }

@@ -31,7 +31,7 @@ public class Maximize implements Objective {
     }
 
     public void tighten() {
-        if (!x.isBound()) throw new RuntimeException("objective not bound");
+        if (!x.isFixed()) throw new RuntimeException("objective not bound");
         this.bound = x.min() + 1;
         throw InconsistencyException.INCONSISTENCY;
     }

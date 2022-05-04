@@ -33,7 +33,7 @@ public interface CPIntVar extends CPVar {
      *
      * @param f the closure
      */
-    void whenBind(Procedure f);
+    void whenFixed(Procedure f);
 
     /**
      * Asks that the closure is called whenever
@@ -41,7 +41,7 @@ public interface CPIntVar extends CPVar {
      *
      * @param f the closure
      */
-    void whenBoundsChange(Procedure f);
+    void whenBoundChange(Procedure f);
 
     /**
      * Asks that the closure is called whenever the domain change
@@ -69,7 +69,7 @@ public interface CPIntVar extends CPVar {
      * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on bind events of this variable.
      */
-    void propagateOnBind(CPConstraint c);
+    void propagateOnFix(CPConstraint c);
 
     /**
      * Asks that {@link CPConstraint#propagate()} is called whenever the
@@ -118,7 +118,7 @@ public interface CPIntVar extends CPVar {
      *
      * @return true if the domain of the variable is a singleton.
      */
-    boolean isBound();
+    boolean isFixed();
 
     /**
      * Returns true if the domain contains the specified value.
@@ -136,13 +136,13 @@ public interface CPIntVar extends CPVar {
     void remove(int v);
 
     /**
-     * Assigns the specified value
+     * Fixes the specified value
      *
      * @param v the value to assign.
      * @exception InconsistencyException
      *            is thrown if the value is not in the domain
      */
-    void assign(int v);
+    void fix(int v);
 
     /**
      * Remove all the values less than a given value

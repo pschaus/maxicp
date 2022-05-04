@@ -24,10 +24,10 @@ public class Equal extends AbstractCPConstraint {
 
     @Override
     public void post() {
-        if (y.isBound())
-            x.assign(y.min());
-        else if (x.isBound())
-            y.assign(x.min());
+        if (y.isFixed())
+            x.fix(y.min());
+        else if (x.isFixed())
+            y.fix(x.min());
         else {
             boundsIntersect();
             int[] domVal = new int[Math.max(x.size(), y.size())];

@@ -40,7 +40,7 @@ public class OrTest extends CPSolverTest {
             cp.post(new Or(x));
 
             for (CPBoolVar xi : x) {
-                assertTrue(!xi.isBound());
+                assertTrue(!xi.isFixed());
             }
 
             cp.post(CPFactory.equal(x[1], 0));
@@ -97,7 +97,7 @@ public class OrTest extends CPSolverTest {
             CPBoolVar[] x = new CPBoolVar[]{CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp), CPFactory.makeBoolVar(cp)};
             
             for (CPBoolVar xi : x) {
-                xi.assign(false);
+                xi.fix(false);
             }
             
             cp.post(new Or(x));

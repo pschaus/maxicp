@@ -54,7 +54,7 @@ public class IsLessOrEqualVar extends AbstractCPConstraint {
     public void post() {
         x.propagateOnBoundChange(this);
         y.propagateOnBoundChange(this);
-        b.propagateOnBind(this);
+        b.propagateOnFix(this);
         propagate();
     }
 
@@ -68,10 +68,10 @@ public class IsLessOrEqualVar extends AbstractCPConstraint {
             setActive(false);
         } else {
             if (x.max() <= y.min()) {
-                b.assign(1);
+                b.fix(1);
                 setActive(false);
             } else if (x.min() > y.max()) {
-                b.assign(0);
+                b.fix(0);
                 setActive(false);
             }
         }

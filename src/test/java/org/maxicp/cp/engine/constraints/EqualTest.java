@@ -66,7 +66,7 @@ public class EqualTest extends CPSolverTest {
 
             assertTrue(equalDom(x,y));
 
-            x.assign(1);
+            x.fix(1);
             cp.fixPoint();
 
             assertTrue(equalDom(x,y));

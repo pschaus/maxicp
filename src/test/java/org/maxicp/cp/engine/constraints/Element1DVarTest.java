@@ -108,7 +108,7 @@ public class Element1DVarTest extends CPSolverTest {
 
             assertEquals(6, z.max());
 
-            y.assign(2);
+            y.fix(2);
             cp.fixPoint();
 
             assertEquals(5, z.min());

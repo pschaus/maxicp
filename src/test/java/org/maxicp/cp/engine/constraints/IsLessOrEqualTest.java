@@ -153,13 +153,13 @@ public class IsLessOrEqualTest extends CPSolverTest {
 
             cp.getStateManager().saveState();
             cp.post(new IsLessOrEqual(b, x, -6));
-            assertTrue(b.isBound());
+            assertTrue(b.isFixed());
             assertTrue(b.isFalse());
             cp.getStateManager().restoreState();
 
             cp.getStateManager().saveState();
             cp.post(new IsLessOrEqual(b, x, 11));
-            assertTrue(b.isBound());
+            assertTrue(b.isFixed());
             assertTrue(b.isTrue());
             cp.getStateManager().restoreState();
 
