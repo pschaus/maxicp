@@ -69,7 +69,6 @@ Some other useful commands:
 .. code-block:: none
 
     $mvn checkstyle:checktyle   # generates a report in target/site/checkstyle.html
-    $mvn findbugs:gui           # opens a gui with potential source of bugs in your code
     $mvn jacoco:report          # creates a cover report in target/site/jacoco/index.html
     $mvn javadoc:javadoc        # creates javadoc in target/site/apidocs/index.html
 
@@ -91,7 +90,7 @@ Who Uses MaxiCP?
 
 If you use it for teaching or for research, please let us know and we will add you in this list.
 
-* UCLouvain, `INGI2365 <https://uclouvain.be/cours-2017-LINGI2365>`_ Research Group of: Pierre Schaus.
+* UCLouvain, `AIA <https://aia.info.ucl.ac.be/people/>`_ Researchers in the Group of Pierre Schaus and Siegfried Nijssens.
 
 
 Citing MaxiCP
