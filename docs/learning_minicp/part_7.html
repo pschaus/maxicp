@@ -1,0 +1,353 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Part 7: Table Constraints &#8212; MiniCP User-Guide 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Part 8: Search" href="part_8.html" />
+    <link rel="prev" title="Part 6: AllDifferent Constraint" href="part_6.html" />
+
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-125847974-1']);
+  _gaq.push(['_trackPageview']);
+</script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="part_8.html" title="Part 8: Search"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="part_6.html" title="Part 6: AllDifferent Constraint"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MiniCP User-Guide 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../minicp.html" accesskey="U">Learn MiniCP</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Part 7: Table Constraints</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="part-7-table-constraints">
+<h1>Part 7: Table Constraints<a class="headerlink" href="#part-7-table-constraints" title="Permalink to this headline">¶</a></h1>
+<p><em>We ask you not to publish your solutions on a public repository.
+The instructors interested to get the source code of
+our solutions can contact us.</em></p>
+<section id="slides">
+<h2>Slides<a class="headerlink" href="#slides" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://youtube.com/playlist?list=PLq6RpCDkJMyqVAjb5pUWPUQnrzcZMosRe">Lectures on Youtube</a></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.icloud.com/keynote/0Nr2LcZGY2xQop312SgMGs37Q#07-table-constraints">Table Constraints</a></p></li>
+</ul>
+</section>
+<section id="theoretical-questions">
+<h2>Theoretical questions<a class="headerlink" href="#theoretical-questions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://inginious.org/course/minicp/table">table</a></p></li>
+</ul>
+</section>
+<section id="table-constraint">
+<h2>Table Constraint<a class="headerlink" href="#table-constraint" title="Permalink to this headline">¶</a></h2>
+<p>The table constraint (also called the extension constraint)
+specifies the list of solutions (tuples) assignable to a vector of variables.</p>
+<p>More precisely, given an array <cite>X</cite> containing <cite>n</cite> variables, and an array <cite>T</cite> of size <cite>m*n</cite>, this constraint holds:</p>
+<div class="math">
+<p><img src="../_images/math/6dd14e3731ff705bb20e6e499aeb21cf3cdff108.png" alt="\exists i: \forall j: T_{i,j} = X_j"/></p>
+</div><p>That is, each row of the table is a valid assignment to <cite>X</cite>.</p>
+<p>Here is an example of a table, with five tuples and four variables:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Tuple index</p></th>
+<th class="head"><p>X[0]</p></th>
+<th class="head"><p>X[1]</p></th>
+<th class="head"><p>X[2]</p></th>
+<th class="head"><p>X[3]</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>3</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+<p>In this particular example, the assignment <cite>X = {2, 1, 0, 3}</cite> is valid, but not <cite>X = {4, 3, 3, 3}</cite> as there is no
+such line in the table.</p>
+<p>Many algorithms exist for filtering table constraints.</p>
+<p>One of the fastest filtering algorithms nowadays is Compact Table (CT) <a class="reference internal" href="#ct2016" id="id1"><span>[CT2016]</span></a>.
+In this exercise you’ll implement a simple version of CT.</p>
+<p>CT works in two steps:</p>
+<ol class="arabic simple">
+<li><p>Compute the list of supported tuples. A tuple <cite>T[i]</cite> is supported if, <em>for each</em> index <cite>j</cite> of the tuple, the domain of the variable <cite>X[j]</cite> contains the value <cite>T[i][j]</cite>.</p></li>
+<li><p>Filter the domains. For each variable <cite>X[j]</cite> and value <cite>v</cite> in its domain, the value <cite>v</cite> can be removed if it is not used by any supported tuple.</p></li>
+</ol>
+<p>Your task is to finish the implementation in
+<a class="reference external" href="https://bitbucket.org/minicp/minicp/src/HEAD/src/main/java/minicp/engine/constraints/TableCT.java?at=master">TableCT.java</a>.</p>
+<p><cite>TableCT</cite> maintains for each pair
+variable/value the set of tuples the pair maintains as an array of bitsets:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="n">BitSet</span><span class="o">[][]</span> <span class="n">supports</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>where <cite>supports[j][v]</cite> is
+the (bit)set of supported tuples for the assignment <cite>X[j]=v</cite>.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>As an example, consider that variable <cite>X[0]</cite> has domain <cite>{0, 1, 3}</cite>. Here are some values for <cite>supports</cite>:
+<cite>supports[0][0] = {1, 2}</cite>,
+<cite>supports[0][1] = {}</cite>, and
+<cite>supports[0][3] = {4,5}</cite>.</p>
+<p>We can infer two things from this example. First, value <cite>1</cite> does not support any tuples, so it can be removed safely
+from the domain of <cite>X[0]</cite>. Moreover, the tuples supported by <cite>X[0]</cite> form the union of the tuples supported by its values;
+we immediately see that tuple <cite>3</cite> is not supported by <cite>X[0]</cite> and can be discarded from further calculations.</p>
+<p>If we push the example further and we say that variable <cite>X[2]</cite> has domain <cite>{0, 1}</cite>, we immediately see that tuples <cite>1</cite>
+and <cite>2</cite> are not supported by variable <cite>X[2]</cite>, and, as such, can be discarded. From this, we can infer that the value
+<cite>0</cite> can be removed from the domain of variable <cite>X[0]</cite> as they don’t support any tuples anymore.</p>
+</section>
+<section id="using-bit-sets">
+<h3>Using bit sets<a class="headerlink" href="#using-bit-sets" title="Permalink to this headline">¶</a></h3>
+<p>You may have assumed that the type of <cite>supports</cite> would have been <cite>List&lt;Integer&gt;[][] supportedByVarVal</cite>.
+This is not the approach used by CT.</p>
+<p>CT uses the concept of bit sets. A bit set is an array-like data structure that stores bits. Each bit is accessible by
+its index. A bitset is in fact composed of an array of <cite>Long</cite>, which we call in this context a <em>word</em>.
+Each of these words stores 64 bits from the bitset.</p>
+<p>Using this structure is convenient for our goal:</p>
+<ul class="simple">
+<li><p>Each supported tuple is encoded as a <cite>1</cite> in the bitset, while <cite>0</cite> encodes unsupported tuples. In the traditional list/array
+representation, each supported tuple would have taken 32 bits to be represented.</p></li>
+<li><p>Computing the intersection and union of bit sets (and these are the main operations that will be made on <cite>supportedByVarVal</cite>)
+is very easy, thanks to the usage of bitwise operators included in all modern CPUs.</p></li>
+</ul>
+<p>Java provides a default implementation of bit sets in the class BitSet, which we will use in this exercise.
+We encourage you to read its documentation before going on.</p>
+</section>
+<section id="a-basic-implementation">
+<h3>A basic implementation<a class="headerlink" href="#a-basic-implementation" title="Permalink to this headline">¶</a></h3>
+<p>You will implement a version of CT that makes no use of the reversible structure (therefore it is probably much less efficient that the real CT algorithm).</p>
+<p>You have to implement the <cite>propagate()</cite> method of the class <cite>TableCT</cite>. All class variables have already been initialized
+for you.</p>
+<p>You “simply” have to compute, for each call to <cite>propagate()</cite>:</p>
+<ul class="simple">
+<li><p>The tuples supported by each variable, which are the union of the tuples supported by the value in the domain of the
+variable.</p></li>
+<li><p>The intersection of the tuples supported by each variable is the set of globally supported tuples.</p></li>
+<li><p>You can now intersect the set of globally supported tuples with each variable/value pair in <cite>supports</cite>.
+If the value supports no tuple (i.e., the intersection is empty), then it can be removed.</p></li>
+</ul>
+<p>Make sure your implementation passes all the tests <a class="reference external" href="https://bitbucket.org/minicp/minicp/src/HEAD/src/test/java/minicp/engine/constraints/TableTest.java?at=master">TableTest.java</a>.</p>
+<dl class="citation">
+<dt class="label" id="ct2016"><span class="brackets"><a class="fn-backref" href="#id1">CT2016</a></span></dt>
+<dd><p>Demeulenaere, J., Hartert, R., Lecoutre, C., Perez, G., Perron, L., Régin, J. C., &amp; Schaus, P. (2016). Compact-table: Efficiently filtering table constraints with reversible sparse bit-sets. In International Conference on Principles and Practice of Constraint Programming (pp. 207-223). Springer.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="eternity-problem">
+<h2>Eternity Problem<a class="headerlink" href="#eternity-problem" title="Permalink to this headline">¶</a></h2>
+<p>Fill in all the gaps in order to solve the Eternity II problem.</p>
+<p>Your task is to finish the implementation in
+<a class="reference external" href="https://bitbucket.org/minicp/minicp/src/HEAD/src/main/java/minicp/examples/Eternity.java?at=master">Eternity.java</a>:</p>
+<ul class="simple">
+<li><p>Create the table.</p></li>
+<li><p>Model the problem using table constraints.</p></li>
+<li><p>Search for a feasible solution using branching combinators.</p></li>
+</ul>
+</section>
+<section id="compac-table-algorithm-for-table-constraints-with-short-tuples">
+<h2>Compac- table algorithm for table constraints with short tuples<a class="headerlink" href="#compac-table-algorithm-for-table-constraints-with-short-tuples" title="Permalink to this headline">¶</a></h2>
+<p>Implement <a class="reference external" href="https://bitbucket.org/minicp/minicp/src/HEAD/src/main/java/minicp/engine/constraints/ShortTableCT.java?at=master">ShortTableCT.java</a>.</p>
+<p>Of course you should get strong inspiration from the
+<a class="reference external" href="https://bitbucket.org/minicp/minicp/src/HEAD/src/main/java/minicp/engine/constraints/TableCT.java?at=master">TableCT.java</a>
+implementation you did in a previous exercise.</p>
+<p>Check that your implementation passes the tests <a class="reference external" href="https://bitbucket.org/minicp/minicp/src/HEAD/src/test/java/minicp/engine/constraints/ShortTableTest.java?at=master">ShortTableTest.java</a>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/mini-cp.png" alt="Logo"/>
+            </a></p>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Part 7: Table Constraints</a><ul>
+<li><a class="reference internal" href="#slides">Slides</a></li>
+<li><a class="reference internal" href="#theoretical-questions">Theoretical questions</a></li>
+<li><a class="reference internal" href="#table-constraint">Table Constraint</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#using-bit-sets">Using bit sets</a></li>
+<li><a class="reference internal" href="#a-basic-implementation">A basic implementation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#eternity-problem">Eternity Problem</a></li>
+<li><a class="reference internal" href="#compac-table-algorithm-for-table-constraints-with-short-tuples">Compac- table algorithm for table constraints with short tuples</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="part_6.html"
+                          title="previous chapter">Part 6: AllDifferent Constraint</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="part_8.html"
+                          title="next chapter">Part 8: Search</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/learning_minicp/part_7.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="part_8.html" title="Part 8: Search"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="part_6.html" title="Part 6: AllDifferent Constraint"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MiniCP User-Guide 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../minicp.html" >Learn MiniCP</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Part 7: Table Constraints</a></li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Laurent Michel, Pierre Schaus, Pascal Van Hentenryck.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+<div class="footer">
+    <script type="text/javascript">
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ?
+              'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+</div>
+
+<script>
+//open external links in a new window
+function external_new_window() {
+    for(var c = document.getElementsByTagName("a"), a = 0;a < c.length;a++) {
+        var b = c[a];
+        if(b.getAttribute("href") && b.hostname !== location.hostname) {
+            b.target = "_blank";
+            b.rel = "noopener";
+        }
+    }
+}
+//open PDF links in a new window
+function pdf_new_window ()
+{
+    if (!document.getElementsByTagName) return false;
+    var links = document.getElementsByTagName("a");
+    for (var eleLink=0; eleLink < links.length; eleLink ++) {
+    if ((links[eleLink].href.indexOf('.pdf') !== -1)||(links[eleLink].href.indexOf('.doc') !== -1)||(links[eleLink].href.indexOf('.docx') !== -1)) {
+        links[eleLink].onclick =
+        function() {
+            window.open(this.href);
+            return false;
+        }
+    }
+    }
+}
+pdf_new_window();
+external_new_window();
+</script>
+
+
+  </body>
+</html>
