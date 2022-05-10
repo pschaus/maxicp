@@ -96,6 +96,12 @@
     </build>
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <additionalJOptions>--enable-preview</additionalJOptions>
+            </plugin>
         </plugins>
     </reporting>
 </project>
