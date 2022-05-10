@@ -4,7 +4,7 @@
     <groupId>org.maxicp</groupId>
     <artifactId>maxicp</artifactId>
     <packaging>jar</packaging>
-    <version>0.1</version>
+    <version>0.0.1</version>
     <name>maxicp</name>
     <url>https://pschaus.github.io/maxicp/</url>
     <organization>
