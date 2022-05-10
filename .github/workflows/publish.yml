@@ -5,7 +5,7 @@ on: push
 jobs:   
   build:
     runs-on: ubuntu-latest
-    container: pschaus/sphinx
+    container: pschaus/sphinx-java
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8                         
@@ -21,6 +21,9 @@ jobs:
         cd userguide
         make html
         cp -r build/html/* ../docs/.
+        cd ..
+        javadoc --enable-preview --release 17 -d javadoc -sourcepath src/main/java -subpackages org org.maxicp
+        cp -r javadoc docs/.
     - name: Commit the new processed data
       run: |
         git pull
