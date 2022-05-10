@@ -5,12 +5,30 @@
     <artifactId>maxicp</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
-    <name>maxicp</name>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Constraint Programming Library</description>
     <url>https://pschaus.github.io/maxicp/</url>
     <organization>
-        <name>Laurent Michel, Pierre Schaus, Pascal Van Hentenryck</name>
+        <name>Laurent Michel, Pierre Schaus, Pascal Van Hentenryck, Guillaume Derval</name>
         <url>https://pschaus.github.io/maxicp/</url>
     </organization>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Pierre Schaus</name>
+            <email>pierre.schaus@uclouvain.be</email>
+            <organization>UCLouvain / ICTEAM / INGI</organization>
+            <organizationUrl></organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
