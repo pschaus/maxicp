@@ -14,6 +14,6 @@
  */
 
 /**
- * Exceptions used in {@link minicp}
+ * Exceptions used in {@link org.maxicp}
  */
 package org.maxicp.util.exception;

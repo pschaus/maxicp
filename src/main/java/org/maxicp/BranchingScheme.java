@@ -168,7 +168,7 @@ public final class BranchingScheme {
      * Last conflict heuristic
      * Attempts to branch first on the last variable that caused an Inconsistency
      *
-     * Lecoutre, C., Saïs, L., Tabary, S., & Vidal, V. (2009).
+     * Lecoutre, C., Saïs, L., Tabary, S.,  Vidal, V. (2009).
      * Reasoning from last conflict (s) in constraint programming.
      * Artificial Intelligence, 173(18), 1592-1614.
      *
@@ -183,7 +183,7 @@ public final class BranchingScheme {
     /**
      * Conflict Ordering Search
      *
-     * Gay, S., Hartert, R., Lecoutre, C., & Schaus, P. (2015).
+     * Gay, S., Hartert, R., Lecoutre, C.,  Schaus, P. (2015).
      * Conflict ordering search for scheduling problems.
      * In International conference on principles and practice of constraint programming (pp. 140-148).
      * Springer.

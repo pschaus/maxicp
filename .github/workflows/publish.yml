@@ -22,7 +22,7 @@ jobs:
         make html
         cp -r build/html/* ../docs/.
         cd ..
-        javadoc --enable-preview --release 17 -d javadoc -sourcepath src/main/java -subpackages org org.maxicp
+        javadoc -encoding utf8 --enable-preview --release 17 -d javadoc -sourcepath src/main/java -subpackages org org.maxicp
         cp -r javadoc docs/.
     - name: Commit the new processed data
       run: |

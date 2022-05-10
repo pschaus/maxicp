@@ -36,7 +36,7 @@ public class TSPBoundImpact {
 
 
     /**
-     * Fages, J. G., & Prud’Homme, C. Making the first solution good! In 2017 IEEE 29th International Conference on Tools with Artificial Intelligence (ICTAI). IEEE.
+     * Fages, J. G., Prud’Homme, C. Making the first solution good! In 2017 IEEE 29th International Conference on Tools with Artificial Intelligence (ICTAI). IEEE.
      * @param x
      * @param obj
      * @return the value that if assigned to v induced the least augmentation of the objective obj
