@@ -2,12 +2,14 @@ org.maxicp
 org.maxicp.cp
 org.maxicp.cp.engine
 org.maxicp.cp.engine.constraints
+org.maxicp.cp.engine.constraints.sequence
 org.maxicp.cp.engine.core
 org.maxicp.cp.examples
 org.maxicp.cp.modelingCompat
 org.maxicp.model
 org.maxicp.model.concrete
 org.maxicp.model.constraints
+org.maxicp.model.constraints.sequence
 org.maxicp.model.examples
 org.maxicp.model.symbolic
 org.maxicp.search

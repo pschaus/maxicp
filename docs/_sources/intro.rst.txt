@@ -21,8 +21,7 @@ MaxiCP is aimed to be used in real-life project and research
 Javadoc
 =======
 
-The `Javadoc API <https://minicp.bitbucket.io/apidocs/>`_.
-
+The `Javadoc API <https://pschaus.github.io/maxicp/javadoc/>`_.
 
 .. _install:
 
