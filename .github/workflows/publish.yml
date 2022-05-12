@@ -26,6 +26,8 @@ jobs:
         cp -r javadoc docs/.
     - name: Commit the new processed data
       run: |
+        git config --global --add safe.directory /__w/maxicp/maxicp
+        git pull
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add docs
