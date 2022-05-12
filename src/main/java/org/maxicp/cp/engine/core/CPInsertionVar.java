@@ -11,7 +11,7 @@ import org.maxicp.util.Procedure;
  *   an InsertionVar can have an empty domain and still be valid. However, a constraint can be added to throw an
  *      inconsistency whenever an InsertionVar is empty
  */
-public interface InsertionVar {
+public interface CPInsertionVar {
 
     /**
      * Returns the solver in which this variable was created.
@@ -23,7 +23,7 @@ public interface InsertionVar {
     /**
      * @return true when the no insertions points exist anymore
      */
-    boolean isBound();
+    boolean isFixed();
 
     /**
      * remove an insertion point from the set of possible insertions points
@@ -63,7 +63,7 @@ public interface InsertionVar {
      * @return the size of the domain and {@code dest[0,...,size-1]} contains
      *         the values in the domain in an arbitrary order
      */
-    int fillInsertions(int[] dest);
+    int fillInsertion(int[] dest);
 
     /**
      * @return number of possible insertions points for the request
@@ -128,7 +128,7 @@ public interface InsertionVar {
      *
      * @param f the closure
      */
-    void whenBind(Procedure f);
+    void whenFixed(Procedure f);
 
     /**
      * Asks that {@link CPConstraint#propagate()} no inserted point remained for this variable
@@ -138,6 +138,6 @@ public interface InsertionVar {
      * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on bind events of this variable.
      */
-    void propagateOnBind(CPConstraint c);
+    void propagateOnFixed(CPConstraint c);
 
 }

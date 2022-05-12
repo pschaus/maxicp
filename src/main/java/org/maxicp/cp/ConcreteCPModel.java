@@ -3,15 +3,16 @@ package org.maxicp.cp;
 import org.maxicp.cp.engine.constraints.AllDifferentDC;
 import org.maxicp.cp.engine.core.*;
 import org.maxicp.cp.modelingCompat.ConcreteCPIntVar;
+import org.maxicp.cp.modelingCompat.ConcreteCPSequenceVar;
 import org.maxicp.cp.modelingCompat.ConcreteCPVar;
 import org.maxicp.model.*;
 import org.maxicp.model.concrete.ConcreteModel;
 import org.maxicp.model.concrete.ConcreteVar;
 import org.maxicp.model.constraints.*;
-import org.maxicp.model.symbolic.IntVarRangeImpl;
-import org.maxicp.model.symbolic.IntVarSetImpl;
-import org.maxicp.model.symbolic.IntVarViewOffset;
-import org.maxicp.model.symbolic.SymbolicModel;
+import org.maxicp.model.constraints.sequence.Disjoint;
+import org.maxicp.model.constraints.sequence.Insert;
+import org.maxicp.model.constraints.sequence.TransitionTimes;
+import org.maxicp.model.symbolic.*;
 import org.maxicp.search.BestFirstSearch;
 import org.maxicp.search.DFSearch;
 import org.maxicp.search.Objective;
@@ -51,6 +52,10 @@ public class ConcreteCPModel implements ConcreteModel {
 
     public CPIntVar getVar(IntVar v) {
         return (CPIntVar) createCPVarIfNeeded(v);
+    }
+
+    public CPSequenceVar getVar(SequenceVar s) {
+        return (CPSequenceVar) createCPVarIfNeeded(s);
     }
 
     public Objective minimize(IntVar v) {
@@ -167,6 +172,24 @@ public class ConcreteCPModel implements ConcreteModel {
                 CPIntVar y = getVar(e.y);
                 solver.post(new org.maxicp.cp.engine.constraints.LessOrEqual(x,y));
             }
+            case TransitionTimes t -> {
+                CPSequenceVar seq = getVar(t.sequenceVar);
+                CPIntVar[] time = Arrays.stream(t.time).map(this::getVar).toArray(CPIntVar[]::new);
+                int[][] distMatrix = t.distMatrix;
+                CPIntVar maxDist = getVar(t.dist);
+                int[] duration = t.duration;
+                solver.post(new org.maxicp.cp.engine.constraints.sequence.TransitionTimes(seq, time, maxDist, distMatrix, duration));
+            }
+            case Insert i -> {
+                CPSequenceVar seq = getVar(i.sequenceVar);
+                int pred = i.pred;
+                int node = i.node;
+                solver.post(new org.maxicp.cp.engine.constraints.sequence.Insert(seq, pred, node));
+            }
+            case Disjoint d -> {
+                CPSequenceVar[] sequenceVars = Arrays.stream(d.sequenceVar).map(this::getVar).toArray(CPSequenceVar[]::new);
+                solver.post(new org.maxicp.cp.engine.constraints.sequence.Disjoint(sequenceVars));
+            }
             case CPInstantiableConstraint cpic -> solver.post(cpic.instantiate(this));
             default -> throw new IllegalStateException("Unexpected value: " + c);
         }
@@ -181,10 +204,20 @@ public class ConcreteCPModel implements ConcreteModel {
             case IntVarSetImpl iv -> CPFactory.makeIntVar(solver, iv.dom);
             case IntVarRangeImpl iv -> CPFactory.makeIntVar(solver, iv.min(), iv.max());
             case IntVarViewOffset iv -> CPFactory.plus(((CPIntVar)createCPVarIfNeeded(iv.baseVar)), iv.offset);
+            default -> null;
+        };
+
+        if (cpiv != null) {
+            mapping.put(v, new ConcreteCPIntVar(v.getDispatcher(), cpiv));
+            return cpiv;
+        }
+
+        CPSequenceVar cpsv = switch (v) {
+            case SequenceVarImpl sv -> CPFactory.makeSequenceVar(solver, sv.nNode(), sv.begin(), sv.end());
             default -> throw new IllegalStateException("Unexpected value: " + v);
         };
 
-        mapping.put(v, new ConcreteCPIntVar(v.getDispatcher(), cpiv));
-        return cpiv;
+        mapping.put(v, new ConcreteCPSequenceVar(v.getDispatcher(), cpsv));
+        return cpsv;
     }
 }

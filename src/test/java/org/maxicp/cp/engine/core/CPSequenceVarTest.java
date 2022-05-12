@@ -4,6 +4,7 @@ package org.maxicp.cp.engine.core;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.maxicp.cp.CPFactory;
 import org.maxicp.cp.engine.CPSolverTest;
 import org.maxicp.state.StateManager;
 import org.maxicp.util.exception.InconsistencyException;
@@ -15,11 +16,11 @@ import static org.junit.Assert.*;
 
 
 
-public class SequenceVarTest extends CPSolverTest {
+public class CPSequenceVarTest extends CPSolverTest {
 
     CPSolver cp;
     StateManager sm;
-    SequenceVar sequence;
+    CPSequenceVar sequence;
     static int[] insertions;
     static int nNodes;
     static int begin;
@@ -58,7 +59,7 @@ public class SequenceVarTest extends CPSolverTest {
     public void SetUp() {
         cp = solverFactory.get();
         sm = cp.getStateManager();
-        sequence = new SequenceVarImpl(cp, 10, 10, 11);
+        sequence = CPFactory.makeSequenceVar(cp, nNodes, begin, end);
         int a = 0;
     }
 
@@ -81,7 +82,7 @@ public class SequenceVarTest extends CPSolverTest {
 
     /**
      * train1 if a sequence corresponds to the expected arrays
-     * @param scheduled scheduled nodes of the sequence. Ordered by appearance in the sequence, omitting begin and end node
+     * @param scheduled scheduled nodes of the sequence. Ordered by appearance in the sequence, including begin and end node
      * @param possible possible nodes of the sequence
      * @param excluded excluded nodes of the sequence
      * @param scheduledInsert scheduled insertions of each InsertionVar. first indexing = id of the InsertionVar.
@@ -89,41 +90,53 @@ public class SequenceVarTest extends CPSolverTest {
      * @param possibleInsert possible insertions of each InsertionVar. first indexing = id of the InsertionVar.
      *                       Must contain the beginning node if present
      */
-    public static void isSequenceValid(SequenceVar sequence, int[] scheduled, int[] possible, int[] excluded,
-                                 int[][] scheduledInsert, int[][] possibleInsert) {
-        assertEquals(scheduled.length, sequence.nScheduledNode());
-        assertEquals(possible.length, sequence.nPossibleNode());
-        assertEquals(excluded.length, sequence.nExcludedNode());
+    public static void isSequenceValid(CPSequenceVar sequence, int[] scheduled, int[] possible, int[] excluded,
+                                       int[][] scheduledInsert, int[][] possibleInsert) {
+        assertEquals(scheduled.length, sequence.nMember());
+        assertEquals(possible.length, sequence.nPossible());
+        assertEquals(excluded.length, sequence.nExcluded());
         assertEquals(sequence.begin(), sequence.nextMember(sequence.end()));
         assertEquals(sequence.end(), sequence.predMember(sequence.begin()));
-        assertEquals(sequence.nNodes(), scheduledInsert.length);
-        int[] insertions = IntStream.range(0, sequence.nNodes()).toArray();
+        assertEquals(sequence.nNode(false), scheduledInsert.length);
+        assertEquals(sequence.nNode(true), scheduledInsert.length + 2);
+        // test the ordering
+        int[] ordering = new int[scheduled.length];
+        assertEquals(scheduled.length, sequence.fillOrder(ordering, true));
+        for (int i = 0 ; i < ordering.length ; ++i) {
+            assertEquals(scheduled[i], ordering[i]);
+        }
+
+        int[] insertions = IntStream.range(0, sequence.nNode()).toArray();
         int[] actual;
         int[] expected;
-        int pred = sequence.begin();
+        int pred = Integer.MIN_VALUE;
+        boolean foundPred = false;
         for (int i: scheduled) {
-            assertTrue(sequence.isScheduled(i));
+            assertTrue(sequence.isMember(i));
             assertFalse(sequence.isPossible(i));
             assertFalse(sequence.isExcluded(i));
-            assertEquals(0, sequence.fillScheduledInsertions(i, insertions));
-            assertEquals(0, sequence.fillPossibleInsertions(i, insertions));
-            assertEquals(i, sequence.nextMember(pred));
-            assertEquals(pred, sequence.predMember(i));
+            assertEquals(0, sequence.fillMemberInsertion(i, insertions));
+            assertEquals(0, sequence.fillPossibleInsertion(i, insertions));
+            if (foundPred) {
+                assertEquals(i, sequence.nextMember(pred));
+                assertEquals(pred, sequence.predMember(i));
+            }
+            foundPred = true;
             pred = i;
         }
         for (int i: possible) {
-            assertFalse(sequence.isScheduled(i));
+            assertFalse(sequence.isMember(i));
             assertTrue(sequence.isPossible(i));
             assertFalse(sequence.isExcluded(i));
 
-            assertEquals(scheduledInsert[i].length, sequence.fillScheduledInsertions(i, insertions));
+            assertEquals(scheduledInsert[i].length, sequence.fillMemberInsertion(i, insertions));
             actual = Arrays.copyOfRange(insertions, 0, scheduledInsert[i].length);
             Arrays.sort(actual);
             expected = scheduledInsert[i];
             Arrays.sort(expected);
             assertArrayEquals(expected, actual);
 
-            assertEquals(possibleInsert[i].length, sequence.fillPossibleInsertions(i, insertions));
+            assertEquals(possibleInsert[i].length, sequence.fillPossibleInsertion(i, insertions));
             actual = Arrays.copyOfRange(insertions, 0, possibleInsert[i].length);
             Arrays.sort(actual);
             expected = possibleInsert[i];
@@ -131,7 +144,7 @@ public class SequenceVarTest extends CPSolverTest {
             assertArrayEquals(expected, actual);
         }
         for (int i: excluded) {
-            assertFalse(sequence.isScheduled(i));
+            assertFalse(sequence.isMember(i));
             assertFalse(sequence.isPossible(i));
             assertTrue(sequence.isExcluded(i));
         }
@@ -143,60 +156,62 @@ public class SequenceVarTest extends CPSolverTest {
     }
 
     /**
-     * train1 if a sequence corresponds to the expected arrays
+     * test if a sequence corresponds to the expected arrays
      * assume that no exclusion of a node for a particular InsertionVar has occurred
-     * @param scheduled scheduled nodes of the sequence. Ordered by appearance in the sequence, omitting begin and end node
+     * @param scheduled scheduled nodes of the sequence. Ordered by appearance in the sequence, including begin and end node
      * @param possible possible nodes of the sequence
      * @param excluded excluded nodes of the sequence
      */
     private void isSequenceValid(int[] scheduled, int[] possible, int[] excluded) {
-        assertEquals(scheduled.length, sequence.nScheduledNode());
-        assertEquals(possible.length, sequence.nPossibleNode());
-        assertEquals(excluded.length, sequence.nExcludedNode());
+        assertEquals(scheduled.length, sequence.nMember());
+        assertEquals(possible.length, sequence.nPossible());
+        assertEquals(excluded.length, sequence.nExcluded());
         assertEquals(sequence.begin(), sequence.nextMember(sequence.end()));
         assertEquals(sequence.end(), sequence.predMember(sequence.begin()));
 
-        int[] sorted_scheduled = new int[scheduled.length + 1]; // used for scheduled insertions. includes begin node
-        for (int i = 0; i < scheduled.length; ++i)
+        int[] sorted_scheduled = new int[scheduled.length - 1]; // used for scheduled insertions. includes begin node but not ending node
+        for (int i = 0; i < sorted_scheduled.length; ++i)
             sorted_scheduled[i] = scheduled[i];
-        sorted_scheduled[scheduled.length] = sequence.begin();
         Arrays.sort(sorted_scheduled);
         int[] sorted_possible = Arrays.copyOf(possible, possible.length);
         Arrays.sort(sorted_possible);
         int[] val;
 
-        int nbScheduledInsertions = scheduled.length + 1; // number of scheduled nodes + begin node
-        int nbPossibleInsertions = possible.length - 1;   // number of possible nodes - itself
+        int nbScheduledInsertions = scheduled.length - 1; // number of scheduled nodes - end node
+        int nbPossibleInsertions = possible.length - 1;       // number of possible nodes - node being tested
 
-        int pred = sequence.begin();
+        int pred = Integer.MIN_VALUE;
+        boolean hasPred = false;
         for (int i: scheduled) {
-            assertTrue(sequence.isScheduled(i));
+            assertTrue(sequence.isMember(i));
             assertFalse(sequence.isPossible(i));
             assertFalse(sequence.isExcluded(i));
-            assertEquals(0, sequence.fillScheduledInsertions(i, insertions));
-            assertEquals(0, sequence.fillPossibleInsertions(i, insertions));
-
-            assertEquals(i, sequence.nextMember(pred));
-            assertEquals(pred, sequence.predMember(i));
+            assertEquals(0, sequence.fillMemberInsertion(i, insertions));
+            assertEquals(0, sequence.fillPossibleInsertion(i, insertions));
+            if (hasPred) {
+                assertEquals(i, sequence.nextMember(pred));
+                assertEquals(pred, sequence.predMember(i));
+            }
             pred = i;
+            hasPred = true;
         }
         for (int i: possible) {
-            assertFalse(sequence.isScheduled(i));
+            assertFalse(sequence.isMember(i));
             assertTrue(sequence.isPossible(i));
             assertFalse(sequence.isExcluded(i));
 
-            assertEquals(nbScheduledInsertions, sequence.fillScheduledInsertions(i, insertions));
+            assertEquals(nbScheduledInsertions, sequence.fillMemberInsertion(i, insertions));
             val = Arrays.copyOfRange(insertions, 0, nbScheduledInsertions);
             Arrays.sort(val);
             assertArrayEquals(sorted_scheduled, val);
 
-            assertEquals(nbPossibleInsertions, sequence.fillPossibleInsertions(i, insertions));
+            assertEquals(nbPossibleInsertions, sequence.fillPossibleInsertion(i, insertions));
             val = Arrays.copyOfRange(insertions, 0, nbPossibleInsertions);
             Arrays.sort(val);
             assertArrayEquals(Arrays.stream(sorted_possible).filter(j -> j != i).toArray(), val);
         }
         for (int i: excluded) {
-            assertFalse(sequence.isScheduled(i));
+            assertFalse(sequence.isMember(i));
             assertFalse(sequence.isPossible(i));
             assertTrue(sequence.isExcluded(i));
         }
@@ -207,18 +222,18 @@ public class SequenceVarTest extends CPSolverTest {
      */
     @Test
     public void testSequenceVar() {
-        assertEquals(10, sequence.nNodes());
+        assertEquals(12, sequence.nNode());
         assertEquals(10, sequence.begin());
         assertEquals(11, sequence.end());
         assertEquals(sequence.begin(), sequence.nextMember(sequence.end()));
         assertEquals(sequence.end(), sequence.nextMember(sequence.begin()));
         assertEquals(sequence.begin(), sequence.predMember(sequence.end()));
         assertEquals(sequence.end(), sequence.predMember(sequence.begin()));
-        assertEquals(0, sequence.nScheduledNode());
-        assertEquals(10, sequence.nPossibleNode());
-        assertEquals(0, sequence.nExcludedNode());
+        assertEquals(2, sequence.nMember());
+        assertEquals(10, sequence.nPossible());
+        assertEquals(0, sequence.nExcluded());
         for (int i = 0; i < 10 ; ++i) {
-            assertEquals(10, sequence.fillInsertions(i, insertions));
+            assertEquals(10, sequence.fillInsertion(i, insertions));
             boolean beginFound = false; // true if the begin node is considered as a predecessor
             for (int val: insertions) {
                 assertNotEquals(val, i); // a node cannot have itself as predecessor
@@ -233,8 +248,10 @@ public class SequenceVarTest extends CPSolverTest {
      */
     @Test
     public void testSequenceVarOffset() {
-        sequence = new SequenceVarImpl(cp, 10, 12, 18);
-        int[] scheduledInit = new int[] {};
+        int begin = 12;
+        int end = 18;
+        sequence = CPFactory.makeSequenceVar(cp, 10, begin, end);
+        int[] scheduledInit = new int[] {begin, end};
         int[] possibleInit = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         int[] excludedInit = new int[] {};
         isSequenceValid(scheduledInit, possibleInit, excludedInit);
@@ -248,46 +265,46 @@ public class SequenceVarTest extends CPSolverTest {
     public void testSchedule() {
         sm.saveState();
 
-        sequence.schedule(sequence.begin(), 0);
-        sequence.schedule(0, 2);
+        sequence.insert(sequence.begin(), 0);
+        sequence.insert(0, 2);
         // sequence at this point: begin -> 0 -> 2 -> end
-        int[] scheduled1 = new int[] {0, 2};
+        int[] scheduled1 = new int[] {begin, 0, 2, end};
         int[] possible1 = new int[] {1, 3, 4, 5, 6, 7, 8, 9};
         int[] excluded1 = new int[] {};
         isSequenceValid(scheduled1, possible1, excluded1);
 
         sm.saveState();
 
-        sequence.schedule(sequence.begin(), 8);  // begin -> 8 -> 0 -> 2 -> end
-        sequence.schedule(2, 5);           // begin -> 8 -> 0 -> 2 -> 5 -> end
-        int[] scheduled2 = new int[] {8, 0, 2, 5};
+        sequence.insert(sequence.begin(), 8);  // begin -> 8 -> 0 -> 2 -> end
+        sequence.insert(2, 5);           // begin -> 8 -> 0 -> 2 -> 5 -> end
+        int[] scheduled2 = new int[] {begin, 8, 0, 2, 5, end};
         int[] possible2 = new int[] {1, 3, 4, 6, 7, 9};
         int[] excluded2 = new int[] {};
         isSequenceValid(scheduled2, possible2, excluded2);
 
         sm.saveState();
 
-        sequence.schedule(8, 3);  // begin -> 8 -> 3 -> 0 -> 2 -> end
-        sequence.schedule(2, 7);  // begin -> 8 -> 3 -> 0 -> 2 -> 7 -> 5 -> end
-        int[] scheduled3 = new int[] {8, 3, 0, 2, 7, 5};
+        sequence.insert(8, 3);  // begin -> 8 -> 3 -> 0 -> 2 -> end
+        sequence.insert(2, 7);  // begin -> 8 -> 3 -> 0 -> 2 -> 7 -> 5 -> end
+        int[] scheduled3 = new int[] {begin, 8, 3, 0, 2, 7, 5, end};
         int[] possible3 = new int[] {1, 4, 6, 9};
         int[] excluded3 = new int[] {};
         isSequenceValid(scheduled3, possible3, excluded3);
 
         sm.saveState();
 
-        sequence.schedule(0, 4);  // begin -> 8 -> 3 -> 0 -> 4 -> 2 -> 7 -> 5 -> end
-        sequence.schedule(0, 9);  // begin -> 8 -> 3 -> 0 -> 9 -> 4 -> 2 -> 7 -> 5 -> end
-        int[] scheduled4 = new int[] {8, 3, 0, 9, 4, 2, 7, 5};
+        sequence.insert(0, 4);  // begin -> 8 -> 3 -> 0 -> 4 -> 2 -> 7 -> 5 -> end
+        sequence.insert(0, 9);  // begin -> 8 -> 3 -> 0 -> 9 -> 4 -> 2 -> 7 -> 5 -> end
+        int[] scheduled4 = new int[] {begin, 8, 3, 0, 9, 4, 2, 7, 5, end};
         int[] possible4 = new int[] {1, 6};
         int[] excluded4 = new int[] {};
         isSequenceValid(scheduled4, possible4, excluded4);
 
         sm.saveState();
 
-        sequence.schedule(3, 1);  // begin -> 8 -> 3 -> 1 -> 0 -> 4 -> 2 -> 7 -> 5 -> end
-        sequence.schedule(5, 6);  // begin -> 8 -> 3 -> 0 -> 9 -> 4 -> 2 -> 7 -> 5 -> 6 -> end
-        int[] scheduled5 = new int[] {8, 3, 1, 0, 9, 4, 2, 7, 5, 6};
+        sequence.insert(3, 1);  // begin -> 8 -> 3 -> 1 -> 0 -> 4 -> 2 -> 7 -> 5 -> end
+        sequence.insert(5, 6);  // begin -> 8 -> 3 -> 0 -> 9 -> 4 -> 2 -> 7 -> 5 -> 6 -> end
+        int[] scheduled5 = new int[] {begin, 8, 3, 1, 0, 9, 4, 2, 7, 5, 6, end};
         int[] possible5 = new int[] {};
         int[] excluded5 = new int[] {};
         isSequenceValid(scheduled5, possible5, excluded5);
@@ -302,7 +319,7 @@ public class SequenceVarTest extends CPSolverTest {
         isSequenceValid(scheduled1, possible1, excluded1);
         sm.restoreState();
 
-        int[] scheduledInit = new int[] {};
+        int[] scheduledInit = new int[] {begin, end};
         int[] possibleInit = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         int[] excludedInit = new int[] {};
         isSequenceValid(scheduledInit, possibleInit, excludedInit);
@@ -317,7 +334,7 @@ public class SequenceVarTest extends CPSolverTest {
 
         sequence.exclude(0);
         sequence.exclude(2);
-        int[] scheduled1 = new int[] {};
+        int[] scheduled1 = new int[] {begin, end};
         int[] possible1 = new int[] {1, 3, 4, 5, 6, 7, 8, 9};
         int[] excluded1 = new int[] {0, 2};
         isSequenceValid(scheduled1, possible1, excluded1);
@@ -328,7 +345,7 @@ public class SequenceVarTest extends CPSolverTest {
         sequence.exclude(7);
         sequence.exclude(9);
         sequence.exclude(3);
-        int[] scheduled2 = new int[] {};
+        int[] scheduled2 = new int[] {begin, end};
         int[] possible2 = new int[] {1, 4, 6, 8};
         int[] excluded2 = new int[] {0, 2, 5, 7, 9, 3};
         isSequenceValid(scheduled2, possible2, excluded2);
@@ -339,7 +356,7 @@ public class SequenceVarTest extends CPSolverTest {
         sequence.exclude(6);
         sequence.exclude(1);
         sequence.exclude(8);
-        int[] scheduled3 = new int[] {};
+        int[] scheduled3 = new int[] {begin, end};
         int[] possible3 = new int[] {};
         int[] excluded3 = new int[] {0, 2, 5, 7, 9, 3, 5, 6, 1, 8};
         isSequenceValid(scheduled3, possible3, excluded3);
@@ -350,7 +367,7 @@ public class SequenceVarTest extends CPSolverTest {
         isSequenceValid(scheduled1, possible1, excluded1);
         sm.restoreState();
 
-        int[] scheduledInit = new int[] {};
+        int[] scheduledInit = new int[] {begin, end};
         int[] possibleInit = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         int[] excludedInit = new int[] {};
         isSequenceValid(scheduledInit, possibleInit, excludedInit);
@@ -362,19 +379,19 @@ public class SequenceVarTest extends CPSolverTest {
     @Test
     public void testExcludeAndSchedule() {
         sm.saveState();
-        sequence.schedule(sequence.begin(), 4);
+        sequence.insert(sequence.begin(), 4);
         sequence.exclude(5);
         sequence.exclude(6);
 
-        int[] scheduled1 = new int[] {4};
+        int[] scheduled1 = new int[] {begin, 4, end};
         int[] possible1 = new int[] {0, 1, 2, 3, 7, 8, 9};
         int[] excluded1 = new int[] {5, 6};
         isSequenceValid(scheduled1, possible1, excluded1);
         sm.saveState();
 
-        sequence.schedule(4, 9);
+        sequence.insert(4, 9);
         sequence.exclude(2);
-        int[] scheduled2 = new int[] {4, 9};
+        int[] scheduled2 = new int[] {begin, 4, 9, end};
         int[] possible2 = new int[] {0, 1, 3, 7, 8};
         int[] excluded2 = new int[] {2, 5, 6};
         isSequenceValid(scheduled2, possible2, excluded2);
@@ -382,8 +399,8 @@ public class SequenceVarTest extends CPSolverTest {
         sm.saveState();
 
         sequence.exclude(1);
-        sequence.schedule(sequence.begin(), 7);
-        int[] scheduled3 = new int[] {7, 4, 9};
+        sequence.insert(sequence.begin(), 7);
+        int[] scheduled3 = new int[] {begin, 7, 4, 9, end};
         int[] possible3 = new int[] {0, 3, 8};
         int[] excluded3 = new int[] {1, 2, 5, 6};
         isSequenceValid(scheduled3, possible3, excluded3);
@@ -393,7 +410,7 @@ public class SequenceVarTest extends CPSolverTest {
         sm.restoreState();
         isSequenceValid(scheduled1, possible1, excluded1);
         sm.restoreState();
-        int[] scheduledInit = new int[] {};
+        int[] scheduledInit = new int[] {begin, end};
         int[] possibleInit = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         int[] excludedInit = new int[] {};
         isSequenceValid(scheduledInit, possibleInit, excludedInit);
@@ -406,7 +423,7 @@ public class SequenceVarTest extends CPSolverTest {
     public void testIndividualInsertionRemoval() {
         sm.saveState();
 
-        InsertionVar[] insertionVars = new InsertionVar[nNodes];
+        CPInsertionVar[] insertionVars = new CPInsertionVar[nNodes];
         for (int i=0; i< nNodes; ++i) {
             insertionVars[i] = sequence.getInsertionVar(i);
         }
@@ -421,7 +438,7 @@ public class SequenceVarTest extends CPSolverTest {
         insertionVars[7].removeInsert(sequence.begin());
         insertionVars[7].removeInsert(5);
         insertionVars[7].removeInsert(6);
-        int[] scheduled1 = new int[] {};
+        int[] scheduled1 = new int[] {begin, end};
         int[] possible1 = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         int[] excluded1 = new int[] {};
         int[][] scheduledInsertions1 = new int[][] {
@@ -451,7 +468,7 @@ public class SequenceVarTest extends CPSolverTest {
         isSequenceValid(scheduled1, possible1, excluded1, scheduledInsertions1, possibleInsertions1);
         sm.saveState();
 
-        sequence.schedule(sequence.begin(), 4);
+        sequence.insert(sequence.begin(), 4);
         insertionVars[2].removeInsert(3); // possible insert
         insertionVars[2].removeInsert(4); // scheduled insert
         insertionVars[2].removeInsert(6); // possible insert
@@ -482,7 +499,7 @@ public class SequenceVarTest extends CPSolverTest {
                 {0, 1, 2, 3,       6, 7,    9},
                 {0, 1, 2, 3,       6, 7, 8,  },
         };
-        int[] scheduled2 = new int[] {4};
+        int[] scheduled2 = new int[] {begin, 4, end};
         int[] possible2= new int[] {0, 1, 2, 3, 6, 7, 8, 9};
         int[] excluded2 = new int[] {5};
         isSequenceValid(scheduled2, possible2, excluded2, scheduledInsertions2, possibleInsertions2);
@@ -498,7 +515,7 @@ public class SequenceVarTest extends CPSolverTest {
     public void testPropagationInsertion() {
         resetPropagatorsArrays();
 
-        InsertionVar[] insertionVars = new InsertionVar[nNodes];
+        CPInsertionVar[] insertionVars = new CPInsertionVar[nNodes];
         for (int i = 0; i < nNodes; ++i) {
             insertionVars[i] = sequence.getInsertionVar(i);
         }
@@ -515,7 +532,7 @@ public class SequenceVarTest extends CPSolverTest {
             }
         };
         cp.post(cons);
-        sequence.schedule(sequence.begin(), 9); // sequence= begin -> 9 -> end
+        sequence.insert(sequence.begin(), 9); // sequence= begin -> 9 -> end
         cp.fixPoint();
         assertIsBoolArrayTrueAt(propagateInsertArrCalled, 9);
         assertIsBoolArrayTrueAt(propagateChangeArrCalled, 9);
@@ -529,8 +546,8 @@ public class SequenceVarTest extends CPSolverTest {
         assertIsBoolArrayTrueAt(propagateExcludeArrCalled, 5);
         resetPropagatorsArrays();
 
-        sequence.schedule(sequence.begin(), 2); // sequence= begin -> 2 -> 9 -> end
-        sequence.schedule(sequence.begin(), 8); // sequence= begin -> 8 -> 2 -> 9 -> end
+        sequence.insert(sequence.begin(), 2); // sequence= begin -> 2 -> 9 -> end
+        sequence.insert(sequence.begin(), 8); // sequence= begin -> 8 -> 2 -> 9 -> end
         cp.fixPoint();
         assertIsBoolArrayTrueAt(propagateInsertArrCalled, 2, 8);
         assertIsBoolArrayTrueAt(propagateChangeArrCalled, 2, 8);
@@ -554,7 +571,7 @@ public class SequenceVarTest extends CPSolverTest {
         CPConstraint cons = new AbstractCPConstraint(cp) {
             @Override
             public void post() {
-                sequence.whenBind(() -> propagateBindCalled = true);
+                sequence.whenFix(() -> propagateBindCalled = true);
                 sequence.whenInsert(() -> propagateInsertCalled = true);
                 sequence.whenExclude(() -> propagateExcludeCalled = true);
             }
@@ -575,14 +592,14 @@ public class SequenceVarTest extends CPSolverTest {
         assertFalse(propagateInsertCalled);
         resetPropagators();
 
-        sequence.schedule(sequence.begin(), 8); // sequence: begin -> 8 -> end
+        sequence.insert(sequence.begin(), 8); // sequence: begin -> 8 -> end
         cp.fixPoint();
         assertFalse(propagateExcludeCalled);
         assertFalse(propagateBindCalled);
         assertTrue(propagateInsertCalled);
         resetPropagators();
 
-        sequence.schedule(8, 1); // sequence: begin -> 8 -> 1 -> end
+        sequence.insert(8, 1); // sequence: begin -> 8 -> 1 -> end
         cp.fixPoint();
         assertFalse(propagateExcludeCalled);
         assertFalse(propagateBindCalled);
@@ -610,7 +627,7 @@ public class SequenceVarTest extends CPSolverTest {
         resetPropagators();
 
         sm.restoreState();
-        sequence.schedule(sequence.begin(), 6); // sequence: begin -> 6 -> 8 -> 1 -> end
+        sequence.insert(sequence.begin(), 6); // sequence: begin -> 6 -> 8 -> 1 -> end
         cp.fixPoint();
         assertFalse(propagateExcludeCalled);
         assertTrue(propagateBindCalled);  // no possible node remain
@@ -620,17 +637,18 @@ public class SequenceVarTest extends CPSolverTest {
 
     @Test
     public void testCanPreceded() {
+        assertTrue(sequence.canPrecede(begin, 8));
         sequence.removeInsertion(begin, 8);
         assertTrue(sequence.canPrecede(begin, 8)); // the insertion is removed but node 8 can still precede begin
-        assertFalse(sequence.canSchedule(begin, 8));
+        assertFalse(sequence.canInsert(begin, 8));
         assertFalse(sequence.isInsertion(begin, 8));
 
-        sequence.schedule(begin, 1);
-        sequence.schedule(begin, 2);
-        sequence.schedule(begin, 3); // sequence at this points: begin -> 3 -> 2 -> 1
+        sequence.insert(begin, 1);
+        sequence.insert(begin, 2);
+        sequence.insert(begin, 3); // sequence at this points: begin -> 3 -> 2 -> 1
 
         assertTrue(sequence.canPrecede(begin, 8));
-        assertFalse(sequence.canSchedule(begin, 8));
+        assertFalse(sequence.canInsert(begin, 8));
         assertFalse(sequence.isInsertion(begin, 8));
 
         sequence.removeInsertion(1, 8);
@@ -639,7 +657,7 @@ public class SequenceVarTest extends CPSolverTest {
 
         for (int n: new int[] {begin, 1, 2, 3}) {
             assertTrue(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canSchedule(n, 8));
+            assertFalse(sequence.canInsert(n, 8));
             assertFalse(sequence.isInsertion(n, 8));
         }
 
@@ -650,7 +668,7 @@ public class SequenceVarTest extends CPSolverTest {
 
         for (int n: new int[] {begin, 1, 2, 3}) {
             assertTrue(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canSchedule(n, 8));
+            assertFalse(sequence.canInsert(n, 8));
             assertFalse(sequence.isInsertion(n, 8));
         }
 
@@ -658,7 +676,7 @@ public class SequenceVarTest extends CPSolverTest {
 
         for (int n: new int[] {begin, 1, 2, 3}) {
             assertFalse(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canSchedule(n, 8));
+            assertFalse(sequence.canInsert(n, 8));
             assertFalse(sequence.isInsertion(n, 8));
         }
         sequence.getSolver().getStateManager().restoreState();
@@ -670,22 +688,22 @@ public class SequenceVarTest extends CPSolverTest {
 
         for (int n: new int[] {begin, 1, 2, 3}) {
             assertFalse(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canSchedule(n, 8));
+            assertFalse(sequence.canInsert(n, 8));
             assertFalse(sequence.isInsertion(n, 8));
         }
     }
 
     @Test(expected = InconsistencyException.class)
     public void throwInconsistencyDoubleInsert() {
-        sequence.schedule(sequence.begin(), 4);
-        sequence.schedule(sequence.begin(), 8); // sequence at this point: begin -> 8 -> 4 -> end
-        sequence.schedule(4, 8);
+        sequence.insert(sequence.begin(), 4);
+        sequence.insert(sequence.begin(), 8); // sequence at this point: begin -> 8 -> 4 -> end
+        sequence.insert(4, 8);
     }
 
     @Test
     public void throwNoInconsistencyDoubleInsert() {
-        sequence.schedule(sequence.begin(), 8);
-        sequence.schedule(sequence.begin(), 8); // double insertions at the same point are valid
+        sequence.insert(sequence.begin(), 8);
+        sequence.insert(sequence.begin(), 8); // double insertions at the same point are valid
     }
 
     @Test
@@ -697,18 +715,94 @@ public class SequenceVarTest extends CPSolverTest {
     @Test(expected = InconsistencyException.class)
     public void throwInconsistencyExcludeSchedule() {
         sequence.exclude(8);
-        sequence.schedule(sequence.begin(), 8);
+        sequence.insert(sequence.begin(), 8);
     }
 
     @Test(expected = InconsistencyException.class)
     public void throwInconsistencyScheduleExclude() {
-        sequence.schedule(sequence.begin(), 8);
+        sequence.insert(sequence.begin(), 8);
         sequence.exclude(8);
     }
 
     @Test(expected = InconsistencyException.class)
     public void throwAssertionSchedule() {
-        sequence.schedule(2, 8);
+        sequence.insert(2, 8);
+    }
+
+    @Test
+    public void testPrecede() {
+        sequence.insert(begin, 1);
+        sequence.insert(1, 8);
+        sequence.insert(8, 4);
+        sequence.insert(4, 5); // sequence at this point: begin -> 1 - > 8 -> 4 -> 5 -> end
+        int[] ordering = new int[] {begin, 1, 8, 4, 5, end};
+        for (int i = 0 ; i < ordering.length ; ++i) {
+            int pred = ordering[i];
+            for (int j = 0; j < i ; ++j) {
+                assertFalse(sequence.precede(pred, ordering[j]));
+            }
+            assertFalse(sequence.precede(pred, pred));
+            for (int j = i + 1; j < ordering.length ; ++j) {
+                assertTrue(sequence.precede(pred, ordering[j]));
+            }
+        }
+    }
+
+    @Test(expected = InconsistencyException.class)
+    public void testInvalidInsert() {
+        sequence.removeInsertion(begin, 4);
+        sequence.insert(begin, 4);
+    }
+
+    @Test
+    public void excludeAll() {
+        sequence.insert(begin, 3);
+        sequence.insert(3, 9);
+        sequence.insert(9, 6);
+        sequence.excludeAllPossible();
+        int[] members = new int[] {begin, 3, 9, 6, end};
+        int[] possible = new int[] {};
+        int[] excluded = new int[] {0, 1, 2, 4, 5, 7, 8};
+        isSequenceValid(members, possible, excluded);
+    }
+
+    @Test
+    public void testRemoveInsertionsAfter() {
+        sequence.insert(begin, 3);
+        sequence.insert(3, 9);
+        sequence.insert(9, 6); // sequence at this point: begin -> 3 -> 9 -> 6 -> end
+        sequence.removeInsertionAfter(9);
+        sequence.removeInsertion(4, 8);
+        sequence.removeInsertion(6, 7);
+        sequence.removeInsertion(begin, 2);
+        int[] members = new int[] {begin, 3, 9, 6, end};
+        int[] possible = new int[] {0, 1, 2, 4, 5, 7, 8};
+        int[] excluded = new int[] {};
+        int[][] memberInsertions = new int[][] {
+                {sequence.begin(), 3, 6},
+                {sequence.begin(), 3, 6},
+                {3, 6},
+                {},
+                {sequence.begin(), 3, 6},
+                {sequence.begin(), 3, 6},
+                {},
+                {sequence.begin(), 3},
+                {sequence.begin(), 3, 6},
+                {},
+        };
+        int[][] possibleInsertions = new int[][] {
+                {   1, 2,    4, 5,    7, 8,  },
+                {0,    2,    4, 5,    7, 8,  },
+                {0, 1,       4, 5,    7, 8,  },
+                {},
+                {0, 1, 2,       5,    7, 8,  },
+                {0, 1, 2,    4,       7, 8,  },
+                {},
+                {0, 1, 2,    4, 5,       8,  },
+                {0, 1, 2,       5,    7,     },
+                {},
+        };
+        isSequenceValid(sequence, members, possible, excluded, memberInsertions, possibleInsertions);
     }
 
 }

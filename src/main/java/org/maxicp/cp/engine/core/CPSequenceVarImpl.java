@@ -9,29 +9,29 @@ import static org.maxicp.util.exception.InconsistencyException.INCONSISTENCY;
 
 /**
  * a sequence var, where each node is represented by an integer and each insertion is an InsertionVar
- * all nodes are split into 3 categories: scheduled (in the sequence), possible (could be in the sequence) and excluded (cannot be in the sequence)
+ * all nodes are split into 3 categories: members (in the sequence), possible (could be in the sequence) and excluded (cannot be in the sequence)
  * WARNING: the ids for the begin node and the end node MUST be >= number of nodes considered
  *
  * constraints remove insertions points from the InsertionVars contained within the sequence
  * if an InsertionVar cannot be inserted into the sequence, it is set as excluded
  */
-public class SequenceVarImpl implements SequenceVar {
+public class CPSequenceVarImpl implements CPSequenceVar {
 
     private final CPSolver cp;
     private final int nNodes;                   // number of nodes available (omitting begin and end)
     private final int maxIndex;                 // max index used for the node (max between begin and end)
     private final int nOmitted;                // number of unused indexes in the representation for the domain
-    private InsertionVarInSequence[] insertionVars;
+    private CPInsertionVarInSequence[] insertionVars;
     private StateInt[] succ;                    // successors of the nodes
     private StateInt[] pred;                    // predecessors of the nodes
-    private StateSequenceSet domain;            // domain for the set of Scheduled, Possible and Excluded variables
+    private StateSequenceSet domain;            // domain for the set of Member, Possible and Excluded variables
 
     // TODO constructor from a set of specified edges
     // TODO checker for clusters of possibles nodes
 
     // constraints registered for this sequence
     private StateStack<CPConstraint> onInsert;    // a node has been inserted into the sequence
-    private StateStack<CPConstraint> onBind;      // all nodes are scheduled or excluded: no possible node remain
+    private StateStack<CPConstraint> onFix;      // all nodes are members or excluded: no possible node remain
     private StateStack<CPConstraint> onExclude;   // a node has been excluded from the sequence
     private final int begin;                    // beginning of the sequence
     private final int end;                      // end of the sequence
@@ -45,7 +45,7 @@ public class SequenceVarImpl implements SequenceVar {
      * @param begin first node of the path
      * @param end last node of the path
      */
-    public SequenceVarImpl(CPSolver cp, int nNodes, int begin, int end) {
+    public CPSequenceVarImpl(CPSolver cp, int nNodes, int begin, int end) {
         //assert (begin >= nNodes && end >= nNodes);
         this.cp = cp;
         this.nNodes = nNodes;
@@ -56,13 +56,13 @@ public class SequenceVarImpl implements SequenceVar {
         this.nOmitted = maxIndex - nNodes - (begin >= nNodes ? 1 : 0) - (end >= nNodes ? 1 : 0);
         this.begin = begin;
         this.end = end;
-        insertionVars = new InsertionVarInSequence[nNodes];
+        insertionVars = new CPInsertionVarInSequence[nNodes];
         succ = new StateInt[maxIndex];
         pred = new StateInt[maxIndex];
         for (int i=0; i < nNodes; ++i) {
             if (i == begin | i == end)
                 continue;
-            insertionVars[i] = new InsertionVarInSequence(i);
+            insertionVars[i] = new CPInsertionVarInSequence(i);
             succ[i] = cp.getStateManager().makeStateInt(i);
             pred[i] = cp.getStateManager().makeStateInt(i);
         }
@@ -79,7 +79,7 @@ public class SequenceVarImpl implements SequenceVar {
         domain.require(begin); // the beginning and ending nodes are always in the domain
         domain.require(end);
         onInsert = new StateStack<>(cp.getStateManager());
-        onBind = new StateStack<>(cp.getStateManager());
+        onFix = new StateStack<>(cp.getStateManager());
         onExclude = new StateStack<>(cp.getStateManager());
         values = new int[nNodes];
     }
@@ -90,8 +90,8 @@ public class SequenceVarImpl implements SequenceVar {
      */
      private SequenceListener seqListener = new SequenceListener() {
         @Override
-        public void bind() {
-            scheduleAll(onBind);
+        public void fix() {
+            scheduleAll(onFix);
         }
 
         @Override
@@ -107,11 +107,11 @@ public class SequenceVarImpl implements SequenceVar {
     /**
      * InsertionVar: represents a node in the sequence, its status and its predecessors
      */
-    public class InsertionVarInSequence implements InsertionVar {
+    public class CPInsertionVarInSequence implements CPInsertionVar {
 
         // sparse set
-        private StateInt nbPossible;  // number of possible insertions. Each value is included within the possible set of the sequence
-        private StateInt nbScheduled; // number of scheduled insertions. Each value is included within the scheduled set of the sequence
+        private StateInt nPossible;  // number of possible insertions. Each value is included within the possible set of the sequence
+        private StateInt nMember; // number of member insertions. Each value is included within the member set of the sequence
         private int[] values;
         private int[] indexes;
         private int n;
@@ -138,13 +138,13 @@ public class SequenceVarImpl implements SequenceVar {
 
         };
 
-        public InsertionVarInSequence(int id) {
+        public CPInsertionVarInSequence(int id) {
             // all insertions are valid at first
-            // no insertion belongs to the set of scheduled insertions at first
+            // no insertion belongs to the set of member insertions at first
             this.id = id;
             n = Math.max(begin+1, nNodes);
-            nbPossible = cp.getStateManager().makeStateInt(n); // consider all nodes as possible
-            nbScheduled = cp.getStateManager().makeStateInt(0);
+            nPossible = cp.getStateManager().makeStateInt(n); // consider all nodes as possible
+            nMember = cp.getStateManager().makeStateInt(0);
             onDomain = new StateStack<>(cp.getStateManager());
             onInsert = new StateStack<>(cp.getStateManager());
             onExclude = new StateStack<>(cp.getStateManager());
@@ -157,20 +157,20 @@ public class SequenceVarImpl implements SequenceVar {
             }
             for (int i = nNodes; i < begin; ++i) {
                 remove(i); // remove nodes in nNodes...begin
-                nbPossible.decrement(); // in order to have a correct removal operation afterwards
+                nPossible.decrement(); // in order to have a correct removal operation afterwards
             }
             remove(id); // a node cannot have itself as predecessor
-            nbPossible.decrement();
+            nPossible.decrement();
 
-            // the begin node is always a scheduled predecessor at first
-            nbScheduled.setValue(1);
-            nbPossible.decrement();
+            // the begin node is always a member predecessor at first
+            nMember.setValue(1);
+            nPossible.decrement();
             // if the end node is in the set, remove it
             if (end < nNodes) {
                 if (remove(end))
-                    nbPossible.decrement();
+                    nPossible.decrement();
             }
-            nbScheduled.setValue(1);        // the beginning node is always a valid predecessor at first
+            nMember.setValue(1);        // the beginning node is always a valid predecessor at first
         }
 
         @Override
@@ -179,13 +179,13 @@ public class SequenceVarImpl implements SequenceVar {
         }
 
         @Override
-        public boolean isBound() {
-            return !SequenceVarImpl.this.isPossible(node());
+        public boolean isFixed() {
+            return !CPSequenceVarImpl.this.isPossible(node());
         }
 
         @Override
         public void removeInsert(int i) {
-            SequenceVarImpl.this.removeInsertion(i, id);
+            CPSequenceVarImpl.this.removeInsertion(i, id);
         }
 
         private boolean checkVal(int val) {
@@ -208,7 +208,7 @@ public class SequenceVarImpl implements SequenceVar {
 
         /**
          * remove an insertion point from the set of possible insertions
-         * does not interact with nbScheduled nor nbPossible, and should only be called by the SequenceVarImpl
+         * does not interact with nMember nor nPossible, and should only be called by the SequenceVarImpl
          * @param val insertion point to remove
          */
         private boolean remove(int val) {
@@ -222,10 +222,10 @@ public class SequenceVarImpl implements SequenceVar {
 
         /**
          * remove all insertions points except the one specified
-         * does not schedule into the sequence, and should only be called by the SequenceVarImpl
+         * does not insert into the sequence, and should only be called by the SequenceVarImpl
          * @param v insertion point to remove
          */
-        private void removeAllBut(int v, boolean isScheduled) {
+        private void removeAllBut(int v, boolean isMember) {
             assert (contains(v));
             int val = values[0];
             int index = indexes[v];
@@ -233,33 +233,33 @@ public class SequenceVarImpl implements SequenceVar {
             values[0] = v;
             indexes[val] = index;
             values[index] = val;
-            if (isScheduled) {
-                nbScheduled.setValue(1);
-                nbPossible.setValue(0);
+            if (isMember) {
+                nMember.setValue(1);
+                nPossible.setValue(0);
             } else {
-                nbScheduled.setValue(0);
-                nbPossible.setValue(1);
+                nMember.setValue(0);
+                nPossible.setValue(1);
             }
         }
 
         /**
          * remove all insertions points from the set of insertions
-         * does not exclude / schedule into the sequence, and should only be called by the SequenceVarImpl
+         * does not exclude / insert into the sequence, and should only be called by the SequenceVarImpl
          */
         private void removeAll() {
-            nbPossible.setValue(0);
-            nbScheduled.setValue(0);
+            nPossible.setValue(0);
+            nMember.setValue(0);
         }
 
         @Override
         public void removeAllInsert() {
-            SequenceVarImpl.this.exclude(id);
+            CPSequenceVarImpl.this.exclude(id);
         }
 
         @Override
         public void removeAllInsertBut(int i) {
-            if (isScheduled(i))  // equivalent to the scheduling of the variable
-                schedule(i, id);
+            if (isMember(i))  // equivalent to the scheduling of the variable
+                insert(i, id);
             else if (isPossible(i)) {
                 removeAllBut(i, false);
             } else
@@ -280,7 +280,7 @@ public class SequenceVarImpl implements SequenceVar {
         }
 
         @Override
-        public int fillInsertions(int[] dest) {
+        public int fillInsertion(int[] dest) {
             int s = size();
             if (s >= 0) System.arraycopy(values, 0, dest, 0, s);
             return s;
@@ -288,7 +288,7 @@ public class SequenceVarImpl implements SequenceVar {
 
         @Override
         public int size() {
-            return nbPossible.value() + nbScheduled.value();
+            return nPossible.value() + nMember.value();
         }
 
         @Override
@@ -322,31 +322,31 @@ public class SequenceVarImpl implements SequenceVar {
         }
 
         @Override
-        public void whenBind(Procedure f) {
+        public void whenFixed(Procedure f) {
             onExclude.push(constraintClosure(f));
             onInsert.push(constraintClosure(f));
         }
 
         @Override
-        public void propagateOnBind(CPConstraint c) {
+        public void propagateOnFixed(CPConstraint c) {
             onInsert.push(c);
             onExclude.push(c);
         }
 
-        public int nbScheduled() {return nbScheduled.value();}
+        public int nMember() {return nMember.value();}
 
-        public int nbPossible() {return nbPossible.value();}
+        public int nPossible() {return nPossible.value();}
 
         @Override
         public String toString() {
-            StringBuilder scheduled = new StringBuilder("S: {");
+            StringBuilder member = new StringBuilder("M: {");
             StringBuilder possible = new StringBuilder(", P: {");
             StringBuilder excluded = new StringBuilder(", E: {");
             for (int i = 0 ; i < values.length ; ++i) {
                 if (contains(values[i])) {
-                    if (isScheduled(values[i])) {
-                        scheduled.append(values[i]);
-                        scheduled.append(',');
+                    if (isMember(values[i])) {
+                        member.append(values[i]);
+                        member.append(',');
                     } else if (isPossible(values[i])) {
                         possible.append(values[i]);
                         possible.append(',');
@@ -356,7 +356,7 @@ public class SequenceVarImpl implements SequenceVar {
                     excluded.append(',');
                 }
             }
-            return scheduled.append('}').toString() + possible.append('}').toString() + excluded.append('}').toString();
+            return member.append('}').toString() + possible.append('}').toString() + excluded.append('}').toString();
         }
     }
 
@@ -376,7 +376,7 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public boolean isBound() {
+    public boolean isFix() {
         return domain.nPossible() == 0;
     }
 
@@ -406,12 +406,12 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public int nScheduledNode() {
-        return nScheduledNode(false);
+    public int nMember() {
+        return nMember(true);
     }
 
     @Override
-    public int nScheduledNode(boolean includeBounds) {
+    public int nMember(boolean includeBounds) {
         if (includeBounds)
             return domain.nRequired();
         else
@@ -419,22 +419,22 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public int nPossibleNode() {
+    public int nPossible() {
         return domain.nPossible();
     }
 
     @Override
-    public int nExcludedNode() {
+    public int nExcluded() {
         return domain.nExcluded() - nOmitted;
     }
 
     @Override
-    public int nNodes() {
-        return nNodes(false);
+    public int nNode() {
+        return nNode(true);
     }
 
     @Override
-    public int nNodes(boolean includeBounds) {
+    public int nNode(boolean includeBounds) {
         if (includeBounds)
             return nNodes + 2;
         else
@@ -442,15 +442,15 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public boolean canSchedule(int pred, int node) {
-        return isPossible(node) && isScheduled(pred) && (insertionVars[node].contains(pred));
+    public boolean canInsert(int pred, int node) {
+        return isPossible(node) && isMember(pred) && (insertionVars[node].contains(pred));
     }
 
     @Override
     public boolean canPrecede(int pred, int node) {
         if (isExcluded(node) || isExcluded(pred))
             return false;
-        if (canSchedule(pred, node))
+        if (canInsert(pred, node))
             return true;
         // look recursively into the InsertionsVar, to see if pred is an insertion of other nodes
         resetSeen();
@@ -463,7 +463,7 @@ public class SequenceVarImpl implements SequenceVar {
         int size = insertionVars[node].size();
         for (int i = 0 ; i < size ; ++i) {
             int n = insertionVars[node].values[i];
-            if (isScheduled(n)) {
+            if (isMember(n)) {
                 if (n == begin)
                     return true;
                 else if (precede(pred, n))
@@ -479,19 +479,13 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     private void resetSeen() {
-        for (InsertionVarInSequence i: insertionVars) {
+        for (CPInsertionVarInSequence i: insertionVars) {
             i.seen = false;
         }
     }
 
-    /**
-     * tell if pred occurs before node in the sequence
-     * @param pred node occuring before
-     * @param node node occuring after
-     * @return true if pred precedes node in the sequence
-     */
-    private boolean precede(int pred, int node) {
-        if (!isScheduled(pred) || !isScheduled(node))
+    public boolean precede(int pred, int node) {
+        if (!isMember(pred) || !isMember(node))
             return false;
         // look from the successor of pred until the end of sequence is met
         for (int succ = nextMember(pred); succ != begin; succ = nextMember(succ)) {
@@ -502,11 +496,11 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public void schedule(int pred, int node) {
-        if (!isScheduled(pred))
+    public void insert(int pred, int node) {
+        if (!isMember(pred))
             throw INCONSISTENCY;
         if (!domain.require(node)) {
-            // the node is either already scheduled or excluded
+            // the node is either already member or excluded
             if (succ[pred].value() != node || isExcluded(node)) // the insertion points asked differs from the current / the node is excluded
                 throw INCONSISTENCY;
             else // trying to do the same insertion twice
@@ -525,13 +519,13 @@ public class SequenceVarImpl implements SequenceVar {
         int size = domain.getPossible(values);
         for (int i = 0; i < size ; ++i) {
             if (insertionVars[values[i]].contains(node)) {
-                // the insertion point related to this node belongs now a scheduled insertion point
-                insertionVars[values[i]].nbPossible.decrement();
-                insertionVars[values[i]].nbScheduled.increment();
+                // the insertion point related to this node belongs now a member insertion point
+                insertionVars[values[i]].nPossible.decrement();
+                insertionVars[values[i]].nMember.increment();
             }
         }
-        if (isBound())
-            seqListener.bind();
+        if (isFix())
+            seqListener.fix();
         insertionVars[node].listener.insert();
         insertionVars[node].listener.change();
         seqListener.insert();
@@ -539,7 +533,7 @@ public class SequenceVarImpl implements SequenceVar {
 
     @Override
     public void exclude(int node) {
-        if (isScheduled(node))
+        if (isMember(node))
             throw INCONSISTENCY;
         if (isExcluded(node))
             return;
@@ -548,8 +542,8 @@ public class SequenceVarImpl implements SequenceVar {
             insertionVars[values[i]].removeInsert(node);
         }
         if (domain.exclude(node)) {
-            if (isBound())
-                seqListener.bind();
+            if (isFix())
+                seqListener.fix();
             insertionVars[node].removeAll();
             insertionVars[node].listener.exclude();
             //insertionVars[node].listener.change();  // not called as it technically does not change its domain
@@ -561,7 +555,7 @@ public class SequenceVarImpl implements SequenceVar {
     public void excludeAllPossible() {
         int size = domain.getPossible(values);
         domain.excludeAllPossible();
-        seqListener.bind(); // notify that the variable is fixed
+        seqListener.fix(); // notify that the variable is fixed
         seqListener.exclude(); // nodes have been excluded
         for (int i = 0 ; i < size; ++i) {
             insertionVars[values[i]].removeAll(); //
@@ -570,7 +564,7 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public boolean isScheduled(int node) {
+    public boolean isMember(int node) {
         return domain.isRequired(node);
     }
 
@@ -585,7 +579,7 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public int fillScheduled(int[] dest) {
+    public int fillMember(int[] dest) {
         return domain.getRequired(dest);
     }
 
@@ -600,11 +594,12 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public int fillScheduledInsertions(int node, int[] dest) {
+    public int fillMemberInsertion(int node, int[] dest) {
         if (!isPossible(node))
             return 0;
         int j = 0; // indexing used for dest
-        if (insertionVars[node].nbScheduled() > domain.nRequired()) { // quicker to iterate over the current sequence
+        int s = insertionVars[node].size();
+        if (s > domain.nRequired()) { // quicker to iterate over the current sequence
             int size = domain.nRequired();
             int current = end; // the end of the sequence can never be a valid insertion
             for (int i=0; i<size; ++i) {
@@ -614,9 +609,8 @@ public class SequenceVarImpl implements SequenceVar {
                     dest[j++] = current;
             }
         } else { // quicker to iterate over the remaining insertions inside the insertion var
-            int s = insertionVars[node].size();
             for (int i = 0; i < s; i++) {
-                // does insertion belong effectively to the scheduled sequence?
+                // does insertion belong effectively to the member sequence?
                 if (domain.isRequired(insertionVars[node].values[i]))
                     dest[j++] = insertionVars[node].values[i];
             }
@@ -625,23 +619,22 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public int fillPossibleInsertions(int node, int[] dest) {
+    public int fillPossibleInsertion(int node, int[] dest) {
         if (!isPossible(node))
             return 0;
         int j = 0; // indexing used for dest
-        if (insertionVars[node].nbPossible() > domain.nPossible()) { // quicker to iterate over the current sequence
-            int size = domain.nPossible();
-            int current = end;
+        int s = insertionVars[node].size();
+        if (s > domain.nPossible()) { // quicker to iterate over the possible nodes
+            int size = domain.getPossible(values);
             for (int i=0; i<size; ++i) {
-                current = nextMember(current);
+                int current = values[i];
                 // does node in the current sequence belong to a valid insertion?
                 if (insertionVars[node].contains(current))
                     dest[j++] = current;
             }
         } else { // quicker to iterate over the remaining insertions inside the insertion var
-            int s = insertionVars[node].size();
             for (int i = 0; i < s; i++) {
-                // does insertion belong effectively to the scheduled sequence?
+                // does insertion belong effectively to the possible values?
                 if (domain.isPossible(insertionVars[node].values[i]))
                     dest[j++] = insertionVars[node].values[i];
             }
@@ -650,23 +643,23 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public int nPossibleInsertions(int node) {
-        return insertionVars[node].nbPossible.value();
+    public int nPossibleInsertion(int node) {
+        return insertionVars[node].nPossible.value();
     }
 
     @Override
-    public int nScheduledInsertions(int node) {
-        return insertionVars[node].nbScheduled.value();
+    public int nMemberInsertion(int node) {
+        return insertionVars[node].nMember.value();
     }
 
     @Override
-    public int nInsertions(int node) {
+    public int nInsertion(int node) {
         return insertionVars[node].size();
     }
 
     @Override
-    public int fillInsertions(int node, int[] dest) {
-        return insertionVars[node].fillInsertions(dest);
+    public int fillInsertion(int node, int[] dest) {
+        return insertionVars[node].fillInsertion(dest);
     }
 
     @Override
@@ -684,28 +677,13 @@ public class SequenceVarImpl implements SequenceVar {
     @Override
     public void removeInsertion(int insertion, int node) {
         if (insertionVars[node].remove(insertion)) {
-            // update the counters for the number of scheduled and possible insertions
-            if (isScheduled(insertion))
-                insertionVars[node].nbScheduled.decrement();
+            // update the counters for the number of member and possible insertions
+            if (isMember(insertion))
+                insertionVars[node].nMember.decrement();
             else if (isPossible(insertion))
-                insertionVars[node].nbPossible.decrement();
-            switch (insertionVars[node].size()) {
-                case 0:
-                    exclude(node);
-                    break;
-                case 1:  // only one insertion point remains
-                    // do nothing
-                    /*
-                    if (isScheduled(insertionVars[node].values[0])) {
-                        schedule(node, insertionVars[node].values[0]);
-                    } else {
-                        // the only insertion remaining belongs to the set of possible insertions
-                    }
-                     */
-                    break;
-                default: // more than 1 insertion point remain
-                    ;
-            }
+                insertionVars[node].nPossible.decrement();
+            if (insertionVars[node].size() == 0)
+                exclude(node);
             insertionVars[node].listener.change();
         }
     }
@@ -719,15 +697,15 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public InsertionVar getInsertionVar(int i) {
+    public CPInsertionVar getInsertionVar(int i) {
         return insertionVars[i];
     }
 
     /**  =====  propagation methods  =====  */
 
     @Override
-    public void whenBind(Procedure f) {
-        onBind.push(constraintClosure(f));
+    public void whenFix(Procedure f) {
+        onFix.push(constraintClosure(f));
     }
 
     @Override
@@ -741,8 +719,8 @@ public class SequenceVarImpl implements SequenceVar {
     }
 
     @Override
-    public void propagateOnBind(CPConstraint c) {
-        onBind.push(c);
+    public void propagateOnFix(CPConstraint c) {
+        onFix.push(c);
     }
 
     @Override
@@ -783,7 +761,7 @@ public class SequenceVarImpl implements SequenceVar {
 
     @Override
     public String ordering(boolean includeBounds, String join) {
-        if (nScheduledNode(includeBounds) == 0)
+        if (nMember(includeBounds) == 0)
             return "";
         int current = includeBounds ? begin : nextMember(begin);
         int last = includeBounds ? end : predMember(end);

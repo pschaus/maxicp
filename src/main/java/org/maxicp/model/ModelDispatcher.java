@@ -4,6 +4,7 @@ import org.maxicp.model.concrete.ConcreteModel;
 import org.maxicp.model.constraints.Element1D;
 import org.maxicp.model.constraints.Element2D;
 import org.maxicp.model.symbolic.IntVarRangeImpl;
+import org.maxicp.model.symbolic.SequenceVarImpl;
 import org.maxicp.model.symbolic.SymbolicModel;
 
 import java.util.function.Consumer;
@@ -82,6 +83,10 @@ public class ModelDispatcher {
 
     public IntVar intVar(int min, int max) {
         return new IntVarRangeImpl(this, min, max);
+    }
+
+    public SequenceVar sequenceVar(int nNodes, int begin, int end) {
+        return new SequenceVarImpl(this, nNodes, begin, end);
     }
 
     public interface ModelInstantiator<T extends ConcreteModel> {

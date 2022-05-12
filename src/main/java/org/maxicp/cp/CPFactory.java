@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 /**
- * Factory to create {@link CPSolver}, {@link CPIntVar}, {@link CPConstraint}
+ * Factory to create {@link CPSolver}, {@link CPIntVar}, {@link CPConstraint}, {@link CPSequenceVar}
  * and some modeling utility methods.
  * Example for the n-queens problem:
  * <pre>
@@ -121,6 +121,16 @@ public final class CPFactory {
      */
     public static CPBoolVar makeBoolVar(CPSolver cp) {
         return new CPBoolVarImpl(cp);
+    }
+
+    /**
+     * Creates a sequence variable.
+     *
+     * @param cp the solver in which the variable is created
+     * @return an uninstantiated boolean variable
+     */
+    public static CPSequenceVar makeSequenceVar(CPSolver cp, int nNodes, int begin, int end) {
+        return new CPSequenceVarImpl(cp, nNodes, begin, end);
     }
 
     /**

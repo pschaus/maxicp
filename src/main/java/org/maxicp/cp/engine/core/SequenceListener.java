@@ -5,7 +5,7 @@ public interface SequenceListener {
     /**
      * Called whenever no possible insertion remain
      */
-    void bind();
+    void fix();
 
     /**
      * Called whenever a possible insertion has been inserted into the sequence

@@ -1,6 +1,5 @@
 package org.maxicp.cp.engine.core;
 
-import org.maxicp.model.Constraint;
 import org.maxicp.util.Procedure;
 
 /**
@@ -10,7 +9,7 @@ import org.maxicp.util.Procedure;
  *  - possible nodes, which could be part of the sequence
  *  - excluded nodes, which cannot be part of the sequence
  */
-public interface SequenceVar {
+public interface CPSequenceVar extends CPVar {
 
     /**
      * Returns the solver in which this variable was created.
@@ -31,36 +30,36 @@ public interface SequenceVar {
     int end();
 
     /**
-     * @return number of scheduled nodes in the sequence
+     * @return number of scheduled nodes in the sequence, including the {@link #begin()} and {@link #end()} nodes
      */
-    int nScheduledNode();
+    int nMember();
 
     /**
      * @param includeBounds whether to count the {@link #begin()} and {@link #end()} nodes or not
      * @return number of scheduled nodes
      */
-    int nScheduledNode(boolean includeBounds);
+    int nMember(boolean includeBounds);
 
     /**
      * @return number of possible nodes in the sequence
      */
-    int nPossibleNode();
+    int nPossible();
 
     /**
      * @return number of excluded nodes in the sequence
      */
-    int nExcludedNode();
+    int nExcluded();
 
     /**
-     * @return number of nodes in the sequence, omitting the beginning and ending node
+     * @return number of nodes in the sequence, including the {@link #begin()} and {@link #end()} nodes
      */
-    int nNodes();
+    int nNode();
 
     /**
      * @param includeBounds whether to count the {@link #begin()} and {@link #end()} nodes or not
      * @return number of nodes in the sequence
      */
-    int nNodes(boolean includeBounds);
+    int nNode(boolean includeBounds);
 
     /**
      * set the node into the sequence, right after a predecessor. Fails if the node is in the excluded set, no effect
@@ -68,7 +67,7 @@ public interface SequenceVar {
      * @param pred predecessor for the node
      * @param node node to schedule
      */
-    void schedule(int pred, int node);
+    void insert(int pred, int node);
 
     /**
      * tell if a node can be scheduled with a given predecessor
@@ -76,7 +75,7 @@ public interface SequenceVar {
      * @param node node trying to be scheduled
      * @return true if the node can be scheduled
      */
-    boolean canSchedule(int pred, int node);
+    boolean canInsert(int pred, int node);
 
     /**
      * tell if a node can precede another one
@@ -104,7 +103,7 @@ public interface SequenceVar {
      * @param node node whose state needs to be known
      * @return true if the node is scheduled
      */
-    boolean isScheduled(int node);
+    boolean isMember(int node);
 
     /**
      * tell if a node is possible
@@ -128,7 +127,7 @@ public interface SequenceVar {
      * @return the size of the scheduled domain and {@code dest[0,...,size-1]} contains
      *         the values in the scheduled domain in an arbitrary order
      */
-    int fillScheduled(int[] dest);
+    int fillMember(int[] dest);
 
     /**
      * Copies the possible values of the domain into an array.
@@ -156,7 +155,7 @@ public interface SequenceVar {
      * @return the size of the scheduled insertion domain and {@code dest[0,...,size-1]} contains
      *         the values in the scheduled insertion domain in an arbitrary order
      */
-    int fillScheduledInsertions(int node, int[] dest);
+    int fillMemberInsertion(int node, int[] dest);
 
     /**
      * Copies the possible insertions values of the domain into an array.
@@ -166,28 +165,28 @@ public interface SequenceVar {
      * @return the size of the possible insertion domain and {@code dest[0,...,size-1]} contains
      *         the values in the possible insertion domain in an arbitrary order
      */
-    int fillPossibleInsertions(int node, int[] dest);
+    int fillPossibleInsertion(int node, int[] dest);
 
     /**
      * give the number of possible insertions for a node
      * @param node node whose number of possible insertions needs to be known
      * @return number of possible insertions for a node
      */
-    int nPossibleInsertions(int node);
+    int nPossibleInsertion(int node);
 
     /**
      * give the number of scheduled insertions for a node
      * @param node node whose number of scheduled insertions needs to be known
      * @return number of scheduled insertions for a node
      */
-    int nScheduledInsertions(int node);
+    int nMemberInsertion(int node);
 
     /**
      * give the total number of insertions for a node
      * @param node node whose number of insertions needs to be known
      * @return number of insertions for a node {@code nInsertions(n) == nPossibleInsertions(n) + nScheduledInsertions(n)}
      */
-    int nInsertions(int node);
+    int nInsertion(int node);
 
     /**
      * Copies the insertions values of the domain into an array.
@@ -197,7 +196,7 @@ public interface SequenceVar {
      * @return the size of the insertion domain and {@code dest[0,...,size-1]} contains
      *         the values in the insertion domain in an arbitrary order
      */
-    int fillInsertions(int node, int[] dest);
+    int fillInsertion(int node, int[] dest);
 
     /**
      * tell if a node is an insertion (possible predecessor) of another node
@@ -216,16 +215,16 @@ public interface SequenceVar {
 
     /**
      * remove all insertion having the specified node as predecessor
-     * @param node
+     * @param node node after which no insertion can occur
      */
     void removeInsertionAfter(int node);
 
     /**
-     * gives the {@link InsertionVar} related to a node in the sequence
+     * gives the {@link CPInsertionVar} related to a node in the sequence
      * @param i id of the InsertionVar
      * @return InsertionVar with id i
      */
-    InsertionVar getInsertionVar(int i);
+    CPInsertionVar getInsertionVar(int i);
 
     /**
      * Asks that the closure is called whenever the domain
@@ -233,7 +232,7 @@ public interface SequenceVar {
      *
      * @param f the closure
      */
-    void whenBind(Procedure f);
+    void whenFix(Procedure f);
 
     /**
      * Asks that the closure is called whenever
@@ -259,7 +258,7 @@ public interface SequenceVar {
      * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on bind events of this variable.
      */
-    void propagateOnBind(CPConstraint c);
+    void propagateOnFix(CPConstraint c);
 
     /**
      * Asks that {@link CPConstraint#propagate()} is called whenever
@@ -284,7 +283,7 @@ public interface SequenceVar {
     /**
      * @return true when no more node belongs to the set of possible nodes
      */
-    boolean isBound();
+    boolean isFix();
 
     /**
      * @param node node in the scheduled sequence
@@ -299,7 +298,8 @@ public interface SequenceVar {
     int predMember(int node);
 
     /**
-     * fill the current order of the sequence into an array large enough, including beginning and ending node
+     * fill the current order of the sequence into an array large enough, including {@link #begin()} and {@link #end()}
+     * node
      * @param dest array where to store the order of the sequence
      * @return number of elements in the sequence, including beginning and ending node
      */
@@ -314,13 +314,14 @@ public interface SequenceVar {
     int fillOrder(int[] dest, boolean includeBounds);
 
     /**
-     * give the ordering of nodes without the beginning and end nodes
-     * @return
+     * give the ordering of nodes with the {@link #begin()} and {@link #end()} nodes
+     * @return ordering of the sequence, with " -> " between 2 consecutive nodes, incudling the {@link #begin()} and
+     *  {@link #end()} nodes
      */
     String ordering();
 
     /**
-     * give the ordering of nodes with the beginning and end nodes
+     * give the ordering of nodes with possibly the {@link #begin()} and {@link #end()} nodes
      * @param includeBounds if the bounds ({@link #begin()} and {@link #end()}) must be included or not
      * @return ordering of the sequence, with " -> " between 2 consecutive nodes
      */
@@ -330,8 +331,16 @@ public interface SequenceVar {
      * give the ordering of nodes with the beginning and end nodes
      * @param includeBounds if the bounds ({@link #begin()} and {@link #end()}) must be included or not
      * @param join string that must be used to join two consecutive nodes
-     * @return ordering of the sequence
+     * @return ordering of the sequence, nodes being joined on the specified string
      */
     String ordering(boolean includeBounds, String join);
+
+    /**
+     * tell if pred occurs before node in the sequence
+     * @param pred node occuring before
+     * @param node node occuring after
+     * @return true if pred precedes node in the sequence
+     */
+    boolean precede(int pred, int node);
 
 }
