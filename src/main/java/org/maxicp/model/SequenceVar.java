@@ -9,8 +9,8 @@ public interface SequenceVar extends Var {
     int nExcluded();
     int nNode();
     int nInsertion(int node);
-    int nMemberInsertions(int node);
-    int nPossibleInsertions(int node);
+    int nMemberInsertion(int node);
+    int nPossibleInsertion(int node);
     boolean isMember(int node);
     boolean isPossible(int node);
     boolean isExcluded(int node);

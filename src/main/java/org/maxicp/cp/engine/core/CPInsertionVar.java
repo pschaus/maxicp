@@ -138,6 +138,6 @@ public interface CPInsertionVar {
      * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on bind events of this variable.
      */
-    void propagateOnFixed(CPConstraint c);
+    void propagateOnFix(CPConstraint c);
 
 }

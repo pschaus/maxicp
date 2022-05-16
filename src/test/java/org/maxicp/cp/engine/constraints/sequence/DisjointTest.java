@@ -138,4 +138,25 @@ public class DisjointTest extends CPSolverTest {
         CPSequenceVars[0].exclude(2);
         cp.fixPoint();
     }
+
+    @Test(expected = InconsistencyException.class)
+    public void testExcludeInMultipleSequence() {
+        try {
+            cp.post(new Disjoint(CPSequenceVars));
+        } catch (InconsistencyException e) {
+            fail("inconsistency should not be thrown when no node is excluded");
+        }
+        for (CPSequenceVar seq : CPSequenceVars) {
+            seq.exclude(2);
+        }
+        cp.fixPoint();
+    }
+
+    @Test(expected = InconsistencyException.class)
+    public void testDisjointAfterExclusion() {
+        for (CPSequenceVar seq : CPSequenceVars) {
+            seq.exclude(2);
+        }
+        cp.post(new Disjoint(CPSequenceVars));
+    }
 }

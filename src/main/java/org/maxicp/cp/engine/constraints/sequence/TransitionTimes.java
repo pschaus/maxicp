@@ -4,6 +4,9 @@ import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPIntVar;
 import org.maxicp.cp.engine.core.CPSequenceVar;
 
+/**
+ * A {@link CPSequenceVar} respects temporal transitions between nodes
+ */
 public class TransitionTimes extends AbstractCPConstraint {
     
     private final CPIntVar[] time;
@@ -92,7 +95,7 @@ public class TransitionTimes extends AbstractCPConstraint {
             distance.propagateOnBoundChange(this);
         }
         seq.propagateOnInsert(this);
-        seq.whenFix(this::updateMinTimeScheduledAndDist); // set the value for the distance
+        seq.whenFixed(this::updateMinTimeScheduledAndDist); // set the value for the distance
     }
 
     /**
@@ -119,7 +122,7 @@ public class TransitionTimes extends AbstractCPConstraint {
         }
         
         if (this.distance != null) {
-            if (seq.isFix())
+            if (seq.isFixed())
                 this.distance.fix(distance);
             else {
                 this.distance.removeBelow(distance);
@@ -208,7 +211,7 @@ public class TransitionTimes extends AbstractCPConstraint {
         //System.out.println("propagating for " + seq.toString());
         int currentDistance = updateMinTimeScheduledAndDist();
         updateMaxTimeScheduled();
-        if (!seq.isFix())
+        if (!seq.isFixed())
             updateScheduledInsertions(currentDistance); // remove insertions candidates affected by the insertion
         //updatePossibleInsertions();
         setActive(true);
@@ -221,7 +224,7 @@ public class TransitionTimes extends AbstractCPConstraint {
      * - the node is scheduled -> call the full propagation
      * - the node is possible -> check its current insertions
      */
-    public class TransitionFromTimeWindow extends AbstractCPConstraint {
+    private class TransitionFromTimeWindow extends AbstractCPConstraint {
 
         private final int node;
 

@@ -328,7 +328,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
         }
 
         @Override
-        public void propagateOnFixed(CPConstraint c) {
+        public void propagateOnFix(CPConstraint c) {
             onInsert.push(c);
             onExclude.push(c);
         }
@@ -376,7 +376,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
     }
 
     @Override
-    public boolean isFix() {
+    public boolean isFixed() {
         return domain.nPossible() == 0;
     }
 
@@ -524,7 +524,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
                 insertionVars[values[i]].nMember.increment();
             }
         }
-        if (isFix())
+        if (isFixed())
             seqListener.fix();
         insertionVars[node].listener.insert();
         insertionVars[node].listener.change();
@@ -542,7 +542,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
             insertionVars[values[i]].removeInsert(node);
         }
         if (domain.exclude(node)) {
-            if (isFix())
+            if (isFixed())
                 seqListener.fix();
             insertionVars[node].removeAll();
             insertionVars[node].listener.exclude();
@@ -682,8 +682,12 @@ public class CPSequenceVarImpl implements CPSequenceVar {
                 insertionVars[node].nMember.decrement();
             else if (isPossible(insertion))
                 insertionVars[node].nPossible.decrement();
-            if (insertionVars[node].size() == 0)
+            if (insertionVars[node].size() == 0) {
+                if (node == 71) {
+                    int a = 0;
+                }
                 exclude(node);
+            }
             insertionVars[node].listener.change();
         }
     }
@@ -704,7 +708,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
     /**  =====  propagation methods  =====  */
 
     @Override
-    public void whenFix(Procedure f) {
+    public void whenFixed(Procedure f) {
         onFix.push(constraintClosure(f));
     }
 

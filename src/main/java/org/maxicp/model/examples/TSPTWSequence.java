@@ -59,7 +59,7 @@ public class TSPTWSequence {
             int bestInsertions = Integer.MAX_VALUE;
             for (int node = 1 ; node < n ; ++node) {
                 if (route.isPossible(node)) {
-                    int nInsertions = route.nMemberInsertions(node);
+                    int nInsertions = route.nMemberInsertion(node);
                     if (nInsertions < bestInsertions) {
                         bestNode = node;
                         bestInsertions = nInsertions;

@@ -5,7 +5,7 @@ import org.maxicp.util.Procedure;
 /**
  * decision variable used to represent a sequence of nodes
  * the nodes are split into 3 categories:
- *  - scheduled nodes, which are part of the sequence and ordered
+ *  - member nodes, which are part of the sequence and ordered
  *  - possible nodes, which could be part of the sequence
  *  - excluded nodes, which cannot be part of the sequence
  */
@@ -232,7 +232,7 @@ public interface CPSequenceVar extends CPVar {
      *
      * @param f the closure
      */
-    void whenFix(Procedure f);
+    void whenFixed(Procedure f);
 
     /**
      * Asks that the closure is called whenever
@@ -283,7 +283,7 @@ public interface CPSequenceVar extends CPVar {
     /**
      * @return true when no more node belongs to the set of possible nodes
      */
-    boolean isFix();
+    boolean isFixed();
 
     /**
      * @param node node in the scheduled sequence

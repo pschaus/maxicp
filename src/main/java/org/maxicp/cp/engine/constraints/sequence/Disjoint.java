@@ -4,11 +4,15 @@ import org.maxicp.cp.engine.core.AbstractCPConstraint;
 import org.maxicp.cp.engine.core.CPSequenceVar;
 import org.maxicp.state.StateInt;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.maxicp.util.exception.InconsistencyException.INCONSISTENCY;
 
-public class Disjoint extends AbstractCPConstraint {
+/**
+ * Ensure that a node is member of one {@link CPSequenceVar}
+ */
+public class Disjoint  extends AbstractCPConstraint {
 
     private final CPSequenceVar[] sequenceArray;
     private final boolean mustAppear;
@@ -17,7 +21,7 @@ public class Disjoint extends AbstractCPConstraint {
      * disjoint constraint. Ensures that the same node id must be scheduled once and only once across all sequences
      * assumes that the same solver is used for all sequences
      * a node can be excluded from all sequences
-     * @param sequenceArray array of CPSequenceVar to post the constraint on
+     * @param sequenceArray array of SequenceVar to post the constraint on
      */
     public Disjoint(CPSequenceVar... sequenceArray) {
         this(true, sequenceArray);
@@ -26,7 +30,7 @@ public class Disjoint extends AbstractCPConstraint {
     /**
      * disjoint constraint. Ensures that the same node id must be scheduled once and only once across all sequences
      * assumes that the same solver is used for all sequences
-     * @param sequenceArray array of CPSequenceVar to post the constraint on
+     * @param sequenceArray array of SequenceVar to post the constraint on
      * @param mustAppear if true, each unique node must be scheduled in one sequence
      */
     public Disjoint(boolean mustAppear, CPSequenceVar... sequenceArray) {
@@ -56,8 +60,35 @@ public class Disjoint extends AbstractCPConstraint {
                 maxRequests = nbRequests;
         }
 
-        HashSet<Integer> nodeSet = new HashSet<>();
+        HashSet<Integer> nodeSet = new HashSet<>(); // if the node is in the set, it is possible / member in at least one sequence
         int[] insertions = new int[maxRequests];
+        if (mustAppear) { // ensure that no node is excluded from all sequences
+            for (int i = 0; i < sequenceArray.length; ++i) {
+                CPSequenceVar seq = sequenceArray[i];
+                int size1 = seq.fillMember(insertions);
+                for (int n = 0; n < size1; ++n)
+                    nodeSet.add(insertions[n]); // add member nodes
+                int size2 = seq.fillExcluded(insertions);
+                for (int n = 0; n < size2; ++n) { // check excluded nodes
+                    int node = insertions[n];
+                    if (!nodeSet.contains(node)) {
+                        nodeSet.add(node);
+                        boolean foundNotExcluded = false;
+                        for (int j = i+1 ; j < sequenceArray.length; ++j) { // inspect all sequences to see if the node can appear there
+                            CPSequenceVar seq2 = sequenceArray[j];
+                            if (!seq2.isExcluded(node)) { // node is not excluded from at least one sequence
+                                foundNotExcluded = true;
+                                break;
+                            }
+                        }
+                        if (!foundNotExcluded)
+                            throw INCONSISTENCY; // a node was excluded from all sequences
+                    }
+                }
+            }
+        }
+
+        nodeSet.clear(); // now used for listener of possible nodes
         for (CPSequenceVar seq: sequenceArray) {
             int size = seq.fillPossible(insertions);
             for (int i=0; i < size; ++i) {
@@ -138,6 +169,16 @@ public class Disjoint extends AbstractCPConstraint {
             }
 
             @Override
+            public boolean isScheduled() {
+                return false;
+            }
+
+            @Override
+            public void setScheduled(boolean scheduled) {
+                ;
+            }
+
+            @Override
             public void post() {
                 int cnt = 0;
                 for (CPSequenceVar seq: sequenceArray) {
@@ -161,5 +202,4 @@ public class Disjoint extends AbstractCPConstraint {
             }
         }
     }
-    
 }

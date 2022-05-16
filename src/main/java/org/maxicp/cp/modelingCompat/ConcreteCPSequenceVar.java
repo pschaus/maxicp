@@ -62,12 +62,12 @@ public class ConcreteCPSequenceVar implements ConcreteSequenceVar, ConcreteCPVar
     }
 
     @Override
-    public int nMemberInsertions(int node) {
+    public int nMemberInsertion(int node) {
         return s.nMemberInsertion(node);
     }
 
     @Override
-    public int nPossibleInsertions(int node) {
+    public int nPossibleInsertion(int node) {
         return s.nPossibleInsertion(node);
     }
 

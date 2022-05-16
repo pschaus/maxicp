@@ -85,15 +85,15 @@ public interface SymbolicSequenceVar extends SequenceVar, SymbolicVar {
         return initNInsertions(node);
     }
 
-    default int nMemberInsertions(int node) {
+    default int nMemberInsertion(int node) {
         if (getDispatcher().getModel() instanceof ConcreteModel cm)
-            return ((ConcreteSequenceVar) cm.getMapping().get(this)).nMemberInsertions(node);
+            return ((ConcreteSequenceVar) cm.getMapping().get(this)).nMemberInsertion(node);
         return initNMemberInsertions(node);
     }
 
-    default int nPossibleInsertions(int node) {
+    default int nPossibleInsertion(int node) {
         if (getDispatcher().getModel() instanceof ConcreteModel cm)
-            return ((ConcreteSequenceVar) cm.getMapping().get(this)).nPossibleInsertions(node);
+            return ((ConcreteSequenceVar) cm.getMapping().get(this)).nPossibleInsertion(node);
         return initNPossibleInsertions(node);
     }
 

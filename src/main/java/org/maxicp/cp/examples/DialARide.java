@@ -174,7 +174,7 @@ public class DialARide {
         // Reading the data
 
         //TODO change file to test the various instances.
-        InputReader reader = new InputReader("data/dialaride/custom0");
+        InputReader reader = new InputReader("data/DARP/Cordeau2003/pr01");
 
         int nVehicles = reader.getInt();
         reader.getInt(); //ignore

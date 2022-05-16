@@ -571,7 +571,7 @@ public class CPSequenceVarTest extends CPSolverTest {
         CPConstraint cons = new AbstractCPConstraint(cp) {
             @Override
             public void post() {
-                sequence.whenFix(() -> propagateBindCalled = true);
+                sequence.whenFixed(() -> propagateBindCalled = true);
                 sequence.whenInsert(() -> propagateInsertCalled = true);
                 sequence.whenExclude(() -> propagateExcludeCalled = true);
             }
