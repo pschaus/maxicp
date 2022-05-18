@@ -29,7 +29,7 @@ public interface CPIntVar extends CPVar {
 
     /**
      * Asks that the closure is called whenever the domain
-     * of this variable is reduced to a single setValue
+     * of this variable is reduced to a single setValue.
      *
      * @param f the closure
      */
@@ -136,7 +136,7 @@ public interface CPIntVar extends CPVar {
     void remove(int v);
 
     /**
-     * Fixes the specified value
+     * Fixes the specified value.
      *
      * @param v the value to assign.
      * @exception InconsistencyException
@@ -145,7 +145,7 @@ public interface CPIntVar extends CPVar {
     void fix(int v);
 
     /**
-     * Remove all the values less than a given value
+     * Removes all the values less than a given value.
      *
      * @param v the value such that all the values less than v are removed
      * @exception InconsistencyException
@@ -154,7 +154,7 @@ public interface CPIntVar extends CPVar {
     void removeBelow(int v);
 
     /**
-     * Remove all the values above a given value
+     * Removes all the values above a given value.
      *
      * @param v the value such that all the values larger than v are removed
      * @exception InconsistencyException
@@ -165,7 +165,7 @@ public interface CPIntVar extends CPVar {
     /**
      * Copies the values of the domain that have been
      * removed (delta set) wrt to a previous state of the domain
-     * described by oldMin, oldMax and oldSize
+     * described by oldMin, oldMax and oldSize.
      *
      * @param dest an array large enough {@code dest.length >= oldSize-size()}
      * @return the size of delta set stored in prefix of dest

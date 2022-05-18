@@ -3,129 +3,161 @@ package org.maxicp.cp.engine.core;
 import org.maxicp.util.Procedure;
 
 /**
- * decision variable used to represent a sequence of nodes
- * the nodes are split into 3 categories:
- *  - member nodes, which are part of the sequence and ordered
- *  - possible nodes, which could be part of the sequence
- *  - excluded nodes, which cannot be part of the sequence
+ * Decision variable used to represent a sequence of nodes
+ * As an invariant of the domain, the nodes are partitioned into 3 categories:
+ *  - member ones, which are part of the sequence and ordered
+ *  - possible ones, which could be part of the sequence
+ *  - excluded ones, which cannot be part of the sequence
+ *
+ * The constraints pruning a {@link CPSequenceVar}
+ * does it by remove insertions points from
+ * the {@link CPInsertionVar} contained within the sequence or
+ * by can exclude them.
  */
 public interface CPSequenceVar extends CPVar {
 
     /**
      * Returns the solver in which this variable was created.
-     * @return the solver in which this variable was created
+     *
+     * @return the solver in which this variable was created.
      */
     CPSolver getSolver();
 
     /**
-     * return the first node of the sequence
-     * @return first node of the sequence
+     * Returns the first node of the sequence.
+     *
+     * @return first node of the sequence.
      */
     int begin();
 
     /**
-     * return the last node of the sequence
+     * Return the last node of the sequence
+     *
      * @return last node of the sequence
      */
     int end();
 
     /**
+     * Returns the number of elements already in the partial sequence
+     *
      * @return number of scheduled nodes in the sequence, including the {@link #begin()} and {@link #end()} nodes
      */
     int nMember();
 
     /**
+     * Returns the number of elements already in the partial sequence, possibly excluding the
+     * the count of {@link #begin()} and {@link #end()}.
+     *
      * @param includeBounds whether to count the {@link #begin()} and {@link #end()} nodes or not
      * @return number of scheduled nodes
      */
     int nMember(boolean includeBounds);
 
     /**
+     * Returns the number of possible elements that can be added to the partial sequence.
+     *
      * @return number of possible nodes in the sequence
      */
     int nPossible();
 
     /**
+     * Returns the number of excluded nudes in the sequence.
+     *
      * @return number of excluded nodes in the sequence
      */
     int nExcluded();
 
     /**
-     * @return number of nodes in the sequence, including the {@link #begin()} and {@link #end()} nodes
+     * Returns the number of nodes in the sequence.
+     *
+     * @return number of nodes in the sequence,
+     *         including the {@link #begin()} and {@link #end()} nodes
      */
     int nNode();
 
     /**
-     * @param includeBounds whether to count the {@link #begin()} and {@link #end()} nodes or not
-     * @return number of nodes in the sequence
+     * Returns the number of nodes in the sequence, possibly excluding bounds.
+     *
+     * @param includeBounds whether to count the {@link #begin()} and {@link #end()} nodes or not.
+     * @return number of nodes in the sequence.
      */
     int nNode(boolean includeBounds);
 
     /**
-     * set the node into the sequence, right after a predecessor. Fails if the node is in the excluded set, no effect
-     * if it is already in the scheduled set
-     * @param pred predecessor for the node
-     * @param node node to schedule
+     * Inserts the node into the sequence, right after the given predecessor.
+     *
+     * @param pred predecessor for the node, a member of the sequence
+     * @param node node to insert, a possible node
+     * @throws org.maxicp.util.exception.InconsistencyException if {@code pred} is not a member
+     *         or if {@code node} is not a possible node.
      */
     void insert(int pred, int node);
 
     /**
-     * tell if a node can be scheduled with a given predecessor
-     * @param pred predecessor for the node
-     * @param node node trying to be scheduled
-     * @return true if the node can be scheduled
+     * Tells if a node can be scheduled with a given predecessor.
+     *
+     * @param pred predecessor for the node.
+     * @param node node trying to be scheduled.
+     * @return true if the node can be scheduled.
      */
     boolean canInsert(int pred, int node);
 
     /**
-     * tell if a node can precede another one
-     * a node p can precede a node n if a sequence can be formed where p occurs before n in the order
-     * @param pred predecessor for the node
-     * @param node node
-     * @return true if a sequence can be formed with pred preceding node
+     * Tells if a node can precede another one.
+     * A node {@code p} can precede a node {@code n}
+     * if a sequence can be formed where {@code p} occurs before {@code n} in the order.
+     *
+     * @param pred predecessor for the node.
+     * @param node node.
+     * @return {@code true} if a sequence can be formed with {@code pred} preceding node.
      */
     boolean canPrecede(int pred, int node);
 
     /**
-     * exclude the node from the set of possible nodes. Fails if the node is in the scheduled set, no effect if it is
-     * already in the excluded set
-     * @param node node to exclude
+     * Excludes the node from the set of possible nodes.
+     *
+     * @param node node to exclude.
+     * @throws org.maxicp.util.exception.InconsistencyException if {@code node}
+     *         is a member of the partial sequence.
      */
     void exclude(int node);
 
     /**
-     * exclude all possible nodes from the sequence, binding the variable
+     * Excludes all possible nodes from the sequence, fixing the variable.
      */
     void excludeAllPossible();
 
     /**
-     * tell if a node is scheduled
-     * @param node node whose state needs to be known
-     * @return true if the node is scheduled
+     * Tells if a node is a member of the sequence.
+     *
+     * @param node the node whose state needs to be known.
+     * @return true if the node is a member of the sequence.
      */
     boolean isMember(int node);
 
     /**
-     * tell if a node is possible
-     * @param node node whose state needs to be known
-     * @return true if the node is possible
+     * Tells if a node is a possible one.
+     *
+     * @param node node whose state needs to be known.
+     * @return true if the node is possible.
      */
     boolean isPossible(int node);
 
     /**
-     * tell if a node is excluded
-     * @param node node whose state needs to be known
-     * @return true if the node is excluded
+     * Tells if a node is excluded.
+     *
+     * @param node node whose state needs to be known.
+     * @return true if the node is excluded.
      */
     boolean isExcluded(int node);
 
     /**
-     * Copies the scheduled values of the domain into an array.
-     * Always contain the {@link #begin()} and {@link #end()} nodes
+     * Copies the member nodes into an array.
+     * The copied values always contain the {@link #begin()} and {@link #end()} nodes
      *
      * @param dest an array large enough {@code dest.length >= nScheduledNode(true)}
      * @return the size of the scheduled domain and {@code dest[0,...,size-1]} contains
-     *         the values in the scheduled domain in an arbitrary order
+     *         the values in the scheduled domain in an arbitrary order.
      */
     int fillMember(int[] dest);
 
@@ -134,7 +166,7 @@ public interface CPSequenceVar extends CPVar {
      *
      * @param dest an array large enough {@code dest.length >= nPossible()}
      * @return the size of the possible domain and {@code dest[0,...,size-1]} contains
-     *         the values in the possible domain in an arbitrary order
+     *         the values in the possible domain in an arbitrary order.
      */
     int fillPossible(int[] dest);
 
@@ -143,7 +175,7 @@ public interface CPSequenceVar extends CPVar {
      *
      * @param dest an array large enough {@code dest.length >= nExcluded()}
      * @return the size of the excluded domain and {@code dest[0,...,size-1]} contains
-     *         the values in the excluded domain in an arbitrary order
+     *         the values in the excluded domain in an arbitrary order.
      */
     int fillExcluded(int[] dest);
 
@@ -214,13 +246,15 @@ public interface CPSequenceVar extends CPVar {
     void removeInsertion(int pred, int node);
 
     /**
-     * remove all insertion having the specified node as predecessor
-     * @param node node after which no insertion can occur
+     * Removes all insertions having the specified node as predecessor.
+     *
+     * @param node node after which no insertion can occur.
      */
     void removeInsertionAfter(int node);
 
     /**
-     * gives the {@link CPInsertionVar} related to a node in the sequence
+     * Gives the {@link CPInsertionVar} related to a node in the sequence.
+     *
      * @param i id of the InsertionVar
      * @return InsertionVar with id i
      */
@@ -228,7 +262,7 @@ public interface CPSequenceVar extends CPVar {
 
     /**
      * Asks that the closure is called whenever the domain
-     * of this variable is reduced to a single setValue
+     * of this variable is reduced to a single setValue.
      *
      * @param f the closure
      */
@@ -236,7 +270,7 @@ public interface CPSequenceVar extends CPVar {
 
     /**
      * Asks that the closure is called whenever
-     * a new node is scheduled into the sequence
+     * a new node is scheduled into the sequence.
      *
      * @param f the closure
      */
@@ -244,7 +278,7 @@ public interface CPSequenceVar extends CPVar {
 
     /**
      * Asks that the closure is called whenever
-     * a new node is excluded from the sequence
+     * a new node is excluded from the sequence.
      *
      * @param f the closure
      */
@@ -281,25 +315,32 @@ public interface CPSequenceVar extends CPVar {
     void propagateOnExclude(CPConstraint c);
 
     /**
+     * Tells if the variable is fixed.
+     *
      * @return true when no more node belongs to the set of possible nodes
      */
     boolean isFixed();
 
     /**
-     * @param node node in the scheduled sequence
+     * Returns the next member node in the sequence just after the one given in parameter.
+     *
+     * @param node node member of the sequence.
      * @return index of the successor of the node. Irrelevant if the node is not in the sequence
      */
     int nextMember(int node);
 
     /**
-     * @param node node in the scheduled sequence
+     * Returns the predecessor member node in the sequence just before the one given in parameter.
+     *
+     * @param node node member of the sequence.
      * @return index of the predecessor of the node. Irrelevant if the node is not in the sequence
      */
     int predMember(int node);
 
     /**
-     * fill the current order of the sequence into an array large enough, including {@link #begin()} and {@link #end()}
-     * node
+     * Fills the current order of the sequence into an array large enough,
+     * including {@link #begin()} and {@link #end()} node.
+     *
      * @param dest array where to store the order of the sequence
      * @return number of elements in the sequence, including beginning and ending node
      */

@@ -8,19 +8,14 @@ import org.maxicp.util.Procedure;
 import static org.maxicp.util.exception.InconsistencyException.INCONSISTENCY;
 
 /**
- * a sequence var, where each node is represented by an integer and each insertion is an InsertionVar
- * all nodes are split into 3 categories: members (in the sequence), possible (could be in the sequence) and excluded (cannot be in the sequence)
- * WARNING: the ids for the begin node and the end node MUST be >= number of nodes considered
- *
- * constraints remove insertions points from the InsertionVars contained within the sequence
- * if an InsertionVar cannot be inserted into the sequence, it is set as excluded
+ * A {@link CPSequenceVar} implementation.
  */
 public class CPSequenceVarImpl implements CPSequenceVar {
 
     private final CPSolver cp;
     private final int nNodes;                   // number of nodes available (omitting begin and end)
     private final int maxIndex;                 // max index used for the node (max between begin and end)
-    private final int nOmitted;                // number of unused indexes in the representation for the domain
+    private final int nOmitted;                 // number of unused indexes in the representation for the domain
     private CPInsertionVarInSequence[] insertionVars;
     private StateInt[] succ;                    // successors of the nodes
     private StateInt[] pred;                    // predecessors of the nodes
@@ -31,22 +26,24 @@ public class CPSequenceVarImpl implements CPSequenceVar {
 
     // constraints registered for this sequence
     private StateStack<CPConstraint> onInsert;    // a node has been inserted into the sequence
-    private StateStack<CPConstraint> onFix;      // all nodes are members or excluded: no possible node remain
+    private StateStack<CPConstraint> onFix;       // all nodes are members or excluded: no possible node remain
     private StateStack<CPConstraint> onExclude;   // a node has been excluded from the sequence
-    private final int begin;                    // beginning of the sequence
-    private final int end;                      // end of the sequence
+    private final int begin;                      // beginning of the sequence
+    private final int end;                        // end of the sequence
 
-    private final int[] values;                 // used by fill methods
+    private final int[] values;                   // used by fill methods
 
     /**
-     * create a Sequence Variable, representing a path from begin until end in a complete graph
+     * Creates a Sequence Variable, representing a path from begin until end in a complete insertion graph.
+     * At the construction the sequence only contains the begin and end nodes.
+     *
      * @param cp solver related to the variable
      * @param nNodes number of nodes in the graph
-     * @param begin first node of the path
-     * @param end last node of the path
+     * @param begin first node of the path, that is already a member of the sequence.
+     * @param end last node of the path, that is already a member of the sequence.
      */
     public CPSequenceVarImpl(CPSolver cp, int nNodes, int begin, int end) {
-        //assert (begin >= nNodes && end >= nNodes);
+        // assert (begin >= nNodes && end >= nNodes);
         this.cp = cp;
         this.nNodes = nNodes;
         this.maxIndex = Math.max(nNodes, Math.max(begin, end)+1);
