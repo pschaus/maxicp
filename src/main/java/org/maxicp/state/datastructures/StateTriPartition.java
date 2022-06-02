@@ -7,47 +7,59 @@ import org.maxicp.state.StateManager;
 import java.util.Set;
 
 /**
- * Sequence set implemented using a sparse-set data structure
+ * Tri-partition sparse-set data structure
  * that can be saved and restored through
  * the {@link org.maxicp.state.StateManager#saveState()} / {@link org.maxicp.state.StateManager#restoreState()}
  * methods.
- * The sequence is split into three sets: required values, possible values and excluded values
+ * The three partitions are the included (I), possible (P) and excluded (E) values.
+ * Initially all the elements are in the possible set and those can only be
+ * moved to the possible and excluded partitions.
+ *
+ *
  */
-public class StateSequenceSet {
+public class StateTriPartition {
 
     protected int[] elems;
     protected int[] elemPos;
-    protected StateInt r;  // delimiter for the required values. They are included within 0...s-1
-    protected StateInt p;  // delimiter for the possible values. They are included within s...p-1
+
+    // +-----------+----------+----------+
+    // |  included | possible | excluded |
+    // +-----------+----------+----------+
+
+    protected StateInt i;  // delimiter for the included values. They are included within 0...i-1
+    protected StateInt p;  // delimiter for the possible values. They are included within i...p-1
     protected int n; // maximum number of elements
 
     protected int ofs; // offset
     protected int nOmitted; // number of values that are put in the exclusion set as soon as the instance was created
 
     /**
-     * create a sequence set with the elements {@code {R : {}, P: {0,...,n-1}, E: {}}}
+     * Creates a tri-partition with the elements {@code {I : {}, P: {0,...,n-1}, E: {}}}.
+     *
      * @param sm the state manager that will save and restore the set when
      *        {@link org.maxicp.state.StateManager#saveState()} / {@link org.maxicp.state.StateManager#restoreState()}
-     *           methods are called
-     * @param n number of elements within the set
+     *           methods are called.
+     * @param n number of elements within the set.
      */
-    public StateSequenceSet(StateManager sm, int n) {
+    public StateTriPartition(StateManager sm, int n) {
         this(sm, 0, n-1);
     }
 
     /**
-     * create a sequence set with the elements {@code {R : {}, P: {min,...,max}, E: {}}}
+     * Creates a tri-partition with the elements {@code {I : {}, P: {min,...,max}, E: {}}}.
+     *
      * @param sm the state manager that will save and restore the set when
      *        {@link StateManager#saveState()} / {@link StateManager#restoreState()}
-     *           methods are called
-     * @param minInclusive minimum value of the domain
-     * @param maxInclusive maximum value of the domain with {@code maxInclusive >= minInclusive}
+     *           methods are called.
+     * @param minInclusive minimum value of the partition
+     * @param maxInclusive maximum value of the partition with {@code maxInclusive >= minInclusive}
      */
-    public StateSequenceSet(StateManager sm, int minInclusive, int maxInclusive) {
+    public StateTriPartition(StateManager sm, int minInclusive, int maxInclusive) {
+        if (maxInclusive < minInclusive) throw new IllegalArgumentException(minInclusive+"<"+maxInclusive);
         n = maxInclusive - minInclusive + 1;
         ofs = minInclusive;
         nOmitted = 0;
-        r = sm.makeStateInt(0);
+        i = sm.makeStateInt(0);
         p = sm.makeStateInt(n);
         elems = new int[n];
         elemPos = new int[n];
@@ -58,13 +70,13 @@ public class StateSequenceSet {
     };
 
     /**
-     * create a sequence set with the elements {@code {R : {}, P: values, E: {}}}
+     * Creates a tri-partition with the elements {@code {R : {}, P: values, E: {}}}
      * @param sm the state manager that will save and restore the set when
      *        {@link StateManager#saveState()} / {@link StateManager#restoreState()}
-     *           methods are called
-     * @param values values to set in the domain
+     *           methods are called.
+     * @param values the initial values for the possible partition P
      */
-    public StateSequenceSet(StateManager sm, Set<Integer> values) {
+    public StateTriPartition(StateManager sm, Set<Integer> values) {
         this(sm, values.stream().min(Integer::compareTo).get(), values.stream().max(Integer::compareTo).get());
         for (int i = ofs; i < n + ofs ; ++i) {
             if (!values.contains(i)) {
@@ -75,13 +87,15 @@ public class StateSequenceSet {
     }
 
     /**
-     * move a value from the set of possible values to the set of excluded values
-     * @param val value to mark as excluded
-     * @return true if the value has been moved from the set of possible to the set of excluded
+     * Moves a value from the set of possible values P to the set of excluded values E.
+     *
+     * @param val the value to move to the excluded set E
+     * @return true if the value has been moved from the set of possible P to the set of excluded,
+     *         false otherwise and the method has no effect in this case.
      */
     public boolean exclude(int val) {
         if (!isPossible(val))
-            return false; // the value is already in the excluded set or in the set of required
+            return false; // the value is already in the excluded set or in the set of included
         val -= ofs;
         this.p.decrement();
         exchangePositions(val, elems[p.value()]);
@@ -89,26 +103,30 @@ public class StateSequenceSet {
     }
 
     /**
-     * move a value from the set of possible values to the set of required values
-     * @param val value to mark as required
-     * @return true if the value has been moved from the set of possible to the set of required
+     * Moves a value from the possible partition P to the included partition I.
+     *
+     * @param val the value to mark as included
+     * @return true if the value has been moved from the set of possible P to the set of included I,
+     *         false otherwise and the method has no effect in this case.
      */
-    public boolean require(int val) {
+    public boolean include(int val) {
         if (!isPossible(val))
-            return false; // the value is already in the excluded set or in the set of required
+            return false; // the value is already in the excluded set or in the set of included
         val -= ofs;
-        exchangePositions(val, elems[r.value()]);
-        this.r.increment();
+        exchangePositions(val, elems[i.value()]);
+        this.i.increment();
         return true;
     }
 
     /**
-     * set one value as the required value and move all other values into the exclusion set
-     * @param v unique value that will be set as required
-     * @return true if the set of required was empty and the value has been marked as required
+     * Sets the specified value as the only included one and move all others into the exclusion partition.
+     *
+     * @param v unique value that will be contained in the included partition.
+     * @return true if the included partition was empty and the value was possible,
+     *         false otherwise and the method has no effect.
      */
-    public boolean requireOne(int v) {
-        if (!isPossible(v) || r.value() != 0)
+    public boolean includeAndExcludeOthers(int v) {
+        if (!isPossible(v) || i.value() != 0)
             return false;
         // the value is set in the first position and the value for s and p are updated
         int val = elems[0];
@@ -117,14 +135,15 @@ public class StateSequenceSet {
         elems[0] = v;
         elemPos[val] = index;
         elems[index] = val;
-        r.setValue(1);
+        i.setValue(1);
         p.setValue(1);
         return true;
     }
 
 
     /**
-     * exchange the position of two values
+     * Exchanges the position of two values.
+     *
      * @param val1 first value to exchange
      * @param val2 second value to exchange
      */
@@ -151,24 +170,49 @@ public class StateSequenceSet {
     }
 
     /**
-     * move all possible values into the set of excluded values
-     * @return true if the set of possible values has been reduced
+     * Moves all possible values into the set of excluded values.
+     *
+     * @return true if the partition of possible values has been reduced
      */
     public boolean excludeAllPossible() {
-        if (p.value() == r.value())
+        if (p.value() == i.value())
             return false;
-        this.p.setValue(r.value());
+        this.p.setValue(i.value());
         return true;
     }
 
-    public boolean isRequired(int val) {
+    /**
+     * Moves all possible values into the set of included values.
+     *
+     * @return true if the partition of possible values has been reduced
+     */
+    public boolean includeAllPossible() {
+        if (p.value() == i.value())
+            return false;
+        this.i.setValue(p.value());
+        return true;
+    }
+
+    /**
+     * Tells if the specified value belongs to the included partition I.
+     *
+     * @param val the value to test.
+     * @return true if val belongs to the included partition I.
+     */
+    public boolean isIncluded(int val) {
         val -= ofs;
         if (val < 0 || val >= n)
             return false;
         else
-            return elemPos[val] < r.value();
+            return elemPos[val] < i.value();
     }
 
+    /**
+     * Tells if the specified value belongs to the excluded partition E.
+     *
+     * @param val the value to test.
+     * @return true if val belongs to the included partition I.
+     */
     public boolean isExcluded(int val) {
         val -= ofs;
         if (val < 0 || val >= n)
@@ -182,13 +226,13 @@ public class StateSequenceSet {
         if (val < 0 || val >= n)
             return false;
         else
-            return elemPos[val] < p.value() && elemPos[val] >= r.value();
+            return elemPos[val] < p.value() && elemPos[val] >= i.value();
     }
 
     /**
      * tell if a value belongs to the domain
      * @param val value to train1
-     * @return true if the value is either required, possible or excluded
+     * @return true if the value is either included, possible or excluded
      */
     public boolean contains(int val) {
         val -= ofs;
@@ -198,28 +242,28 @@ public class StateSequenceSet {
     }
 
     public int nPossible() {
-        return p.value() - r.value();
+        return p.value() - i.value();
     }
 
     public int nExcluded() {
         return n - p.value() - nOmitted;
     }
 
-    public int nRequired() {
-        return r.value();
+    public int nIncluded() {
+        return i.value();
     }
 
     public int size() { return n - nOmitted;}
 
-    public int getRequired(int[] dest) {
-        int size = r.value();
+    public int getIncluded(int[] dest) {
+        int size = i.value();
         for (int i = 0; i < size ; ++i)
             dest[i] = elems[i] + ofs;
         return size;
     }
 
     public int getPossible(int[] dest) {
-        int begin = r.value();
+        int begin = i.value();
         int end = p.value() - begin;
         for (int i = 0; i < end ; ++i)
             dest[i] = elems[i + begin] + ofs;
@@ -237,33 +281,33 @@ public class StateSequenceSet {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        b.append("R: {");
+        b.append("I: {");
 
-        int i=0;
-        int rVal = r.value();
+        int idx = 0;
+        int i = this.i.value();
         int pVal = p.value();
-        while (i < rVal - 1) {
-            b.append(elems[i++] + ofs);
+        while (idx < i - 1) {
+            b.append(elems[idx++] + ofs);
             b.append(',');
         }
-        if (rVal > 0)
-            b.append(elems[i++] + ofs);
+        if (idx > 0)
+            b.append(elems[idx++] + ofs);
         b.append("}\nP: {");
 
-        while (i < pVal - 1) {
-            b.append(elems[i++] + ofs);
+        while (idx < pVal - 1) {
+            b.append(elems[idx++] + ofs);
             b.append(',');
         }
-        if (pVal - rVal > 0)
-            b.append(elems[i++] + ofs);
+        if (pVal - idx > 0)
+            b.append(elems[idx++] + ofs);
         b.append("}\nE: {");
 
-        while (i < n - 1 - nOmitted) {
-            b.append(elems[i++] + ofs);
+        while (idx < n - 1 - nOmitted) {
+            b.append(elems[idx++] + ofs);
             b.append(',');
         }
         if (nExcluded() > 0)
-            b.append(elems[i++] + ofs);
+            b.append(elems[idx++] + ofs);
         b.append('}');
         return b.toString();
     }

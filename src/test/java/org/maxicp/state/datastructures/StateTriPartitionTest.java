@@ -11,19 +11,19 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
-public class StateSequenceSetTest extends StateManagerTest {
+public class StateTriPartitionTest extends StateManagerTest {
 
     StateManager sm;
-    StateSequenceSet set;
+    StateTriPartition set;
 
     @Before
     public void setUp() {
         sm = stateFactory.get();
-        set = new StateSequenceSet(sm, 9);
+        set = new StateTriPartition(sm, 9);
     }
 
     /**
-     * train1 the methods exclude, nPossible, nExcluded, nRequired, getPossible, getExcluded, getRequired
+     * train1 the methods exclude, nPossible, nExcluded, nIncluded, getPossible, getExcluded, getIncluded
      * use removal of values as well as their correctness when backtracking
      */
     @Test
@@ -31,7 +31,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         // every node should be considered as possible
         assertEquals(9, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
         sm.saveState();
         set.exclude(0);
         set.exclude(5);
@@ -39,7 +39,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         set.exclude(8);
         assertEquals(6, set.nPossible());
         assertEquals(3, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
 
         int[] values = new int[9];
         int size = set.getPossible(values);
@@ -54,37 +54,37 @@ public class StateSequenceSetTest extends StateManagerTest {
         Arrays.sort(slice);
         assertArrayEquals(new int[] {0,5,8}, slice);
 
-        size = set.getRequired(values);
+        size = set.getIncluded(values);
         assertEquals(0, size);
 
         sm.restoreState();
         assertEquals(7, set.nPossible());
         assertEquals(2, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
         sm.restoreState();
         assertEquals(9, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
     }
 
     /**
-     * train1 the methods require, nPossible, nExcluded, nRequired, getPossible, getExcluded, getRequired
+     * train1 the methods include, nPossible, nExcluded, nIncluded, getPossible, getExcluded, getIncluded
      * use requiring of values as well as their correctness when backtracking
      */
     @Test
-    public void testRequire() {
+    public void testInclude() {
         // every node should be considered as possible
         assertEquals(9, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
         sm.saveState();
-        set.require(0);
-        set.require(5);
+        set.include(0);
+        set.include(5);
         sm.saveState();
-        set.require(8);
+        set.include(8);
         assertEquals(6, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(3, set.nRequired());
+        assertEquals(3, set.nIncluded());
 
         int[] values = new int[9];
         int size = set.getPossible(values);
@@ -96,7 +96,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         size = set.getExcluded(values);
         assertEquals(0, size);
 
-        size = set.getRequired(values);
+        size = set.getIncluded(values);
         assertEquals(3, size);
         slice = Arrays.stream(values, 0, 3).toArray();
         Arrays.sort(slice);
@@ -105,15 +105,15 @@ public class StateSequenceSetTest extends StateManagerTest {
         sm.restoreState();
         assertEquals(7, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(2, set.nRequired());
+        assertEquals(2, set.nIncluded());
         sm.restoreState();
         assertEquals(9, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
     }
 
     /**
-     * train1 the methods exclude, require, nPossible, nExcluded, nRequired, getPossible, getExcluded, getRequired
+     * train1 the methods exclude, require, nPossible, nExcluded, nIncluded, getPossible, getExcluded, getIncluded
      * use both removal and scheduling of values as well as their correctness when backtracking
      */
     @Test
@@ -121,19 +121,19 @@ public class StateSequenceSetTest extends StateManagerTest {
         // every node should be considered as possible
         assertEquals(9, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
         sm.saveState();
-        set.require(0);
+        set.include(0);
         set.exclude(2);
-        set.require(5);
+        set.include(5);
         sm.saveState();
-        set.require(8);
-        set.require(2); // should not be required as it was excluded
+        set.include(8);
+        set.include(2); // should not be required as it was excluded
         set.exclude(3);
         set.exclude(3);
         assertEquals(4, set.nPossible());
         assertEquals(2, set.nExcluded());
-        assertEquals(3, set.nRequired());
+        assertEquals(3, set.nIncluded());
 
         int[] values = new int[9];
         int size = set.getPossible(values);
@@ -148,7 +148,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         Arrays.sort(slice);
         assertArrayEquals(new int[] {2,3}, slice);
 
-        size = set.getRequired(values);
+        size = set.getIncluded(values);
         assertEquals(3, size);
         slice = Arrays.stream(values, 0, 3).toArray();
         Arrays.sort(slice);
@@ -157,7 +157,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         sm.restoreState();
         assertEquals(6, set.nPossible());
         assertEquals(1, set.nExcluded());
-        assertEquals(2, set.nRequired());
+        assertEquals(2, set.nIncluded());
 
         size = set.getPossible(values);
         assertEquals(6, size);
@@ -171,7 +171,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         Arrays.sort(slice);
         assertArrayEquals(new int[] {2}, slice);
 
-        size = set.getRequired(values);
+        size = set.getIncluded(values);
         assertEquals(2, size);
         slice = Arrays.stream(values, 0, 2).toArray();
         Arrays.sort(slice);
@@ -180,7 +180,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         sm.restoreState();
         assertEquals(9, set.nPossible());
         assertEquals(0, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
     }
 
     /**
@@ -190,15 +190,15 @@ public class StateSequenceSetTest extends StateManagerTest {
     public void testRequireOne() {
         sm.saveState();
 
-        set.require(7);
-        set.require(6);
-        set.require(3);
+        set.include(7);
+        set.include(6);
+        set.include(3);
         assertSequenceState(set, new int[] {3, 6, 7}, new int[] {0, 1, 2, 4, 5, 8}, new int[] {});
 
         sm.saveState();
 
         assertSequenceState(set, new int[] {3, 6, 7}, new int[] {0, 1, 2, 4, 5, 8}, new int[] {});
-        assertFalse(set.requireOne(6));
+        assertFalse(set.includeAndExcludeOthers(6));
         assertSequenceState(set, new int[] {3, 6, 7}, new int[] {0, 1, 2, 4, 5, 8}, new int[] {});
 
         sm.restoreState();
@@ -208,15 +208,15 @@ public class StateSequenceSetTest extends StateManagerTest {
         sm.restoreState();
         sm.saveState();
 
-        assertTrue(set.requireOne(6));
+        assertTrue(set.includeAndExcludeOthers(6));
         assertSequenceState(set, new int[] {6}, new int[] {}, new int[] {0, 1, 2, 3, 4, 5, 7, 8});
 
         sm.restoreState();
         assertSequenceState(set, new int[] {}, new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8}, new int[] {});
     }
 
-    private void assertSequenceFromSetInit(StateSequenceSet set, Set<Integer> values, int min, int max) {
-        assertEquals(0, set.nRequired());
+    private void assertSequenceFromSetInit(StateTriPartition set, Set<Integer> values, int min, int max) {
+        assertEquals(0, set.nIncluded());
         assertEquals(0, set.nExcluded());
         assertEquals(values.size(), set.nPossible());
         for (int i = min-1; i <= max + 1; ++i ) {
@@ -227,7 +227,7 @@ public class StateSequenceSetTest extends StateManagerTest {
                 assertFalse(set.isPossible(i));
                 assertFalse(set.contains(i));
             }
-            assertFalse(set.isRequired(i));
+            assertFalse(set.isIncluded(i));
             assertFalse(set.isExcluded(i));
         }
     }
@@ -241,16 +241,16 @@ public class StateSequenceSetTest extends StateManagerTest {
         Set<Integer> values = Set.of(5, 7, 3, 4, 9, 2);
         int min = values.stream().min(Integer::compareTo).get();
         int max = values.stream().max(Integer::compareTo).get();
-        StateSequenceSet set = new StateSequenceSet(sm, values);
+        StateTriPartition set = new StateTriPartition(sm, values);
         assertSequenceFromSetInit(set, values, min, max);
 
         sm.saveState();
 
-        assertTrue(set.require(7));  // R: {7}
-        assertTrue(set.require(9));  // R: {7, 9}
-        assertFalse(set.require(8)); // not in the set
+        assertTrue(set.include(7));  // R: {7}
+        assertTrue(set.include(9));  // R: {7, 9}
+        assertFalse(set.include(8)); // not in the set
         assertTrue(set.exclude(4));  // E: {4}
-        assertFalse(set.require(7)); // R: {7, 9}
+        assertFalse(set.include(7)); // R: {7, 9}
         assertTrue(set.exclude(2));  // E: {2, 4}
         assertFalse(set.exclude(7));
         // set at this point: {R: {7, 9}, P: {3, 5}, E: {2, 4}}
@@ -265,10 +265,10 @@ public class StateSequenceSetTest extends StateManagerTest {
         assertSequenceState(set, new int[] {7, 9}, new int[] {3, 5}, new int[] {2, 4});
         sm.saveState();
 
-        assertTrue(set.require(3));  // R: {3, 7, 9}
-        assertTrue(set.require(5));  // R: {3, 5, 7, 9}
+        assertTrue(set.include(3));  // R: {3, 7, 9}
+        assertTrue(set.include(5));  // R: {3, 5, 7, 9}
         assertFalse(set.exclude(5));
-        assertFalse(set.require(5));
+        assertFalse(set.include(5));
         assertFalse(set.excludeAllPossible());
         assertSequenceState(set, new int[] {3, 5, 7, 9}, new int[] {}, new int[] {2, 4});
 
@@ -281,18 +281,63 @@ public class StateSequenceSetTest extends StateManagerTest {
         assertSequenceFromSetInit(set, values, min, max);
     }
 
+
+
+    /**
+     * train1 operations on a sequence created from a set of integers values and includeAll
+     */
+    @Test
+    public void testSequenceIncludeAll() {
+
+        Set<Integer> values = Set.of(5, 7, 3, 4, 9, 2);
+        int min = values.stream().min(Integer::compareTo).get();
+        int max = values.stream().max(Integer::compareTo).get();
+        StateTriPartition set = new StateTriPartition(sm, values);
+        assertSequenceFromSetInit(set, values, min, max);
+
+        System.out.println(set);
+
+        sm.saveState();
+
+        assertTrue(set.include(7));  // I: {7}
+        assertTrue(set.include(9));  // I: {7, 9}
+        assertFalse(set.include(8)); // not in the set
+        assertTrue(set.exclude(4));  // E: {4}
+
+        assertSequenceState(set, new int[] {7, 9}, new int[] {2, 3, 5}, new int[] {4});
+
+        sm.saveState();
+
+        assertTrue(set.includeAllPossible());
+
+        assertSequenceState(set, new int[] {2, 3, 5, 7, 9}, new int[] {}, new int[] {4});
+
+        assertTrue(set.isIncluded(3));
+        assertTrue(set.isExcluded(4));
+        assertTrue(!set.isExcluded(3));
+
+
+        sm.restoreState();
+
+        assertSequenceState(set, new int[] {7, 9}, new int[] {2, 3, 5}, new int[] {4});
+
+    }
+
+
+
+
     /**
      * assert the state of a StateSequenceSet
-     * train1 the methods {@link StateSequenceSet#nPossible()}, {@link StateSequenceSet#nRequired()}, {@link StateSequenceSet#nExcluded()}
-     * {@link StateSequenceSet#getPossible(int[])}, {@link StateSequenceSet#getRequired(int[])}, {@link StateSequenceSet#getExcluded(int[])},
-     * {@link StateSequenceSet#contains(int)}, {@link StateSequenceSet#size()}
+     * train1 the methods {@link StateTriPartition#nPossible()}, {@link StateTriPartition#nIncluded()}, {@link StateTriPartition#nExcluded()}
+     * {@link StateTriPartition#getPossible(int[])}, {@link StateTriPartition#getIncluded(int[])}, {@link StateTriPartition#getExcluded(int[])},
+     * {@link StateTriPartition#contains(int)}, {@link StateTriPartition#size()}
      * @param set set that will be tested
-     * @param sortedRequired required values, sorted
+     * @param sortedIncluded required values, sorted
      * @param sortedPossible possible values, sorted
      * @param sortedExcluded excluded values, sorted
      */
-    private void assertSequenceState(StateSequenceSet set, int[] sortedRequired, int[] sortedPossible, int[] sortedExcluded) {
-        int[] values = new int[Math.max(Math.max(sortedRequired.length, sortedPossible.length), sortedExcluded.length)];
+    private void assertSequenceState(StateTriPartition set, int[] sortedIncluded, int[] sortedPossible, int[] sortedExcluded) {
+        int[] values = new int[Math.max(Math.max(sortedIncluded.length, sortedPossible.length), sortedExcluded.length)];
         int[] slice;
         int[] expected;
         int len1;
@@ -300,9 +345,9 @@ public class StateSequenceSetTest extends StateManagerTest {
         for (int i = 0; i < 3; ++i) {
             switch (i) {
                 case 0 -> {
-                    len1 = set.nRequired();
-                    len2 = set.getRequired(values);
-                    expected = sortedRequired;
+                    len1 = set.nIncluded();
+                    len2 = set.getIncluded(values);
+                    expected = sortedIncluded;
                 }
                 case 1 -> {
                     len1 = set.nPossible();
@@ -321,7 +366,7 @@ public class StateSequenceSetTest extends StateManagerTest {
             Arrays.sort(slice);
             assertArrayEquals(expected, slice);
         }
-        assertEquals(sortedRequired.length + sortedPossible.length + sortedExcluded.length, set.size());
+        assertEquals(sortedIncluded.length + sortedPossible.length + sortedExcluded.length, set.size());
     }
 
     /**
@@ -330,14 +375,14 @@ public class StateSequenceSetTest extends StateManagerTest {
      * @param min minimum value inclusive within the set
      * @param max maximum value inclusive within the set
      */
-    private void assertSequenceFromMinMaxInit(StateSequenceSet set, int min, int max) {
-        assertEquals(0, set.nRequired());
+    private void assertSequenceFromMinMaxInit(StateTriPartition set, int min, int max) {
+        assertEquals(0, set.nIncluded());
         assertEquals(0, set.nExcluded());
         assertEquals(max - min + 1, set.nPossible());
         for (int i = min; i <= max; ++i) {
             assertTrue(set.isPossible(i));
             assertTrue(set.contains(i));
-            assertFalse(set.isRequired(i));
+            assertFalse(set.isIncluded(i));
             assertFalse(set.isExcluded(i));
         }
 
@@ -350,7 +395,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         assertArrayEquals(possible, values);
 
         assertEquals(0, set.nExcluded());
-        assertEquals(0, set.nRequired());
+        assertEquals(0, set.nIncluded());
     }
 
     /**
@@ -360,46 +405,46 @@ public class StateSequenceSetTest extends StateManagerTest {
     public void testSequenceFromMinMax() {
         int min = 5;
         int max = 12;
-        StateSequenceSet set = new StateSequenceSet(sm, 5, 12);
+        StateTriPartition set = new StateTriPartition(sm, 5, 12);
         assertSequenceFromMinMaxInit(set, min, max);
         for (int i = min-3; i < min; ++i) {
             assertFalse(set.isPossible(i));
-            assertFalse(set.isRequired(i));
+            assertFalse(set.isIncluded(i));
             assertFalse(set.isExcluded(i));
-            assertFalse(set.require(i));
+            assertFalse(set.include(i));
             assertFalse(set.exclude(i));
             assertFalse(set.contains(i));
         }
         for (int i = max+1; i < max+4; ++i) {
             assertFalse(set.isPossible(i));
-            assertFalse(set.isRequired(i));
+            assertFalse(set.isIncluded(i));
             assertFalse(set.isExcluded(i));
-            assertFalse(set.require(i));
+            assertFalse(set.include(i));
             assertFalse(set.exclude(i));
             assertFalse(set.contains(i));
         }
 
         sm.saveState();
         // exclude and require some values
-        assertTrue(set.require(6));  // R: {6}
-        assertFalse(set.require(6)); // R: {6}
+        assertTrue(set.include(6));  // R: {6}
+        assertFalse(set.include(6)); // R: {6}
         assertFalse(set.exclude(6)); // E: {}
         assertTrue(set.exclude(12)); // E: {12}
         assertTrue(set.exclude(5));  // E: {12, 5}
         assertTrue(set.exclude(10)); // E: {12, 5, 10}
         assertFalse(set.exclude(1)); // does not belong to the set
         assertFalse(set.exclude(12));
-        assertTrue(set.require(8));  // R: {6, 8}
+        assertTrue(set.include(8));  // R: {6, 8}
         // set at this point: {R: {6, 8}, P: {7, 9, 11}, E: {5, 10, 12}}
         assertSequenceState(set, new int[] {6, 8}, new int[] {7, 9, 11}, new int[] {5, 10, 12});
 
         sm.saveState();
 
-        assertTrue(set.require(9));
-        assertTrue(set.require(7));
-        assertTrue(set.require(11));
+        assertTrue(set.include(9));
+        assertTrue(set.include(7));
+        assertTrue(set.include(11));
         assertFalse(set.exclude(11));
-        assertFalse(set.require(9));
+        assertFalse(set.include(9));
         // set at this point: {R: {6, 7, 8, 9, 11}, P: {}, E: {5, 10, 12}}
         assertSequenceState(set, new int[] {6, 7, 8, 9, 11}, new int[] {}, new int[] {5, 10, 12});
 
@@ -410,7 +455,7 @@ public class StateSequenceSetTest extends StateManagerTest {
         assertTrue(set.exclude(9));
         assertTrue(set.exclude(7));
         assertTrue(set.exclude(11));
-        assertFalse(set.require(11));
+        assertFalse(set.include(11));
         assertFalse(set.exclude(9));
         // set at this point: {R: {6, 8}, P: {}, E: {5, 7, 9, 10, 11, 12}}
         assertSequenceState(set, new int[] {6, 8}, new int[] {}, new int[] {5, 7, 9, 10, 11, 12});

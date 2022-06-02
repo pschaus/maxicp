@@ -1,7 +1,7 @@
 package org.maxicp.cp.engine.core;
 
 import org.maxicp.state.*;
-import org.maxicp.state.datastructures.StateSequenceSet;
+import org.maxicp.state.datastructures.StateTriPartition;
 import org.maxicp.state.datastructures.StateStack;
 import org.maxicp.util.Procedure;
 
@@ -19,7 +19,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
     private CPInsertionVarInSequence[] insertionVars;
     private StateInt[] succ;                    // successors of the nodes
     private StateInt[] pred;                    // predecessors of the nodes
-    private StateSequenceSet domain;            // domain for the set of Member, Possible and Excluded variables
+    private StateTriPartition domain;            // domain for the set of Member, Possible and Excluded variables
 
     // TODO constructor from a set of specified edges
     // TODO checker for clusters of possibles nodes
@@ -37,8 +37,8 @@ public class CPSequenceVarImpl implements CPSequenceVar {
      * Creates a Sequence Variable, representing a path from begin until end in a complete insertion graph.
      * At the construction the sequence only contains the begin and end nodes.
      *
-     * @param cp solver related to the variable
-     * @param nNodes number of nodes in the graph
+     * @param cp solver related to the variable.
+     * @param nNodes number of nodes in the graph.
      * @param begin first node of the path, that is already a member of the sequence.
      * @param end last node of the path, that is already a member of the sequence.
      */
@@ -56,7 +56,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
         insertionVars = new CPInsertionVarInSequence[nNodes];
         succ = new StateInt[maxIndex];
         pred = new StateInt[maxIndex];
-        for (int i=0; i < nNodes; ++i) {
+        for (int i = 0; i < nNodes; ++i) {
             if (i == begin | i == end)
                 continue;
             insertionVars[i] = new CPInsertionVarInSequence(i);
@@ -68,13 +68,13 @@ public class CPSequenceVarImpl implements CPSequenceVar {
         pred[begin] = cp.getStateManager().makeStateInt(end);
         pred[end] = cp.getStateManager().makeStateInt(begin);
 
-        domain = new StateSequenceSet(cp.getStateManager(), maxIndex);
-        for (int i=nNodes; i < maxIndex; ++i) {
+        domain = new StateTriPartition(cp.getStateManager(), maxIndex);
+        for (int i = nNodes; i < maxIndex; ++i) {
             if (i != begin && i != end)
                 domain.exclude(i);
         }
-        domain.require(begin); // the beginning and ending nodes are always in the domain
-        domain.require(end);
+        domain.include(begin); // the beginning and ending nodes are always in the domain
+        domain.include(end);
         onInsert = new StateStack<>(cp.getStateManager());
         onFix = new StateStack<>(cp.getStateManager());
         onExclude = new StateStack<>(cp.getStateManager());
@@ -82,7 +82,8 @@ public class CPSequenceVarImpl implements CPSequenceVar {
     }
 
     /**
-     * listener for the whole sequence. For more information about the changes (i.e. what insertion has occurred?),
+     * Listener for the whole sequence.
+     * For more information about the changes (i.e. what insertion has occurred?),
      * use the listener within the insertionVars
      */
      private SequenceListener seqListener = new SequenceListener() {
@@ -117,6 +118,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
         private StateStack<CPConstraint> onInsert;
         private StateStack<CPConstraint> onDomain;
         private StateStack<CPConstraint> onExclude;
+
         private boolean seen = false; // used by canPrecede(), set to true if the insertion is seen during the recursive call
 
         private InsertionListener listener = new InsertionListener() {
@@ -410,9 +412,9 @@ public class CPSequenceVarImpl implements CPSequenceVar {
     @Override
     public int nMember(boolean includeBounds) {
         if (includeBounds)
-            return domain.nRequired();
+            return domain.nIncluded();
         else
-            return domain.nRequired() - 2;
+            return domain.nIncluded() - 2;
     }
 
     @Override
@@ -496,7 +498,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
     public void insert(int pred, int node) {
         if (!isMember(pred))
             throw INCONSISTENCY;
-        if (!domain.require(node)) {
+        if (!domain.include(node)) {
             // the node is either already member or excluded
             if (succ[pred].value() != node || isExcluded(node)) // the insertion points asked differs from the current / the node is excluded
                 throw INCONSISTENCY;
@@ -562,7 +564,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
 
     @Override
     public boolean isMember(int node) {
-        return domain.isRequired(node);
+        return domain.isIncluded(node);
     }
 
     @Override
@@ -577,7 +579,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
 
     @Override
     public int fillMember(int[] dest) {
-        return domain.getRequired(dest);
+        return domain.getIncluded(dest);
     }
 
     @Override
@@ -596,8 +598,8 @@ public class CPSequenceVarImpl implements CPSequenceVar {
             return 0;
         int j = 0; // indexing used for dest
         int s = insertionVars[node].size();
-        if (s > domain.nRequired()) { // quicker to iterate over the current sequence
-            int size = domain.nRequired();
+        if (s > domain.nIncluded()) { // quicker to iterate over the current sequence
+            int size = domain.nIncluded();
             int current = end; // the end of the sequence can never be a valid insertion
             for (int i=0; i<size; ++i) {
                 current = nextMember(current);
@@ -608,7 +610,7 @@ public class CPSequenceVarImpl implements CPSequenceVar {
         } else { // quicker to iterate over the remaining insertions inside the insertion var
             for (int i = 0; i < s; i++) {
                 // does insertion belong effectively to the member sequence?
-                if (domain.isRequired(insertionVars[node].values[i]))
+                if (domain.isIncluded(insertionVars[node].values[i]))
                     dest[j++] = insertionVars[node].values[i];
             }
         }

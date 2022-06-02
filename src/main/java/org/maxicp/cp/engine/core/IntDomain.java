@@ -153,6 +153,6 @@ public interface IntDomain {
     int fillDeltaArray(int oldMin, int oldMax, int oldSize, int [] arr);
 
 
-        @Override
+    @Override
     String toString();
 }

@@ -102,6 +102,7 @@ public interface CPSequenceVar extends CPVar {
      */
     boolean canInsert(int pred, int node);
 
+
     /**
      * Tells if a node can precede another one.
      * A node {@code p} can precede a node {@code n}
@@ -338,38 +339,42 @@ public interface CPSequenceVar extends CPVar {
     int predMember(int node);
 
     /**
-     * Fills the current order of the sequence into an array large enough,
+     * Fills the current order of the sequence into an array
      * including {@link #begin()} and {@link #end()} node.
      *
-     * @param dest array where to store the order of the sequence
+     * @param dest array where to store the order of the sequence. The array should be large enough.
      * @return number of elements in the sequence, including beginning and ending node
      */
     int fillOrder(int[] dest);
 
     /**
-     * fill the current order of the sequence into an array large enough
-     * @param dest array where to store the order of the sequence
+     * Fills the current order of the sequence into an array.
+     *
+     * @param dest array where to store the order of the sequence. The array should be large enough.
      * @param includeBounds if True, includes the beginning and ending node into the order array
      * @return number of elements in the sequence
      */
     int fillOrder(int[] dest, boolean includeBounds);
 
     /**
-     * give the ordering of nodes with the {@link #begin()} and {@link #end()} nodes
+     * Gives a string representation of the ordering of nodes with the {@link #begin()} and {@link #end()} nodes.
+     *
      * @return ordering of the sequence, with " -> " between 2 consecutive nodes, incudling the {@link #begin()} and
      *  {@link #end()} nodes
      */
     String ordering();
 
     /**
-     * give the ordering of nodes with possibly the {@link #begin()} and {@link #end()} nodes
+     * Gives a string representation of the ordering of nodes with possibly the {@link #begin()} and {@link #end()} nodes.
+     *
      * @param includeBounds if the bounds ({@link #begin()} and {@link #end()}) must be included or not
      * @return ordering of the sequence, with " -> " between 2 consecutive nodes
      */
     String ordering(boolean includeBounds);
 
     /**
-     * give the ordering of nodes with the beginning and end nodes
+     * Gives a string representation of ordering of nodes with the beginning and end nodes.
+     *
      * @param includeBounds if the bounds ({@link #begin()} and {@link #end()}) must be included or not
      * @param join string that must be used to join two consecutive nodes
      * @return ordering of the sequence, nodes being joined on the specified string
@@ -377,10 +382,11 @@ public interface CPSequenceVar extends CPVar {
     String ordering(boolean includeBounds, String join);
 
     /**
-     * tell if pred occurs before node in the sequence
+     * Tells if a given node precedes another one in the sequence.
+     *
      * @param pred node occuring before
      * @param node node occuring after
-     * @return true if pred precedes node in the sequence
+     * @return true iff pred precedes node in the sequence
      */
     boolean precede(int pred, int node);
 

@@ -4,47 +4,54 @@ package org.maxicp.cp.engine.core;
 import org.maxicp.util.Procedure;
 
 /**
- * used to represent a node and its possible insertions points
- * an insertion point is defined by an integer i
- *   and is supposed to be valid if the node can be inserted after node i
- *   invalid insertion points are removed using constraints
- *   an InsertionVar can have an empty domain and still be valid. However, a constraint can be added to throw an
- *      inconsistency whenever an InsertionVar is empty
+ * This variable represents the set of nodes after which
+ * this node can be inserted.
+ *
+ * An insertion point is defined by an integer i
+ * and is supposed to be valid if this node can be inserted after node i.
+ * Invalid insertion points are assumed to be removed by the constraints.
+ * A {@link CPInsertionVar} can be empty domain and still be valid.
+ * However, a constraint can be added to throw an inconsistency whenever an InsertionVar is empty.
  */
 public interface CPInsertionVar {
 
     /**
      * Returns the solver in which this variable was created.
      *
-     * @return the solver in which this variable was created
+     * @return the solver in which this variable was created.
      */
     CPSolver getSolver();
 
     /**
-     * @return true when the no insertions points exist anymore
+     * Tells if the variable is fixed, that is
+     * it cannot be inserted after any other node.
+     *
+     * @return true when the no insertions points exist anymore.
      */
     boolean isFixed();
 
     /**
-     * remove an insertion point from the set of possible insertions points
-     * @param i predecessor candidate for the beginning of the request
+     * Removes an insertion point from the set of possible insertions points.
+     *
+     * @param i predecessor candidate for the beginning of the request.
      */
     void removeInsert(int i);
 
     /**
-     * remove all insertion points
+     * Removes all insertion points.
      */
     void removeAllInsert();
 
     /**
-     * remove all insertion points except the insertion point specified
-     * @param i predecessor for the beginning of the request
+     * Removes all insertion points except the specified one.
+     *
+     * @param i predecessor for the beginning of the request.
      */
     void removeAllInsertBut(int i);
 
     /**
-     * tell if the insertion belongs to the set of insertions points
-     * @param i
+     * Tells if the insertion belongs to the set of insertions points.
+     * @param i a node
      * @return
      */
     boolean contains(int i);
