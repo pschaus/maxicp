@@ -70,8 +70,8 @@ public class TransitionTimes extends AbstractCPConstraint {
         this.distance = distance;
         this.transition = transition;
         this.serviceTime = serviceTime;
-        insertionsVar = new int[seq.nNode(true)]; // upper bound on the number of nodes being member of the sequence
-        insertionsPoint = new int[seq.nNode(false)]; // upper bound on the number of insertions for one node
+        insertionsVar = new int[seq.nNode()]; // upper bound on the number of nodes being member of the sequence
+        insertionsPoint = new int[seq.nNode()]; // upper bound on the number of insertions for one node
         this.listenDistanceChange = listenDistanceChange;
     }
 

@@ -42,19 +42,19 @@ public class StateTriPartitionTest extends StateManagerTest {
         assertEquals(0, set.nIncluded());
 
         int[] values = new int[9];
-        int size = set.getPossible(values);
+        int size = set.fillPossible(values);
         assertEquals(6, size);
         int[] slice = Arrays.stream(values, 0, 6).toArray();
         Arrays.sort(slice);
         assertArrayEquals(new int[] {1,2,3,4,6,7}, slice);
 
-        size = set.getExcluded(values);
+        size = set.fillExcluded(values);
         assertEquals(3, size);
         slice = Arrays.stream(values, 0, 3).toArray();
         Arrays.sort(slice);
         assertArrayEquals(new int[] {0,5,8}, slice);
 
-        size = set.getIncluded(values);
+        size = set.fillIncluded(values);
         assertEquals(0, size);
 
         sm.restoreState();
@@ -87,16 +87,16 @@ public class StateTriPartitionTest extends StateManagerTest {
         assertEquals(3, set.nIncluded());
 
         int[] values = new int[9];
-        int size = set.getPossible(values);
+        int size = set.fillPossible(values);
         assertEquals(6, size);
         int[] slice = Arrays.stream(values, 0, 6).toArray();
         Arrays.sort(slice);
         assertArrayEquals(new int[] {1,2,3,4,6,7}, slice);
 
-        size = set.getExcluded(values);
+        size = set.fillExcluded(values);
         assertEquals(0, size);
 
-        size = set.getIncluded(values);
+        size = set.fillIncluded(values);
         assertEquals(3, size);
         slice = Arrays.stream(values, 0, 3).toArray();
         Arrays.sort(slice);
@@ -136,19 +136,19 @@ public class StateTriPartitionTest extends StateManagerTest {
         assertEquals(3, set.nIncluded());
 
         int[] values = new int[9];
-        int size = set.getPossible(values);
+        int size = set.fillPossible(values);
         assertEquals(4, size);
         int[] slice = Arrays.stream(values, 0, 4).toArray();
         Arrays.sort(slice);
         assertArrayEquals(new int[] {1,4,6,7}, slice);
 
-        size = set.getExcluded(values);
+        size = set.fillExcluded(values);
         assertEquals(2, size);
         slice = Arrays.stream(values, 0, 2).toArray();
         Arrays.sort(slice);
         assertArrayEquals(new int[] {2,3}, slice);
 
-        size = set.getIncluded(values);
+        size = set.fillIncluded(values);
         assertEquals(3, size);
         slice = Arrays.stream(values, 0, 3).toArray();
         Arrays.sort(slice);
@@ -159,19 +159,19 @@ public class StateTriPartitionTest extends StateManagerTest {
         assertEquals(1, set.nExcluded());
         assertEquals(2, set.nIncluded());
 
-        size = set.getPossible(values);
+        size = set.fillPossible(values);
         assertEquals(6, size);
         slice = Arrays.stream(values, 0, 6).toArray();
         Arrays.sort(slice);
         assertArrayEquals(new int[] {1,3,4,6,7,8}, slice);
 
-        size = set.getExcluded(values);
+        size = set.fillExcluded(values);
         assertEquals(1, size);
         slice = Arrays.stream(values, 0, 1).toArray();
         Arrays.sort(slice);
         assertArrayEquals(new int[] {2}, slice);
 
-        size = set.getIncluded(values);
+        size = set.fillIncluded(values);
         assertEquals(2, size);
         slice = Arrays.stream(values, 0, 2).toArray();
         Arrays.sort(slice);
@@ -329,7 +329,7 @@ public class StateTriPartitionTest extends StateManagerTest {
     /**
      * assert the state of a StateSequenceSet
      * train1 the methods {@link StateTriPartition#nPossible()}, {@link StateTriPartition#nIncluded()}, {@link StateTriPartition#nExcluded()}
-     * {@link StateTriPartition#getPossible(int[])}, {@link StateTriPartition#getIncluded(int[])}, {@link StateTriPartition#getExcluded(int[])},
+     * {@link StateTriPartition#fillPossible(int[])}, {@link StateTriPartition#fillIncluded(int[])}, {@link StateTriPartition#fillExcluded(int[])},
      * {@link StateTriPartition#contains(int)}, {@link StateTriPartition#size()}
      * @param set set that will be tested
      * @param sortedIncluded required values, sorted
@@ -346,17 +346,17 @@ public class StateTriPartitionTest extends StateManagerTest {
             switch (i) {
                 case 0 -> {
                     len1 = set.nIncluded();
-                    len2 = set.getIncluded(values);
+                    len2 = set.fillIncluded(values);
                     expected = sortedIncluded;
                 }
                 case 1 -> {
                     len1 = set.nPossible();
-                    len2 = set.getPossible(values);
+                    len2 = set.fillPossible(values);
                     expected = sortedPossible;
                 }
                 default -> {
                     len1 = set.nExcluded();
-                    len2 = set.getExcluded(values);
+                    len2 = set.fillExcluded(values);
                     expected = sortedExcluded;
                 }
             }
@@ -389,7 +389,7 @@ public class StateTriPartitionTest extends StateManagerTest {
         int[] possible = IntStream.range(min, max+1).toArray();
         int[] values = new int[max-min+1];
         assertEquals(set.nPossible(), possible.length);
-        int len = set.getPossible(values);
+        int len = set.fillPossible(values);
         assertEquals(possible.length, len);
         Arrays.sort(values);
         assertArrayEquals(possible, values);

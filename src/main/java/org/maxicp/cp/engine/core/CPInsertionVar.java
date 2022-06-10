@@ -23,38 +23,15 @@ public interface CPInsertionVar {
     CPSolver getSolver();
 
     /**
-     * Tells if the variable is fixed, that is
-     * it cannot be inserted after any other node.
-     *
-     * @return true when the no insertions points exist anymore.
-     */
-    boolean isFixed();
-
-    /**
      * Removes an insertion point from the set of possible insertions points.
      *
      * @param i predecessor candidate for the beginning of the request.
      */
     void removeInsert(int i);
 
-    /**
-     * Removes all insertion points.
-     */
-    void removeAllInsert();
 
-    /**
-     * Removes all insertion points except the specified one.
-     *
-     * @param i predecessor for the beginning of the request.
-     */
-    void removeAllInsertBut(int i);
-
-    /**
-     * Tells if the insertion belongs to the set of insertions points.
-     * @param i a node
-     * @return
-     */
     boolean contains(int i);
+
 
     /**
      * id of the node
@@ -88,7 +65,7 @@ public interface CPInsertionVar {
     /**
      * Asks that {@link CPConstraint#propagate()} is called whenever the domain
      * of this variable is reduced to a singleton.
-     * In such a state the variable is bind and we say that a <i>bind</i> event occurs.
+     * In such a state the variable is fixed.
      *
      * @param c the constraint for which the {@link CPConstraint#propagate()}
      *          method should be called on bind events of this variable.
@@ -130,20 +107,20 @@ public interface CPInsertionVar {
     void propagateOnExclude(CPConstraint c);
 
     /**
-     * Asks that the closure is called whenever no inserted point remained for this variable
-     * this occurs when the insertion variable is either inserted or excluded
+     * Asks that the closure is called whenever no inserted point remains for this variable.
+     * This occurs when the insertion variable is either inserted or excluded
      *
      * @param f the closure
      */
     void whenFixed(Procedure f);
 
     /**
-     * Asks that {@link CPConstraint#propagate()} no inserted point remained for this variable
-     * this occurs when the insertion variable is either inserted or excluded
-     * In such a state the variable is bind and we say that a <i>bind</i> event occurs.
+     * Asks that {@link CPConstraint#propagate()} to be called when
+     * no inserted point remains for this variable.
+     * This occurs when the insertion variable is either inserted or excluded.
      *
      * @param c the constraint for which the {@link CPConstraint#propagate()}
-     *          method should be called on bind events of this variable.
+     *          method should be called on fix of this variable.
      */
     void propagateOnFix(CPConstraint c);
 

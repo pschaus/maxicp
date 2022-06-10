@@ -26,14 +26,14 @@ public class DisjointTest extends CPSolverTest {
         cp = solverFactory.get();
         CPSequenceVars = new CPSequenceVar[nSequences];
         for (int i = 0; i < nSequences ; ++i) {
-            CPSequenceVars[i] = CPFactory.makeSequenceVar(cp, nNodes, nNodes+i, nNodes + nSequences + i);
+            CPSequenceVars[i] = CPFactory.makeSequenceVar(cp, nNodes+2*nSequences, nNodes+i, nNodes + nSequences + i);
         }
     }
 
     @Test
     public void testDisjoint1() {
         for (int i = 0; i < nSequences ; ++i) {
-            CPSequenceVars[i] = CPFactory.makeSequenceVar(cp, nNodes, nNodes+i, nNodes + nSequences + i);
+            CPSequenceVars[i] = CPFactory.makeSequenceVar(cp, nNodes+2*nSequences, nNodes+i, nNodes + nSequences + i);
         }
         cp.post(new Disjoint(CPSequenceVars));
         // no modifications should have occurred at the moment
@@ -72,7 +72,7 @@ public class DisjointTest extends CPSolverTest {
         CPSequenceVar[] CPSequenceVars = new CPSequenceVar[nSequences];
 
         for (int i = 0; i < nSequences ; ++i) {
-            CPSequenceVars[i] = CPFactory.makeSequenceVar(cp, nNodes, nNodes+i, nNodes + nSequences + i);
+            CPSequenceVars[i] = CPFactory.makeSequenceVar(cp, nNodes+2*nSequences, nNodes+i, nNodes + nSequences + i);
         }
         // a node cannot be excluded from all sequences
         sm.saveState();
@@ -144,6 +144,7 @@ public class DisjointTest extends CPSolverTest {
         try {
             cp.post(new Disjoint(CPSequenceVars));
         } catch (InconsistencyException e) {
+
             fail("inconsistency should not be thrown when no node is excluded");
         }
         for (CPSequenceVar seq : CPSequenceVars) {

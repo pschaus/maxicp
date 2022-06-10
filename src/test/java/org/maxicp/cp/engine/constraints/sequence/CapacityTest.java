@@ -23,7 +23,7 @@ public class CapacityTest extends CPSolverTest {
 
     @BeforeClass
     public static void SetUpClass() {
-        nNodes = 8;
+        nNodes = 10;
         begin = 8;
         end = 9;
     }

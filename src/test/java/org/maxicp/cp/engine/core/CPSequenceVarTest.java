@@ -49,10 +49,10 @@ public class CPSequenceVarTest extends CPSolverTest {
 
     @BeforeClass
     public static void SetUpClass() {
-        nNodes = 10;
+        nNodes = 12;
         begin = 10;
         end = 11;
-        insertions = IntStream.range(0, nNodes).toArray();
+        insertions = IntStream.range(0, nNodes-1).toArray();
     }
 
     @Before
@@ -97,8 +97,7 @@ public class CPSequenceVarTest extends CPSolverTest {
         assertEquals(excluded.length, sequence.nExcluded());
         assertEquals(sequence.begin(), sequence.nextMember(sequence.end()));
         assertEquals(sequence.end(), sequence.predMember(sequence.begin()));
-        assertEquals(sequence.nNode(false), scheduledInsert.length);
-        assertEquals(sequence.nNode(true), scheduledInsert.length + 2);
+        assertEquals(sequence.nNode(), scheduledInsert.length);
         // test the ordering
         int[] ordering = new int[scheduled.length];
         assertEquals(scheduled.length, sequence.fillOrder(ordering, true));
@@ -248,9 +247,9 @@ public class CPSequenceVarTest extends CPSolverTest {
      */
     @Test
     public void testSequenceVarOffset() {
-        int begin = 12;
-        int end = 18;
-        sequence = CPFactory.makeSequenceVar(cp, 10, begin, end);
+        int begin = 10;
+        int end = 11;
+        sequence = CPFactory.makeSequenceVar(cp, 12, begin, end);
         int[] scheduledInit = new int[] {begin, end};
         int[] possibleInit = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         int[] excludedInit = new int[] {};
@@ -452,6 +451,8 @@ public class CPSequenceVarTest extends CPSolverTest {
                 {},
                 {sequence.begin()},
                 {sequence.begin()},
+                {},
+                {}
         };
         int[][] possibleInsertions1 = new int[][] {
                 {   1, 2, 3,    5, 6, 7, 8,  },
@@ -464,6 +465,8 @@ public class CPSequenceVarTest extends CPSolverTest {
                 {0, 1, 2, 3, 4,          8, 9},
                 {0, 1, 2, 3, 4, 5, 6, 7,    9},
                 {0, 1, 2, 3, 4, 5, 6, 7, 8,  },
+                {},
+                {}
         };
         isSequenceValid(scheduled1, possible1, excluded1, scheduledInsertions1, possibleInsertions1);
         sm.saveState();
@@ -486,6 +489,8 @@ public class CPSequenceVarTest extends CPSolverTest {
                 {4},
                 {sequence.begin()},
                 {sequence.begin(), 4},
+                {},
+                {}
         };
         int[][] possibleInsertions2 = new int[][] {
                 {   1, 2, 3,       6, 7, 8,  },
@@ -498,6 +503,8 @@ public class CPSequenceVarTest extends CPSolverTest {
                 {0, 1, 2, 3,             8, 9},
                 {0, 1, 2, 3,       6, 7,    9},
                 {0, 1, 2, 3,       6, 7, 8,  },
+                {},
+                {}
         };
         int[] scheduled2 = new int[] {begin, 4, end};
         int[] possible2= new int[] {0, 1, 2, 3, 6, 7, 8, 9};
@@ -635,64 +642,6 @@ public class CPSequenceVarTest extends CPSolverTest {
         resetPropagators();
     }
 
-    @Test
-    public void testCanPreceded() {
-        assertTrue(sequence.canPrecede(begin, 8));
-        sequence.removeInsertion(begin, 8);
-        assertTrue(sequence.canPrecede(begin, 8)); // the insertion is removed but node 8 can still precede begin
-        assertFalse(sequence.canInsert(begin, 8));
-        assertFalse(sequence.isInsertion(begin, 8));
-
-        sequence.insert(begin, 1);
-        sequence.insert(begin, 2);
-        sequence.insert(begin, 3); // sequence at this points: begin -> 3 -> 2 -> 1
-
-        assertTrue(sequence.canPrecede(begin, 8));
-        assertFalse(sequence.canInsert(begin, 8));
-        assertFalse(sequence.isInsertion(begin, 8));
-
-        sequence.removeInsertion(1, 8);
-        sequence.removeInsertion(2, 8);
-        sequence.removeInsertion(3, 8);
-
-        for (int n: new int[] {begin, 1, 2, 3}) {
-            assertTrue(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canInsert(n, 8));
-            assertFalse(sequence.isInsertion(n, 8));
-        }
-
-        sequence.getSolver().getStateManager().saveState();
-        for (int n: new int[] {4, 5, 6, 7, 9}) {
-            sequence.removeInsertion(n, 8);
-        }
-
-        for (int n: new int[] {begin, 1, 2, 3}) {
-            assertTrue(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canInsert(n, 8));
-            assertFalse(sequence.isInsertion(n, 8));
-        }
-
-        sequence.removeInsertion(0, 8); // node 8 becomes excluded at this point
-
-        for (int n: new int[] {begin, 1, 2, 3}) {
-            assertFalse(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canInsert(n, 8));
-            assertFalse(sequence.isInsertion(n, 8));
-        }
-        sequence.getSolver().getStateManager().restoreState();
-        // only let node 8 be scheduled after node 4, and remove all insertions from node 4 except node 8
-        // form a disconnected component of 2 nodes
-
-        sequence.getInsertionVar(8).removeAllInsertBut(4);
-        sequence.getInsertionVar(4).removeAllInsertBut(8);
-
-        for (int n: new int[] {begin, 1, 2, 3}) {
-            assertFalse(sequence.canPrecede(n, 8));
-            assertFalse(sequence.canInsert(n, 8));
-            assertFalse(sequence.isInsertion(n, 8));
-        }
-    }
-
     @Test(expected = InconsistencyException.class)
     public void throwInconsistencyDoubleInsert() {
         sequence.insert(sequence.begin(), 4);
@@ -729,24 +678,6 @@ public class CPSequenceVarTest extends CPSolverTest {
         sequence.insert(2, 8);
     }
 
-    @Test
-    public void testPrecede() {
-        sequence.insert(begin, 1);
-        sequence.insert(1, 8);
-        sequence.insert(8, 4);
-        sequence.insert(4, 5); // sequence at this point: begin -> 1 - > 8 -> 4 -> 5 -> end
-        int[] ordering = new int[] {begin, 1, 8, 4, 5, end};
-        for (int i = 0 ; i < ordering.length ; ++i) {
-            int pred = ordering[i];
-            for (int j = 0; j < i ; ++j) {
-                assertFalse(sequence.precede(pred, ordering[j]));
-            }
-            assertFalse(sequence.precede(pred, pred));
-            for (int j = i + 1; j < ordering.length ; ++j) {
-                assertTrue(sequence.precede(pred, ordering[j]));
-            }
-        }
-    }
 
     @Test(expected = InconsistencyException.class)
     public void testInvalidInsert() {
@@ -789,6 +720,8 @@ public class CPSequenceVarTest extends CPSolverTest {
                 {sequence.begin(), 3},
                 {sequence.begin(), 3, 6},
                 {},
+                {},
+                {},
         };
         int[][] possibleInsertions = new int[][] {
                 {   1, 2,    4, 5,    7, 8,  },
@@ -801,6 +734,8 @@ public class CPSequenceVarTest extends CPSolverTest {
                 {0, 1, 2,    4, 5,       8,  },
                 {0, 1, 2,       5,    7,     },
                 {},
+                {},
+                {}
         };
         isSequenceValid(sequence, members, possible, excluded, memberInsertions, possibleInsertions);
     }

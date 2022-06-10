@@ -5,6 +5,7 @@ import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Tri-partition sparse-set data structure
@@ -182,6 +183,14 @@ public class StateTriPartition {
     }
 
     /**
+     * Moves all values, also the included ones into the set of excluded values.
+     */
+    public void excludeAll() {
+        this.i.setValue(0);
+        this.p.setValue(0);
+    }
+
+    /**
      * Moves all possible values into the set of included values.
      *
      * @return true if the partition of possible values has been reduced
@@ -255,26 +264,92 @@ public class StateTriPartition {
 
     public int size() { return n - nOmitted;}
 
-    public int getIncluded(int[] dest) {
+    public int fillIncluded(int[] dest) {
         int size = i.value();
         for (int i = 0; i < size ; ++i)
             dest[i] = elems[i] + ofs;
         return size;
     }
 
-    public int getPossible(int[] dest) {
+    /**
+     * Sets the first values of <code>dest</code> to the included ones
+     * that also satisfy the given filter predicate
+     *
+     * @param dest, an array large enough {@code dest.length >= size()}
+     * @param filterPredicate the predicate, only elements for which the predicate is true are kept
+     * @return the size of the included set of elements satisfying the predicate
+     */
+    public int fillIncludedWithFilter(int[] dest, Predicate<Integer> filterPredicate) {
+        int j = 0;
+        int size = i.value();
+        for (int i = 0; i < size ; ++i) {
+            int v = elems[i] + ofs;
+            if (filterPredicate.test(v)) {
+                dest[j] = elems[i] + ofs;
+                j++;
+            }
+        }
+        return j;
+    }
+
+    public int fillPossible(int[] dest) {
         int begin = i.value();
         int end = p.value() - begin;
-        for (int i = 0; i < end ; ++i)
-            dest[i] = elems[i + begin] + ofs;
+        if (ofs == 0) {
+            System.arraycopy(elems, begin, dest, 0, end);
+        } else {
+            for (int i = 0; i < end ; i++) {
+                dest[i] = elems[i + begin] + ofs;
+            }
+        }
         return end;
     }
 
-    public int getExcluded(int[] dest) {
+    /**
+     * Sets the first values of <code>dest</code> to the possible ones
+     * that also satisfy the given filter predicate
+     *
+     * @param dest, an array large enough {@code dest.length >= size()}
+     * @param filterPredicate the predicate, only elements for which the predicate is true are kept
+     * @return the size of the possible set of elements satisfying the predicate
+     */
+    public int fillPossibleWithFilter(int[] dest, Predicate<Integer> filterPredicate) {
+        int begin = i.value();
+        int end = p.value() - begin;
+        int j = 0;
+        for (int i = 0; i < end; i++) {
+            int v = elems[i + begin] + ofs;
+            if (filterPredicate.test(v)) {
+                dest[j] = v;
+                j++;
+            }
+            dest[i] = elems[i + begin] + ofs;
+        }
+        return j;
+    }
+
+    public int fillIncludedAndPossible(int[] dest) {
+        int end = p.value();
+        if (ofs == 0) {
+            System.arraycopy(elems, 0, dest, 0, end);
+        } else {
+            for (int i = 0; i < end ; i++) {
+                dest[i] = elems[i] + ofs;
+            }
+        }
+        return end;
+    }
+
+    public int fillExcluded(int[] dest) {
         int begin = p.value();
         int end = n - begin - nOmitted;
-        for (int i = 0; i < end; ++i)
-            dest[i] = elems[i + begin] + ofs;
+        if (ofs == 0) {
+            System.arraycopy(elems, begin, dest, 0, end);
+        } else {
+            for (int i = 0; i < end; i++) {
+                dest[i] = elems[i + begin] + ofs;
+            }
+        }
         return end;
     }
 

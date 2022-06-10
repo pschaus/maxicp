@@ -19,6 +19,7 @@ import org.maxicp.state.StateInt;
 import org.maxicp.state.StateManager;
 
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 /**
  * Set implemented using a sparse-set data structure
@@ -102,6 +103,28 @@ public class StateSparseSet {
             dest[i] = values[i] + ofs;
         return s;
     }
+
+    /**
+     * Sets the first values of <code>dest</code> to the ones
+     * present in the set that also satisfy the given filter predicate
+     *
+     * @param dest, an array large enough {@code dest.length >= size()}
+     * @param filterPredicate the predicate, only elements for which the predicate is true are kept
+     * @return the size of the set of elements in the set satisfying hte predicate
+     */
+    public int fillArrayWithFilter(int[] dest, Predicate<Integer> filterPredicate) {
+        int s = size.value();
+        int j = 0;
+        for (int i = 0; i < s; i++) {
+            if (filterPredicate.test(values[i]+ofs)) {
+                dest[j] = values[i] + ofs;
+                j++;
+            }
+        }
+        return j;
+    }
+
+
 
     /**
      * Checks if the set is empty

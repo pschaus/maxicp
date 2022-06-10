@@ -25,7 +25,7 @@ public class TransitionTimesTest extends CPSolverTest {
 
     @BeforeClass
     public static void SetUpClass() {
-        nNodes = 4;
+        nNodes = 6;
         begin = 4;
         end = 5;
         /* layout considered
@@ -74,12 +74,16 @@ public class TransitionTimesTest extends CPSolverTest {
                 {},
                 {},
                 {},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions1 = new int[][] {
                 {},
                 {},
                 {},
                 {},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled1 = new int[] {begin, end};
         int[] possible1= new int[] {0};
@@ -95,6 +99,8 @@ public class TransitionTimesTest extends CPSolverTest {
                 {},
                 {},
                 {},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled2 = new int[] {begin, 0, end};
         int[] possible2= new int[] {};
@@ -124,12 +130,16 @@ public class TransitionTimesTest extends CPSolverTest {
                 {sequence.begin()},
                 {sequence.begin()},
                 {},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions1 = new int[][] {
                 {  1, 2},
                 {0,   2},
                 {0,    }, // node 1 cannot be predecessor because of time window violation
                 {},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled1 = new int[] {begin, end};
         int[] possible1= new int[] {0, 1, 2};
@@ -146,12 +156,16 @@ public class TransitionTimesTest extends CPSolverTest {
                 {},
                 {},
                 {},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions2 = new int[][] {
                 {},
                 {},
                 {},
                 {},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled2 = new int[] {begin, 0, 2, end};
         int[] possible2 = new int[] {};

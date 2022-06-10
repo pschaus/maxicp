@@ -43,8 +43,9 @@ public class Disjoint  extends AbstractCPConstraint {
     public void post() {
 
         if (mustAppear && sequenceArray.length == 1) { // all nodes must be visited and only one sequence is in the set
-            if (sequenceArray[0].nExcluded() > 0) // no node can be excluded
+            if (sequenceArray[0].nExcluded() > 0) { // no node can be excluded
                 throw INCONSISTENCY;
+            }
             sequenceArray[0].whenExclude(() -> {
                 throw INCONSISTENCY;
             });
@@ -55,7 +56,7 @@ public class Disjoint  extends AbstractCPConstraint {
         int maxRequests = Integer.MIN_VALUE;
         int nbRequests;
         for (CPSequenceVar seq: sequenceArray) {
-            nbRequests = seq.nNode(false);
+            nbRequests = seq.nNode();
             if (nbRequests > maxRequests)
                 maxRequests = nbRequests;
         }
@@ -89,18 +90,29 @@ public class Disjoint  extends AbstractCPConstraint {
         }
 
         nodeSet.clear(); // now used for listener of possible nodes
-        for (CPSequenceVar seq: sequenceArray) {
+        for (CPSequenceVar seq : sequenceArray) {
             int size = seq.fillPossible(insertions);
-            for (int i=0; i < size; ++i) {
+            for (int i = 0; i < size; i++) {
                 int node = insertions[i];
                 if (!nodeSet.contains(node)) {
                     nodeSet.add(node);
                     // handle the actions related to one node
-                    HandleOneNode handle = new HandleOneNode(node);
-                    getSolver().post(handle);
+                    getSolver().post(new HandleOneNode(node));
+                }
+            }
+
+            // remove members from other sequences
+            size = seq.fillMember(insertions);
+            for (CPSequenceVar seq2 : sequenceArray) {
+                if (seq2 != seq) {
+                    for (int i = 0; i < size; i++) {
+                        int node = insertions[i];
+                        seq2.exclude(node);
+                    }
                 }
             }
         }
+
     }
 
     /**
@@ -121,8 +133,7 @@ public class Disjoint  extends AbstractCPConstraint {
             if (isActive()) { // the node is not yet scheduled
                 if (mustAppear) {
                     // prevent exclusions from all sequences
-                    HandleExclusions handleExclusions = new HandleExclusions();
-                    handleExclusions.post();
+                    getSolver().post(new HandleExclusions());
                 }
                 for (CPSequenceVar seq: sequenceArray) {
                     seq.getInsertionVar(node).propagateOnInsert(this);
@@ -137,8 +148,10 @@ public class Disjoint  extends AbstractCPConstraint {
             CPSequenceVar foundScheduled = null;
             for (CPSequenceVar seq: sequenceArray) {
                 if (seq.isMember(node)) {
-                    if (foundScheduled != null) // the node was scheduled in two sequences
+                    if (foundScheduled != null) {
+                        // the node was scheduled in two sequences
                         throw INCONSISTENCY;
+                    }
                     foundScheduled = seq; // assign to the sequence where the node has been scheduled
                 }
             }

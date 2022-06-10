@@ -76,14 +76,6 @@ public interface CPSequenceVar extends CPVar {
     int nNode();
 
     /**
-     * Returns the number of nodes in the sequence, possibly excluding bounds.
-     *
-     * @param includeBounds whether to count the {@link #begin()} and {@link #end()} nodes or not.
-     * @return number of nodes in the sequence.
-     */
-    int nNode(boolean includeBounds);
-
-    /**
      * Inserts the node into the sequence, right after the given predecessor.
      *
      * @param pred predecessor for the node, a member of the sequence
@@ -101,18 +93,6 @@ public interface CPSequenceVar extends CPVar {
      * @return true if the node can be scheduled.
      */
     boolean canInsert(int pred, int node);
-
-
-    /**
-     * Tells if a node can precede another one.
-     * A node {@code p} can precede a node {@code n}
-     * if a sequence can be formed where {@code p} occurs before {@code n} in the order.
-     *
-     * @param pred predecessor for the node.
-     * @param node node.
-     * @return {@code true} if a sequence can be formed with {@code pred} preceding node.
-     */
-    boolean canPrecede(int pred, int node);
 
     /**
      * Excludes the node from the set of possible nodes.
@@ -380,14 +360,5 @@ public interface CPSequenceVar extends CPVar {
      * @return ordering of the sequence, nodes being joined on the specified string
      */
     String ordering(boolean includeBounds, String join);
-
-    /**
-     * Tells if a given node precedes another one in the sequence.
-     *
-     * @param pred node occuring before
-     * @param node node occuring after
-     * @return true iff pred precedes node in the sequence
-     */
-    boolean precede(int pred, int node);
 
 }

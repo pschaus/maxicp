@@ -25,7 +25,7 @@ public class PrecedenceTest extends CPSolverTest {
 
     @BeforeClass
     public static void SetUpClass() {
-        nNodes = 8;
+        nNodes = 10;
         begin = 8;
         end = 9;
     }
@@ -58,6 +58,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {sequence.begin()},
                 {sequence.begin()},
                 {sequence.begin()},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions1 = new int[][] {
                 {   1,    3,    5, 6,  }, // 0 cannot have 2, 4 nor 7 as predecessor
@@ -68,6 +70,9 @@ public class PrecedenceTest extends CPSolverTest {
                 {0, 1, 2, 3, 4,    6, 7},
                 {0, 1, 2, 3, 4, 5,    7},
                 {0, 1, 2, 3, 4, 5, 6   },
+                {}, // begin has no insertion
+                {}  // end has no insertion
+
         };
         int[] scheduled1 = new int[] {begin, end};
         int[] possible1 = new int[] {0, 1, 2, 3, 4, 5, 6, 7};
@@ -85,6 +90,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {sequence.begin(), 2},
                 {sequence.begin(), 2},
                 {2}, // begin node cannot be a predecessor anymore
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions2 = new int[][] {
                 {   1,    3,    5, 6,  }, // 0 cannot have 2, 4 nor 7 as predecessor
@@ -95,6 +102,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {0, 1,    3, 4,    6, 7},
                 {0, 1,    3, 4, 5,    7},
                 {0, 1,    3, 4, 5, 6   },
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled2 = new int[] {begin, 2, end};
         int[] possible2 = new int[] {0, 1, 3, 4, 5, 6, 7};
@@ -149,6 +158,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {sequence.begin()},
                 {sequence.begin()},
                 {sequence.begin()},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions1 = new int[][] {
                 {   1,    3,    5, 6,  }, // 0 cannot have 2, 4 nor 7 as predecessor
@@ -159,6 +170,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {0, 1, 2, 3, 4,    6, 7},
                 {0, 1, 2, 3, 4, 5,    7},
                 {0, 1, 2, 3, 4, 5, 6   },
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled1 = new int[] {begin, end};
         int[] possible1 = new int[] {0, 1, 2, 3, 4, 5, 6, 7};
@@ -176,6 +189,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {sequence.begin(), 7},
                 {sequence.begin(), 7},
                 {}, // scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions2 = new int[][] {
                 {   1,    3,    5, 6,  }, // 0 cannot have 2, 4 nor 7 as predecessor
@@ -186,6 +201,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {0, 1, 2, 3, 4,    6,  },
                 {0, 1, 2, 3, 4, 5,     },
                 {}, // scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled2 = new int[] {begin, 7, end};
         int[] possible2 = new int[] {0, 1, 2, 3, 4, 5, 6};
@@ -203,6 +220,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {sequence.begin(), 7, 4},
                 {sequence.begin(), 7, 4},
                 {}, // scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions3 = new int[][] {
                 {   1,    3,    5, 6,  }, // 0 cannot have 2, 4 nor 7 as predecessor
@@ -213,6 +232,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {0, 1, 2, 3,       6,  },
                 {0, 1, 2, 3,    5,     },
                 {}, // scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled3 = new int[] {begin, 4, 7, end};
         int[] possible3 = new int[] {0, 1, 2, 3, 5, 6};
@@ -230,6 +251,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {sequence.begin(), 7, 4, 2},
                 {sequence.begin(), 7, 4, 2},
                 {}, // scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions4 = new int[][] {
                 {   1,    3,    5, 6,  }, // 0 cannot have 2, 4 nor 7 as predecessor
@@ -257,6 +280,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {sequence.begin(), 7, 4, 2, 0},
                 {sequence.begin(), 7, 4, 2, 0},
                 {}, // scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions5 = new int[][] {
                 {}, // scheduled
@@ -267,6 +292,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {   1,    3,       6,  },
                 {   1,    3,    5,     },
                 {}, // scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled5 = new int[] {begin, 0, 2, 4, 7, end};
         int[] possible5 = new int[] {1, 3, 5, 6};
@@ -294,6 +321,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {}, // 5 is scheduled
                 {sequence.begin(), 5, 2},
                 {2}, // begin cannot be scheduled anymore for node 7
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions1 = new int[][] {
                 {   1,    3,       6,  },   // 0 cannot have 2, 4 nor 7 as predecessor
@@ -304,6 +333,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {},                         // 5 is scheduled
                 {0, 1,    3, 4,       7},
                 {0, 1,    3, 4,    6   },   // 7 cannot have 0 as predecessor
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled1 = new int[] {begin, 5, 2, end};
         int[] possible1 = new int[] {0, 1, 3, 4, 6, 7};
@@ -322,6 +353,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {}, // 5 is scheduled
                 {sequence.begin(), 5, 2, 3},
                 {2, 3},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions2 = new int[][] {
                 {   1,             6,  },   // 0 cannot have 2, 4 nor 7 as predecessor
@@ -332,6 +365,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {},                         // 5 is scheduled
                 {0, 1,       4,       7},
                 {0, 1,       4,    6,  },
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled2 = new int[] {begin, 5, 2, 3, end};
         int[] possible2 = new int[] {0, 1, 4, 6, 7};
@@ -350,6 +385,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {}, // 5 is scheduled
                 {sequence.begin(), 5, 2, 3, 7},
                 {}, // 7 is scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions3 = new int[][] {
                 {   1,             6,  },   // 0 cannot have 2, 4 nor 7 as predecessor
@@ -360,6 +397,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {},                         // 5 is scheduled
                 {0, 1,       4,        },
                 {},                         // 7 is scheduled
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled3 = new int[] {begin, 5, 2, 3, 7, end};
         int[] possible3 = new int[] {0, 1, 4, 6};
@@ -385,6 +424,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {}, // scheduled
                 {sequence.begin(), 5, 4, 1},
                 {4, 1}, // nodes before 4 cannot be scheduled anymore for node 7
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions1 = new int[][] {
                 {         3,       6,  },   // 0 cannot have 2, 4 nor 7 as predecessor
@@ -395,6 +436,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {},                         // 5 is scheduled
                 {0,    2, 3,          7},
                 {0,    2, 3,       6   },
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled1 = new int[] {begin, 5, 4, 1, end};
         int[] possible1 = new int[] {0, 2, 3, 6, 7};
@@ -422,6 +465,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {}, // scheduled
                 {sequence.begin(), 5, 1, 4},
                 {sequence.begin(), 5, 1, 4},
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[][] possibleInsertions1 = new int[][] {
                 {      2, 3,       6, 7},
@@ -432,6 +477,8 @@ public class PrecedenceTest extends CPSolverTest {
                 {},                         // 5 is scheduled
                 {0,    2, 3,          7},
                 {0,    2, 3,       6   },
+                {}, // begin has no insertion
+                {}  // end has no insertion
         };
         int[] scheduled1 = new int[] {begin, 5, 1, 4, end};
         int[] possible1 = new int[] {0, 2, 3, 6, 7};
