@@ -24,13 +24,13 @@ package org.maxicp.state;
  *
  * @see StateManager#makeStateInt(int) for the creation.
  */
-public interface StateInt extends State<Integer> {
+public interface StateLong extends State<Long> {
 
     /**
      * Increments the value
      * @return the new value
      */
-    default int increment() {
+    default long increment() {
         return setValue(value() + 1);
     }
 
@@ -38,7 +38,7 @@ public interface StateInt extends State<Integer> {
      * Decrements the value
      * @return the new value
      */
-    default int decrement() {
+    default long decrement() {
         return setValue(value() - 1);
     }
 

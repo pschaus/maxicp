@@ -81,6 +81,14 @@ public interface StateManager {
     StateInt makeStateInt(int initValue);
 
     /**
+     * Creates a Stateful long (restorable)
+     *
+     * @param initValue the initial setValue
+     * @return a StateLong object wrapping the initValue
+     */
+    StateLong makeStateLong(long initValue);
+
+    /**
      * Creates a Stateful map (restorable)
      *
      * @return a reference to the map.

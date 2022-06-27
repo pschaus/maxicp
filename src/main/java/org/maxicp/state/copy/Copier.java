@@ -115,6 +115,13 @@ public class Copier implements StateManager {
     }
 
     @Override
+    public StateLong makeStateLong(long initValue) {
+        CopyLong s = new CopyLong(initValue);
+        store.add(s);
+        return s;
+    }
+
+    @Override
     public StateMap makeStateMap() {
         CopyMap s = new CopyMap<>();
         store.add(s);

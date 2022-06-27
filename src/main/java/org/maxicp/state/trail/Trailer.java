@@ -121,6 +121,11 @@ public class Trailer implements StateManager {
     }
 
     @Override
+    public StateLong makeStateLong(long initValue) {
+        return new TrailLong(this,initValue);
+    }
+
+    @Override
     public StateMap makeStateMap() {
         return new TrailMap(this);
     }

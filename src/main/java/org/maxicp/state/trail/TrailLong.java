@@ -13,33 +13,24 @@
  * Copyright (c)  2018. by Laurent Michel, Pierre Schaus, Pascal Van Hentenryck
  */
 
-package org.maxicp.state;
+package org.maxicp.state.trail;
 
+
+import org.maxicp.state.StateInt;
+import org.maxicp.state.StateLong;
+import org.maxicp.state.StateManager;
+import org.maxicp.state.trail.Trail;
+import org.maxicp.state.trail.Trailer;
 
 /**
- * Object that wraps an integer value
- * that can be saved and restored through
- * the {@link StateManager#saveState()} / {@link StateManager#restoreState()}
- * methods.
- *
- * @see StateManager#makeStateInt(int) for the creation.
+ * Implementation of {@link StateInt} with trail strategy
+ * @see Trailer
+ * @see StateManager#makeStateInt(int)
  */
-public interface StateInt extends State<Integer> {
+public class TrailLong extends Trail<Long> implements StateLong {
 
-    /**
-     * Increments the value
-     * @return the new value
-     */
-    default int increment() {
-        return setValue(value() + 1);
-    }
-
-    /**
-     * Decrements the value
-     * @return the new value
-     */
-    default int decrement() {
-        return setValue(value() - 1);
+    protected TrailLong(Trailer trail, long initial) {
+        super(trail, initial);
     }
 
 }
