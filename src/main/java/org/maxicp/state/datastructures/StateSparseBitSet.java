@@ -38,111 +38,173 @@ public class StateSparseBitSet {
     private int[] nonZeroIdx;
     private StateInt nNonZero;
 
+    /* Temp variable */
+    public CollectionBitSet collection;
+
     /**
      * Bitset of the same capacity as the outer {@link StateSparseBitSet}.
      * It is not synchronized with  {@link StateManager}.
      * It is rather intended to be used as parameter to the
      * {@link #intersect(BitSet)} method to modify the outer {@link StateSparseBitSet}.
      */
-    public class SupportBitSet extends BitSet{
+    public class SupportBitSet extends BitSet {
 
-        public SupportBitSet(){
+        public SupportBitSet() {
             super(nWords);
         }
 
-        public SupportBitSet(BitSet anotherBitSet){
-            super(anotherBitSet);
+        public SupportBitSet(BitSet anotherBitSet) {
+            this(anotherBitSet, false);
         }
 
-        /**
-         * Unset all the bits
-         */
-        public void clear() {
-            for (int i = 0; i < nNonZero.value(); i++) {
-                words[nonZeroIdx[i]] = 0L;
-            }
-        }
-
-        /**
-         * Makes the union with another bit-set but
-         * only on non zero-words of the outer sparse-bit-set.
-         *
-         * @param other the other bit-set to make the union with
-         */
-        public void union(BitSet other) {
-            for (int i = 0; i < nNonZero.value(); i++) {
-                words[nonZeroIdx[i]] |= other.words[nonZeroIdx[i]];
-            }
-        }
-
-        /**
-         * Makes the intersection with another bit-set but
-         * only on non zero-words of the outer sparse-bit-set.
-         *
-         * @param other the other bit-set to make the intersection with
-         */
-        public void intersect(BitSet other) {
-            for (int i = 0; i < nNonZero.value(); i++) {
-                words[nonZeroIdx[i]] &= other.words[nonZeroIdx[i]];
-            }
+        public SupportBitSet(BitSet anotherBitSet, boolean shared) {
+            super(anotherBitSet, shared);
+            assert anotherBitSet.nbWords == nWords : "BitSet size is incomptible with State Sparse BitSet size";
         }
 
     }
 
     /**
-     * Creates a StateSparseSet with n bits, initially all set
+     * Temporary bitset used to hold temporary value.
+     * Optimized to compute elements only on active words.
+     */
+    public class CollectionBitSet extends BitSet {
+        private long[] collection;
+        public CollectionBitSet() {
+            super(nWords);
+        }
+
+        @Override
+        public void clear(){
+            for (int i = nNonZero.value() - 1; i >= 0; i--) {
+                collection[nonZeroIdx[i]] = 0L;
+            }
+        }
+
+        @Override
+        public void union(BitSet other){
+            for (int i = nNonZero.value() - 1; i >= 0; i--) {
+                int idx = nonZeroIdx[i];
+                collection[idx] |= other.words[idx];
+            }
+        }
+
+        @Override
+        public void intersect(BitSet other) {
+            for (int i = nNonZero.value() - 1; i >= 0; i--) {
+                int idx = nonZeroIdx[i];
+                collection[idx] &= other.words[idx];
+            }
+        }
+    }
+
+    /**
+     * Creates a StateSparseSet with n bits, initially all set (value 1 for all)
      *
      * @param sm the state manager
      * @param n  the number of bits
      */
     public StateSparseBitSet(StateManager sm, int n) {
         nWords = (n + 63) >>> 6; // divided by 64
-        //System.out.println("nwords:"+nWords);
         words = new State[nWords];
-        Arrays.setAll(words, i -> sm.makeStateRef(Long.valueOf(0xFFFFFFFFFFFFFFFFL)));
+        Arrays.setAll(words, i -> sm.makeStateLong(0xFFFFFFFFFFFFFFFFL));
+        //TODO mask of last
         nonZeroIdx = new int[nWords];
         Arrays.setAll(nonZeroIdx, i -> i);
         nNonZero = sm.makeStateInt(nWords);
-    }
-
-    public int getnWords(){
-        return nWords;
+        collection = new CollectionBitSet();
     }
 
     /**
-     * Intersect this sparset-set with bs
+     * Test is the reversibleSparseBitSet is empty
      *
-     * @param bs the sparset-set to intersect with
+     * @return true is empty, false otherwise
      */
-    public void intersect(BitSet bs) {
-        for (int i = nNonZero.value() - 1; i >= 0; i--) {
-            State<Long> w = words[nonZeroIdx[i]];
-            long wn = w.value() & bs.words[nonZeroIdx[i]];
-            if (wn == 0L) {
-                nNonZero.decrement();
-                int tmp = nonZeroIdx[i];
-                nonZeroIdx[i] = nonZeroIdx[nNonZero.value()];
-                nonZeroIdx[nNonZero.value()] = tmp;
-            } else {
-                w.setValue(wn);
-            }
-        }
-    }
-
     public boolean isEmpty() {
         return nNonZero.value() == 0;
     }
 
+    /**
+     * Remove the content of the BitSet from this sparseBitSet
+     *
+     * @param bs the BitSet to remove
+     */
+    public void remove(BitSet bs) {
+        int size = nNonZero.value();
+        for (int i = size - 1; i >= 0; i--) {
+            int idx = nonZeroIdx[i];
+            long remove = words[idx].value() & ~bs.words[idx];
+            if (remove == 0L){
+                // deactivation of word
+                size -= 1;
+                nonZeroIdx[i] = nonZeroIdx[size];
+                nonZeroIdx[size] = idx;
+            } else {
+                words[idx].setValue(remove);
+            }
+        }
+        nNonZero.setValue(size);
+    }
+
+    /**
+     * Remove the content of the collection from this sparseBitSet
+     */
+    public void removeCollected() {
+        this.remove(collection);
+    }
+
+    /**
+     * Intersect this sparseBitSet with bs
+     *
+     * @param bs the BitSet to intersect with
+     */
+    public void intersect(BitSet bs) {
+        int size = nNonZero.value();
+        for (int i = size - 1; i >= 0; i--) {
+            int idx = nonZeroIdx[i];
+            long intersect = words[idx].value() & bs.words[idx];
+            if (intersect == 0L){
+                // deactivation of word
+                size -= 1;
+                nonZeroIdx[i] = nonZeroIdx[size];
+                nonZeroIdx[size] = idx;
+            } else {
+                words[idx].setValue(intersect);
+            }
+        }
+        nNonZero.setValue(size);
+    }
+
+    /**
+     * Intersect this sparseBitSet with the collection
+     */
+    public void intersectCollected() {
+        this.intersect(collection);
+    }
+
+    /**
+     * Test the emptiness of the intersection with a given BitSet
+     *
+     * @param bs the BitSet to test the intersection with
+     * @return true if empty, false otherwise
+     */
     public boolean hasEmptyIntersection(BitSet bs) {
-        //System.out.println("nonNonZero:"+nNonZero.value());
         for (int i = nNonZero.value() - 1; i >= 0; i--) {
-            State<Long> w = words[nonZeroIdx[i]];
-            //System.out.println("intersectino word" + nonZeroIdx[i] +" = "+(w.value() & bs.words[nonZeroIdx[i]]));
-            if ((w.value() & bs.words[nonZeroIdx[i]]) != 0L) {
+            int idx = nonZeroIdx[i];
+            if ((words[idx].value() & bs.words[idx]) != 0L) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * Test the emptiness of the intersection with the collection
+     * true if empty, false otherwise
+     * @return
+     */
+    public boolean hasEmptyIntersectionCollected(){
+        return this.hasEmptyIntersection(collection);
     }
 
     @Override
