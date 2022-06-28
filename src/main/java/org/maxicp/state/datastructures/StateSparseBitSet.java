@@ -207,9 +207,8 @@ public class StateSparseBitSet {
 
     /**
      * Test the emptiness of the intersection with the collection
-     * true if empty, false otherwise
      *
-     * @return
+     * @return true if empty, false otherwise
      */
     public boolean hasEmptyIntersectionCollected() {
         return this.hasEmptyIntersection(collection);
