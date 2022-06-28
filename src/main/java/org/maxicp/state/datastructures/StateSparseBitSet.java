@@ -38,6 +38,8 @@ public class StateSparseBitSet {
     private int[] nonZeroIdx;
     private StateInt nNonZero;
 
+    private Long mask;
+
     /* Temp variable */
     public CollectionBitSet collection;
 
@@ -70,19 +72,20 @@ public class StateSparseBitSet {
      */
     public class CollectionBitSet extends BitSet {
         private long[] collection;
+
         public CollectionBitSet() {
             super(nWords);
         }
 
         @Override
-        public void clear(){
+        public void clear() {
             for (int i = nNonZero.value() - 1; i >= 0; i--) {
                 collection[nonZeroIdx[i]] = 0L;
             }
         }
 
         @Override
-        public void union(BitSet other){
+        public void union(BitSet other) {
             for (int i = nNonZero.value() - 1; i >= 0; i--) {
                 int idx = nonZeroIdx[i];
                 collection[idx] |= other.words[idx];
@@ -107,8 +110,13 @@ public class StateSparseBitSet {
     public StateSparseBitSet(StateManager sm, int n) {
         nWords = (n + 63) >>> 6; // divided by 64
         words = new State[nWords];
-        Arrays.setAll(words, i -> sm.makeStateLong(0xFFFFFFFFFFFFFFFFL));
-        //TODO mask of last
+        mask = ~0L >>> (64 - (n % 64));
+        Arrays.setAll(words, i ->
+                i == nWords - 1 ?
+                        sm.makeStateLong(mask) :
+                        sm.makeStateLong(0xFFFFFFFFFFFFFFFFL)
+
+        );
         nonZeroIdx = new int[nWords];
         Arrays.setAll(nonZeroIdx, i -> i);
         nNonZero = sm.makeStateInt(nWords);
@@ -134,7 +142,7 @@ public class StateSparseBitSet {
         for (int i = size - 1; i >= 0; i--) {
             int idx = nonZeroIdx[i];
             long remove = words[idx].value() & ~bs.words[idx];
-            if (remove == 0L){
+            if (remove == 0L) {
                 // deactivation of word
                 size -= 1;
                 nonZeroIdx[i] = nonZeroIdx[size];
@@ -163,7 +171,7 @@ public class StateSparseBitSet {
         for (int i = size - 1; i >= 0; i--) {
             int idx = nonZeroIdx[i];
             long intersect = words[idx].value() & bs.words[idx];
-            if (intersect == 0L){
+            if (intersect == 0L) {
                 // deactivation of word
                 size -= 1;
                 nonZeroIdx[i] = nonZeroIdx[size];
@@ -201,9 +209,10 @@ public class StateSparseBitSet {
     /**
      * Test the emptiness of the intersection with the collection
      * true if empty, false otherwise
+     *
      * @return
      */
-    public boolean hasEmptyIntersectionCollected(){
+    public boolean hasEmptyIntersectionCollected() {
         return this.hasEmptyIntersection(collection);
     }
 
