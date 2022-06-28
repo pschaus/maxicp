@@ -115,7 +115,6 @@ public class StateSparseBitSet {
                 i == nWords - 1 ?
                         sm.makeStateLong(mask) :
                         sm.makeStateLong(0xFFFFFFFFFFFFFFFFL)
-
         );
         nonZeroIdx = new int[nWords];
         Arrays.setAll(nonZeroIdx, i -> i);
