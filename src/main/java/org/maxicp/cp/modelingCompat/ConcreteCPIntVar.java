@@ -7,7 +7,6 @@ import org.maxicp.model.concrete.ConcreteIntVar;
 import org.maxicp.model.concrete.ConcreteVar;
 
 public class ConcreteCPIntVar implements ConcreteIntVar, ConcreteCPVar {
-
     final CPIntVar v;
     final ModelDispatcher md;
 
